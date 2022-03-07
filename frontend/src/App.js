@@ -6,8 +6,9 @@ import { Admin } from "./widgets/admin/Admin";
 import { Customer } from "./widgets/customer/Customer";
 import UnknownPage from "./components/unknownPage/UnknownPage";
 import { getUserTypeRdx } from "./redux/context/contextSelectors";
+import FirstTimeUser from "./widgets/firstTimeUser/FirstTimeUser";
 
-function HomeRouter(props) {
+function HomeRouter() {
   const userType = useSelector(getUserTypeRdx);
 
   if (userType === "customer") return <Navigate to="/customer" />;
@@ -22,6 +23,7 @@ function App() {
     <div>
       <Routes>
         <Route path="home/" element={<HomeRouter />}></Route>
+        <Route path="ftu" element={<FirstTimeUser />}></Route>
         <Route path="hotel/*" element={<Hotel />}></Route>
         <Route path="admin/*" element={<Admin />}></Route>
         <Route path="customer/*" element={<Customer />}></Route>
