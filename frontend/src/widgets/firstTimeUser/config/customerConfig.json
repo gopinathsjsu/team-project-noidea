@@ -1,0 +1,101 @@
+{
+  "modalHeader": "User registration",
+  "submissionText": "Submit and continue",
+  "termsAndConditions": [
+    "You agree to Hootel's terms of service",
+    "You understand and consent to Hootel's privacy policy"
+  ],
+  "mandatoryFields": [
+    "firstName",
+    "lastName",
+    "phoneNumber",
+    "dobMonth",
+    "dobDate",
+    "dobYear",
+    "ccNumber",
+    "ccExpDate",
+    "ccZipcode"
+  ],
+  "accordions": [
+    {
+      "title": "Your information",
+      "hasSubSections": true,
+      "nextCTA": "Continue",
+      "subSections": [
+        {
+          "subtitle": "Basic information",
+          "fields": [
+            {
+              "fieldId": "firstName",
+              "colSizeXS": 6,
+              "label": "First name"
+            },
+            {
+              "fieldId": "lastName",
+              "colSizeXS": 6,
+              "label": "Last name"
+            },
+            {
+              "fieldId": "phoneNumber",
+              "colSizeXS": 12,
+              "placeholder": "XXX-XXX-XXXX",
+              "label": "Phone number"
+            }
+          ]
+        },
+        {
+          "subtitle": "Date of birth",
+          "nextCTA": "Finish",
+          "fields": [
+            {
+              "fieldId": "dobMonth",
+              "colSizeXS": 4,
+              "placeholder": "MM",
+              "label": "Month"
+            },
+            {
+              "fieldId": "dobDate",
+              "colSizeXS": 4,
+              "placeholder": "DD",
+              "label": "Date"
+            },
+            {
+              "fieldId": "dobYear",
+              "colSizeXS": 4,
+              "placeholder": "YYYY",
+              "label": "Year"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Payments information",
+      "hasSubSections": false,
+      "nextCTA": "Finish",
+      "fields": [
+        {
+          "fieldId": "ccNumber",
+          "colSizeXS": 12,
+          "colSizeMD": 6,
+          "placeholder": "XXXX XXXX XXXX XXXX",
+          "label": "Card number"
+        },
+        {
+          "fieldId": "ccExpDate",
+          "colSizeXS": 6,
+          "colSizeMD": 3,
+          "label": "Exp. date",
+          "placeholder": "MM/YYYY"
+        },
+        {
+          "fieldId": "ccZipcode",
+          "colSizeXS": 6,
+          "colSizeMD": 3,
+          "label": "Zip code",
+          "placeholder": "XXXXX"
+        }
+      ]
+    }
+  ]
+}
