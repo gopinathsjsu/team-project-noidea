@@ -1,4 +1,6 @@
 import { Container, Nav, NavDropdown, Navbar, Image } from "react-bootstrap";
+import { Auth } from "aws-amplify";
+
 import "./NavbarWrapper.css";
 
 const userTypeText = {
@@ -30,6 +32,16 @@ export function NavbarWrapper(props) {
           </Nav>
           <Nav>
             <Nav.Link href="#deets">Accounts</Nav.Link>
+            <Nav.Link
+              onClick={async () => {
+                try {
+                  await Auth.signOut();
+                } catch (error) {
+                  console.log("error signing out: ", error);
+                }
+              }}>
+              Sign out
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
