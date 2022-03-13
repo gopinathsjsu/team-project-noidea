@@ -1,0 +1,46 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "hootelwebappe472e77f_identitypool_e472e77f",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "hootele472e77f",
+    "userPoolName": "hootelwebappe472e77f_userpool_e472e77f",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "email"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "hootele472e77f_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "e472e77f",
+    "resourceName": "hootelwebappe472e77f",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "default",
+    "triggers": {},
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+}
