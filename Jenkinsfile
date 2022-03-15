@@ -8,6 +8,9 @@ pipeline {
     environment{
         AWS_DEFAULT_REGION="us-west-2"
         AWS_CREDENTIALS=credentials('AWS-hootel-dev')
+        ZIP_USER_LOGIN="UserService-Login.zip"
+        ZIP_USER_REGISTER="UserService-Register.zip"
+        ZIP_USER_VERIFY="UserService-Verify.zip"
     }
 
     // Different pipeline stages
@@ -28,9 +31,9 @@ pipeline {
                     echo "Building ${BRANCH_NAME}"
 
                     echo "UserService"
-                    zip archive: true, dir: "backend/UserService/Login", overwrite: true, zipFile: "UserService-Login.zip"
-                    zip archive: true, dir: "backend/UserService/Register", overwrite: true, zipFile: "UserService-Register.zip"
-                    zip archive: true, dir: "backend/UserService/VerifyUser", overwrite: true, zipFile: "UserService-Verify.zip"
+                    zip archive: true, dir: "backend/UserService/Login", overwrite: true, zipFile: "${env.ZIP_USER_LOGIN}"
+                    zip archive: true, dir: "backend/UserService/Register", overwrite: true, zipFile: "${env.ZIP_USER_REGISTER}"
+                    zip archive: true, dir: "backend/UserService/VerifyUser", overwrite: true, zipFile: "${env.ZIP_USER_VERIFY}"
 
                     echo "LoyaltyService"
                     echo "SearchService"
@@ -44,7 +47,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        string(credentialsId: 'hootel-dev-bucket', variable: 'BUCKET'), 
+                        string(credentialsId: 'hootel-cicd-bucket', variable: 'BUCKET'), 
                         string(credentialsId: 'hootel-dev-lambda', variable: 'LAMBDA'),
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
@@ -55,8 +58,8 @@ pipeline {
                     ]
                     ) {
                         echo "Deploying ${BRANCH_NAME} onto $LAMBDA"
-                        AWS("s3 cp UserService-Login.zip s3://$BUCKET")
-                        AWS("lambda update-function-code --function-name $LAMBDA --s3-bucket $BUCKET --s3-key UserService-Login.zip")
+                        AWS("s3 cp ${ZIP_LOGINSERVICE} s3://$BUCKET")
+                        AWS("lambda update-function-code --function-name $LAMBDA --s3-bucket $BUCKET --s3-key ${ZIP_LOGINSERVICE}")
                     }
                 }
             }
@@ -66,7 +69,7 @@ pipeline {
         //         script {
                     
         //             withCredentials([
-        //                 string(credentialsId: 'hootel-prod-bucket', variable: 'BUCKET'), 
+        //                 string(credentialsId: 'hootel-cicd-bucket', variable: 'BUCKET'), 
         //                 string(credentialsId: 'hootel-prod-lambda-create', variable: 'LAMBDA'),
         //                 [
         //                     $class: 'AmazonWebServicesCredentialsBinding',
@@ -77,8 +80,8 @@ pipeline {
         //             ]
         //             ) {
         //                 echo "Deploying ${BRANCH_NAME} onto $LAMBDA"
-        //                 AWS("s3 cp UserService-Login.zip s3://$BUCKET")
-        //                 AWS("lambda update-function-code --function-name $LAMBDA --s3-bucket $BUCKET --s3-key UserService-Login.zip")
+        //                 AWS("s3 cp ${ZIP_LOGINSERVICE} s3://$BUCKET")
+        //                 AWS("lambda update-function-code --function-name $LAMBDA --s3-bucket $BUCKET --s3-key ${ZIP_LOGINSERVICE}")
         //         }
         //     }
         // }
