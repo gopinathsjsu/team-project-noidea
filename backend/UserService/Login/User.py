@@ -24,3 +24,10 @@ class User:
     def setAddress(self, address):
         self.address = address
     
+    def toJson(self):
+        return {
+            'fName': self.fName,
+            'lName': self.lName,
+            'email': self.email,
+            'address': self.address
+        }
