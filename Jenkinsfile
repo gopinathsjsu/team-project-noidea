@@ -57,9 +57,9 @@ pipeline {
                         ]
                     ]
                     ) {
-                        echo "Deploying ${BRANCH_NAME} onto $LAMBDA"
-                        AWS("s3 cp ${ZIP_LOGINSERVICE} s3://$BUCKET")
-                        AWS("lambda update-function-code --function-name $LAMBDA --s3-bucket $BUCKET --s3-key ${ZIP_LOGINSERVICE}")
+                        echo "Deploying ${BRANCH_NAME} onto ${LAMBDA}"
+                        AWS("s3 cp ${env.ZIP_USER_LOGIN} s3://${BUCKET}")
+                        AWS("lambda update-function-code --function-name ${LAMBDA} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_LOGIN} --region ${AWS_DEFAULT_REGION}")
                     }
                 }
             }
