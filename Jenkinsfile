@@ -48,7 +48,7 @@ pipeline {
                 script {
                     withCredentials([
                         string(credentialsId: 'hootel-cicd-bucket', variable: 'BUCKET'), 
-                        string(credentialsId: 'hootel-dev-lambda', variable: 'LAMBDA'),
+                        string(credentialsId: 'hootel-dev-lambda-UserLogin', variable: 'LAMBDA'),
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
                             credentialsId: "AWS-hootel-dev",
