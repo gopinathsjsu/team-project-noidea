@@ -42,6 +42,7 @@ class User:
         return self.id
 
     def toJson(self):
+        self.role.sort()
         return {
             'userId': self.id,
             'fName': self.fName,
