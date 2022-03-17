@@ -1,9 +1,11 @@
 class User:
-    def __init__(self, name, email, address):
+    def __init__(self, userId, name, email, address, role):
+        self.id = userId
         self.fName = name[0]
         self.lName = name[1]
         self.address = address
         self.email = email
+        self.role = role
     
     def getName(self):
         return [self.fName, self.lName]
@@ -23,11 +25,28 @@ class User:
     
     def setAddress(self, address):
         self.address = address
+
+    def getRole(self):
+        return self.role
     
+    def setRole(self, role):
+        self.role = [role]
+    
+    def addRole(self, role):
+        self.role.append(role)
+    
+    def removeRole(self, role):
+        self.role.remove(role)
+    
+    def getId(self):
+        return self.id
+
     def toJson(self):
         return {
+            'userId': self.id,
             'fName': self.fName,
             'lName': self.lName,
             'email': self.email,
-            'address': self.address
+            'address': self.address,
+            'role': self.role
         }

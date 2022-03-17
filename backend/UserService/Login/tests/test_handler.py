@@ -5,11 +5,11 @@ import lambda_function
 class TestHanderCase(unittest.TestCase):
     def test_response(self):
         print("testing valid response")
-        u = lambda_function.User(["hello", "world"], "test@gmail.com", "test")
+        u = lambda_function.User('user001', ["hello", "world"], "test@gmail.com", "test", ['User', 'Customer'])
         response = lambda_function.lambda_handler({'body': {'user': u.toJson()}}, None)
         print(response)
         self.assertEqual(response['statusCode'], 200)
-        self.assertEqual(response['body']['user'], json.dumps(u.toJson()))
+        self.assertEqual(response['body']['user'], u.toJson())
 
         print("testing invalid input")
         response = lambda_function.lambda_handler({}, None)

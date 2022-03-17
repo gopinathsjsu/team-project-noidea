@@ -23,8 +23,8 @@ def lambda_handler(event, context):
         }
     u = eventBody['user']
     
-    u = User([u['fName'], u['lName']], u['email'], u['address'])
-    return returnResponse(200, {'user': json.dumps(u.toJson())})
+    u = User(u['userId'], [u['fName'], u['lName']], u['email'], u['address'], u['role'])
+    return returnResponse(200, {'user': u.toJson()})
 
 def returnResponse(statusCode, body):
     return {
