@@ -21,12 +21,10 @@ def lambda_handler(event, context):
     if 'body' in eventBody:
         eventBody = eventBody['body']
     else:
-        return {
-            'statusCode': 400,
-            'body': {
-                'message': 'Invalid input'
-            }
-        }
+        return returnResponse(400, {'message': 'Invalid input'})
+    
+    if 'user' not in eventBody: 
+        return returnResponse(400, {'message': 'Invalid input'})
 
     # Remove keys and regions when done
     dynamodb = boto3.resource('dynamodb', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_KEY_ID'], region_name=os.environ['AWS_REGION'])
@@ -38,6 +36,8 @@ def lambda_handler(event, context):
                 'userId': eventBody['user']['userId']
             }
         )
+        if 'Item' not in item:
+            return returnResponse(400, {'message': 'Invalid userId, user does not exist'})
         u = User(item['Item']['userId'], [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], list(item['Item']['Roles']))
     except ClientError as e:
         return returnResponse(400, json.dumps(e.response['Error']['Message']))
