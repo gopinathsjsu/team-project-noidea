@@ -2,18 +2,19 @@ import uuid
 
 
 class Customer:
-    def __init__(self, user):
+    def __init__(self, user, loyaltyId, bookings, currentBooking):
         self.user = user
-        self.loyaltyId = None
-        self.generateLoyaltyId()
-        self.bookings = []
-        self.currentBooking = None
+        self.loyaltyId = loyaltyId
+        if self.loyaltyId == -1:
+            self.generateLoyaltyId()
+        self.bookings = bookings
+        self.currentBooking = currentBooking
 
     def getLoyaltyId(self):
         return self.loyaltyId
 
     def generateLoyaltyId(self):
-        self.loyaltyId = uuid.uuid4()
+        self.loyaltyId = str(uuid.uuid4())
     
     def getBookings(self):
         return self.bookings
