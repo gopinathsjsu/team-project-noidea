@@ -13,11 +13,17 @@ class TestHanderCase(unittest.TestCase):
 
     def test_response_invalid_user(self):
         print("testing invalid input")
-        response = lambda_function.lambda_handler({}, None)
+        response = lambda_function.lambda_handler({'body': {}}, None)
         self.assertEqual(response['statusCode'], 400)
         # Temp error outputs
-        self.assertEqual(response['body'], {'message': 'Invalid input'})
+        self.assertEqual(response['body'], {'message': 'Invalid input, no user'})
         print()
+    
+    def test_response_invalid_body(self):
+        print("testing invalid body")
+        response = lambda_function.lambda_handler({}, None)
+        self.assertEqual(response['statusCode'], 400)
+        self.assertEqual(response['body'], {'message': 'Invalid input, no body'})
 
     def test_response_invalid_userId(self):
         print("testing invalid userId")
