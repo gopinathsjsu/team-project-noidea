@@ -1,9 +1,10 @@
 class User:
-    def __init__(self, userId, name, email, address, role):
+    def __init__(self, userId, name, email, address, country, role):
         self.id = userId
         self.fName = name[0]
         self.lName = name[1]
         self.address = address
+        self.country = country
         self.email = email
         self.role = role
     
@@ -25,6 +26,12 @@ class User:
     
     def setAddress(self, address):
         self.address = address
+    
+    def getCountry(self):
+        return self.country
+
+    def setCountry(self, country):
+        self.country = country
 
     def getRole(self):
         return self.role
@@ -49,5 +56,6 @@ class User:
             'lName': self.lName,
             'email': self.email,
             'address': self.address,
+            'country': self.country,
             'role': self.role
         }

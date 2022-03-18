@@ -5,7 +5,7 @@ import lambda_function
 class TestHanderCase(unittest.TestCase):
     def test_response_valid(self):
         print("testing valid response")
-        u = lambda_function.User('user001', ["first", "last"], "test@gmail.com", "One Washington Square, San José, CA 95192", ['User', 'Customer'])
+        u = lambda_function.User('user001', ["first", "last"], "test@gmail.com", "One Washington Square, San José, CA 95192", "USA", ['User', 'Customer', 'Admin'])
         response = lambda_function.lambda_handler({'body': {'user': {'userId': 'user001'}}}, None)
         self.assertEqual(response['statusCode'], 200)
         self.assertEqual(response['body']['user'], u.toJson())
