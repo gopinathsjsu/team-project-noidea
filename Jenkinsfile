@@ -11,6 +11,7 @@ pipeline {
         ZIP_USER_LOGIN="UserService-Login.zip"
         ZIP_USER_REGISTER="UserService-Register.zip"
         ZIP_USER_VERIFY="UserService-Verify.zip"
+        ZIP_USER_GETROLE="UserService-GetRole.zip"
     }
 
     // Different pipeline stages
@@ -32,8 +33,9 @@ pipeline {
 
                     echo "UserService"
                     zip archive: true, dir: "backend/UserService/Login", overwrite: true, zipFile: "${env.ZIP_USER_LOGIN}"
-                    zip archive: true, dir: "backend/UserService/Register", overwrite: true, zipFile: "${env.ZIP_USER_REGISTER}"
-                    zip archive: true, dir: "backend/UserService/VerifyUser", overwrite: true, zipFile: "${env.ZIP_USER_VERIFY}"
+                    zip archive: true, dir: "backend/UserService/GetRole", overwrite: true, zipFile: "${env.ZIP_USER_GETROLE}"
+                    // zip archive: true, dir: "backend/UserService/Register", overwrite: true, zipFile: "${env.ZIP_USER_REGISTER}"
+                    // zip archive: true, dir: "backend/UserService/VerifyUser", overwrite: true, zipFile: "${env.ZIP_USER_VERIFY}"
 
                     echo "LoyaltyService"
                     echo "SearchService"
@@ -49,6 +51,7 @@ pipeline {
                     withCredentials([
                         string(credentialsId: 'hootel-cicd-bucket', variable: 'BUCKET'), 
                         string(credentialsId: 'hootel-dev-lambda-UserLogin', variable: 'LAMBDA'),
+                        string(credentialsId: 'hootel-dev-lambda-UserGetRole', variable: 'LAMBDA2'),
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
                             credentialsId: "AWS-hootel-dev",
@@ -59,7 +62,9 @@ pipeline {
                     ) {
                         echo "Deploying ${BRANCH_NAME} onto ${LAMBDA}"
                         AWS("s3 cp ${env.ZIP_USER_LOGIN} s3://${BUCKET}")
+                        AWS("s3 cp ${env.ZIP_USER_GETROLE} s3://${BUCKET}")
                         AWS("lambda update-function-code --function-name ${LAMBDA} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_LOGIN} --region ${AWS_DEFAULT_REGION}")
+                        AWS("lambda update-function-code --function-name ${LAMBDA2} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_GETROLE} --region ${AWS_DEFAULT_REGION}")
                     }
                 }
             }
