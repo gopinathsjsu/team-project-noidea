@@ -6,6 +6,7 @@ from User import User
 from Customer import Customer
 from Admin import Admin
 from botocore.exceptions import ClientError
+from decimal import Decimal
 
 # from dotenv import load_dotenv
 # load_dotenv()
@@ -20,16 +21,18 @@ def lambda_handler(event, context):
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
 
-    if 'body' in eventBody:
-        eventBody = eventBody['body']
+    if 'queryStringParameters' in eventBody:
+        eventBody = eventBody['queryStringParameters']
     else:
         return returnResponse(400, {'message': 'Invalid input, no body'})
     
-    if 'user' not in eventBody: 
+    if 'userId' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no user'})
+    if 'role' not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no role'})
     
-    userId = eventBody['user']['userId']
-    roleRequested = eventBody['user']['role']
+    userId = eventBody['userId']
+    roleRequested = eventBody['role']
 
     # Remove keys and regions when done
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
@@ -88,14 +91,24 @@ def lambda_handler(event, context):
         if 'Item' not in item:
             print('Item error')
             return returnResponse(400, {'message': 'Invalid userId, admin does not exist or user is not an admin'})
-        admin = Admin(u, item['Item']['branchAssigments'], item['Item']['adminLevel'])
+        admin = Admin(u, item['Item']['branchAssigments'], int(item['Item']['adminLevel']))
         return returnResponse(200, {'user': admin.toJson()})
 
     else:
         return returnResponse(400, {'message': 'Invalid role requested'})
 
 def returnResponse(statusCode, body):
+    logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
+    logger.debug('[RESPONSE] json.dumps(body): {}'.format(json.dumps(body)))
     return {
         'statusCode': statusCode,
-        'body': body
+        'body': json.dumps(body),
+        'isBase64Encoded': False,
+        'headers': {
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            'Access-Control-Allow-Credentials': True,
+            'Content-Type': 'application/json'
+        }
     }

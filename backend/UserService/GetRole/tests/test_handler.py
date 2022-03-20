@@ -42,7 +42,7 @@ class TestHanderCase(unittest.TestCase):
 
     def test_response_invalid_user(self):
         print("testing invalid user")
-        response = lambda_function.lambda_handler({'body': {'user': {'userId': 'user999', 'role': 'Customer'}}}, None)
+        response = lambda_function.lambda_handler({'queryStringParameters': {'userId': 'user999', 'role': 'Customer'}}, None)
         self.assertEqual(response['statusCode'], 400)
         self.assertEqual(response['body'], {'message': 'Invalid userId, user does not exist'})
         print()
@@ -63,9 +63,14 @@ class TestHanderCase(unittest.TestCase):
 
     def test_invalid_role(self):
         print("testing invalid role")
-        response = lambda_function.lambda_handler({'body': {'user': {'userId': 'user001', 'role': 'abcd'}}}, None)
+        response = lambda_function.lambda_handler({'queryStringParameters': {'userId': 'user001', 'role': 'abcd'}}, None)
         self.assertEqual(response['statusCode'], 400)
         self.assertEqual(response['body'], {'message': 'Invalid role requested'})
+        print()
+    
+    def test_no_role(self):
+        print("testing no role")
+        response = self.lambda_handler({'queryStringParameters': {'userId': 'user001'}}, None)
         print()
 
     def test_invalid_loyaltyId(self):
@@ -76,4 +81,4 @@ class TestHanderCase(unittest.TestCase):
         print()
 
     def lambda_handler(self, userId, role):
-        return lambda_function.lambda_handler({'body': {'user': {'userId': userId, 'role': role}}}, None)
+        return lambda_function.lambda_handler({'queryStringParameters': {'userId': userId, 'role': role}}, None)

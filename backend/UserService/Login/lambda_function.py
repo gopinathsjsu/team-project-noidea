@@ -18,12 +18,12 @@ def lambda_handler(event, context):
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
 
-    if 'body' in eventBody:
-        eventBody = eventBody['body']
+    if 'queryStringParameters' in eventBody:
+        eventBody = eventBody['queryStringParameters']
     else:
         return returnResponse(400, {'message': 'Invalid input, no body'})
     
-    if 'user' not in eventBody: 
+    if 'userId' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no user'})
 
     # Remove keys and regions when done
@@ -33,18 +33,28 @@ def lambda_handler(event, context):
         item = userTable.get_item(
             TableName=os.environ['TABLE_USER'],
             Key={
-                'userId': eventBody['user']['userId']
+                'userId': eventBody['userId']
             }
         )
         if 'Item' not in item:
             return returnResponse(400, {'message': 'Invalid userId, user does not exist'})
         u = User(item['Item']['userId'], [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], item['Item']['Country'], list(item['Item']['Roles']))
     except ClientError as e:
-        return returnResponse(400, json.dumps(e.response['Error']['Message']))
+        return returnResponse(400, e.response['Error']['Message'])
     return returnResponse(200, {'user': u.toJson()})
 
 def returnResponse(statusCode, body):
+    logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
+    logger.debug('[RESPONSE] json.dumps(body): {}'.format(json.dumps(body)))
     return {
         'statusCode': statusCode,
-        'body': body
+        'body': json.dumps(body),
+        'isBase64Encoded': False,
+        'headers': {
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            'Access-Control-Allow-Credentials': True,
+            'Content-Type': 'application/json'
+        }
     }
