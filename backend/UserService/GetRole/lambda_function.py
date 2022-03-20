@@ -32,7 +32,7 @@ def lambda_handler(event, context):
     roleRequested = eventBody['user']['role']
 
     # Remove keys and regions when done
-    dynamodb = boto3.resource('dynamodb', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_KEY_ID'], region_name=os.environ['AWS_REGION'])
+    dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
     userTable = dynamodb.Table(os.environ['TABLE_USER'])
     try:
         item = userTable.get_item(
