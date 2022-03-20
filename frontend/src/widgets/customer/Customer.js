@@ -1,11 +1,16 @@
 import { Container } from "react-bootstrap";
-import { NavbarWrapper } from "../../components/navbar/NavbarWrapper";
+import { Routes, Route } from "react-router-dom";
+import Reservations from "./widgets/reservations/Reservations";
 
 export function Customer(props) {
   return (
     <div>
-      <NavbarWrapper userType="customer" />
-      <Container fluid="sm">Customer</Container>
+      <Container fluid="sm">
+        <Routes>
+          <Route path="/stays/*" element={<Reservations />}></Route>
+          <Route path="/loyalty/*" element={<div>Loyalty</div>}></Route>
+        </Routes>
+      </Container>
     </div>
   );
 }
