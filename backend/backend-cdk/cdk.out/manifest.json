@@ -1,0 +1,274 @@
+{
+  "version": "16.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "BackEndCdkStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "BackEndCdkStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "BackEndCdkStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "BackEndCdkStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/7f79ff0926b60134b19ba0ae3c465052d89bf48eb816144701913603be531770.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "BackEndCdkStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "BackEndCdkStack.assets"
+      ],
+      "metadata": {
+        "/BackEndCdkStack/Hotel-Booking/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingC09385BA"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingCloudWatchRoleA98D7CE2"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingAccount7F933787"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingDeploymentDB98052E5464213164b11bb50ecde0a0adeb6ed4"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingDeploymentStageprodCC205835"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingEndpoint25222DDA"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingOPTIONSF2893991"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/setting/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingsetting29E19AA9"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/setting/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingsettingOPTIONS8A1F211F"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/setting/POST/ApiPermission.BackEndCdkStackHotelBooking60BEBEE4.POST..setting": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingsettingPOSTApiPermissionBackEndCdkStackHotelBooking60BEBEE4POSTsetting9B30B4DD"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/setting/POST/ApiPermission.Test.BackEndCdkStackHotelBooking60BEBEE4.POST..setting": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingsettingPOSTApiPermissionTestBackEndCdkStackHotelBooking60BEBEE4POSTsetting4EE10FDC"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Booking/Default/setting/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelBookingsettingPOST5AE2D83E"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoom4759C73A"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomCloudWatchRole5C8ABE3A"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomAccount254E5548"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomDeployment988F904F3b09b4931675e86a543995781b69f937"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomDeploymentStageprod4BDC0550"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomEndpoint6C66FAEF"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomOPTIONSDE19EE48"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/setting/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomsetting855FA9A0"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/setting/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomsettingOPTIONSFD2B94A8"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/setting/POST/ApiPermission.BackEndCdkStackHotelRoomCB99882A.POST..setting": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomsettingPOSTApiPermissionBackEndCdkStackHotelRoomCB99882APOSTsetting19B0E1FD"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/setting/POST/ApiPermission.Test.BackEndCdkStackHotelRoomCB99882A.POST..setting": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomsettingPOSTApiPermissionTestBackEndCdkStackHotelRoomCB99882APOSTsetting4BF9C808"
+          }
+        ],
+        "/BackEndCdkStack/Hotel-Room/Default/setting/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HotelRoomsettingPOST15735914"
+          }
+        ],
+        "/BackEndCdkStack/BookingEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BookingEndpoint"
+          }
+        ],
+        "/BackEndCdkStack/RoomEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoomEndpoint"
+          }
+        ],
+        "/BackEndCdkStack/booking_service/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "bookingserviceServiceRole0F14E41B"
+          }
+        ],
+        "/BackEndCdkStack/booking_service/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "bookingserviceServiceRoleDefaultPolicy49A2275E"
+          }
+        ],
+        "/BackEndCdkStack/booking_service/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "bookingservice53A92A66"
+          }
+        ],
+        "/BackEndCdkStack/room_service/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "roomserviceServiceRole1B0C281C"
+          }
+        ],
+        "/BackEndCdkStack/room_service/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "roomserviceServiceRoleDefaultPolicy779325B6"
+          }
+        ],
+        "/BackEndCdkStack/room_service/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "roomservice06741075"
+          }
+        ],
+        "/BackEndCdkStack/bookingTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "bookingTable1B4DA365"
+          }
+        ],
+        "/BackEndCdkStack/roomTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "roomTableC21A0A7F"
+          }
+        ],
+        "/BackEndCdkStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/BackEndCdkStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/BackEndCdkStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/BackEndCdkStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "BackEndCdkStack"
+    }
+  }
+}
