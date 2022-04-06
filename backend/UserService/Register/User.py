@@ -59,3 +59,14 @@ class User:
             'country': self.country,
             'role': self.role
         }
+    
+    def toDict(self):
+        self.role.sort()
+        return {
+            'userId': self.id,
+            'firstName': self.fName,
+            'lastName': self.lName,
+            'email': self.email,
+            'Address': self.address,
+            'Country': self.country
+        }

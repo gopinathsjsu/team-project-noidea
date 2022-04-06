@@ -39,6 +39,16 @@ def uploadUser(user):
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
     try:
         table.put_item(Item=user.toDict())
+        for role in user.role:
+            table.update_item(
+                Key={
+                    "userId": user.id
+                },
+                UpdateExpression="ADD UserRoles :role",
+                ExpressionAttributeValues={
+                    ':role': {role}
+                }
+            )
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
         return returnResponse(500, {'message': 'Error uploading user'})
