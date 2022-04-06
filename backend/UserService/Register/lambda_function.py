@@ -10,6 +10,7 @@ logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
     logger.debug('[EVENT] event: {}'.format(event))
+    logger.debug('[EVENT] eventType: {}'.format(type(event)))
     # Required since we want a unified input event
     eventBody = event
     if type(eventBody) == str:
@@ -22,6 +23,10 @@ def lambda_handler(event, context):
     
     if 'user' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no user'})
+    
+    if type(eventBody) == str:
+        eventBody = json.loads(eventBody)
+        logger.debug('[EVENT] eventBody: {}'.format(eventBody))
 
     user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
     try:
@@ -51,8 +56,7 @@ def uploadUser(user):
             )
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
-        return returnResponse(500, {'message': 'Error uploading user'})
-    return returnResponse(200, {'message': 'User created'})
+        return returnResponse(500, {'message': 'Error uploading user2'})
 
 
 def returnResponse(statusCode, body):
