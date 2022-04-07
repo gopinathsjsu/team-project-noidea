@@ -21,12 +21,12 @@ def lambda_handler(event, context):
     else:
         return returnResponse(400, {'message': 'Invalid input, no body'})
     
-    if 'user' not in eventBody: 
-        return returnResponse(400, {'message': 'Invalid input, no user'})
-    
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
         logger.debug('[EVENT] eventBody: {}'.format(eventBody))
+    
+    if 'user' not in eventBody: 
+        return returnResponse(400, {'message': 'Invalid input, no user'})
 
     user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
     try:
