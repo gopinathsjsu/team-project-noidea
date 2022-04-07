@@ -64,7 +64,7 @@ def lambda_handler(event, context):
 
     uploadUser(user)
     
-    return returnResponse(200, {'abc': '1234'})
+    return returnResponse(200, user)
 
 def uploadUser(user):
     logger.debug('[UPLOAD] user: {}'.format(json.dumps(user.toJson())))
