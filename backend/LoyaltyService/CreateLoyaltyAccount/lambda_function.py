@@ -46,7 +46,8 @@ def createLoyaltyAccount(userId):
             'referrals': 0,
             'referred': [],
             'sharable': True,
-            'sharedWith': []
+            'sharedWith': [],
+            'amount': 0
         })
     except ClientError as e:
         logger.error(e.response['Error']['Message'])

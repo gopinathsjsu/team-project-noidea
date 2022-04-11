@@ -10,7 +10,7 @@ class Loyalty:
         return {
             'id': self.id,
             'ownerId': self.ownerId,
-            'amount': self.amount,
+            'amount': float(self.amount),
             'sharable': self.sharable,
             'sharedWith': self.sharedWith
         }

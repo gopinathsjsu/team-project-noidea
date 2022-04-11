@@ -1,3 +1,4 @@
+from decimal import *
 import json
 import logging
 import boto3
@@ -33,20 +34,17 @@ def lambda_handler(event, context):
         item = LoyaltyTable.get_item(
             TableName=os.environ['TABLE_LOYALTY'],
             Key={
-                'loyaltyId': eventBody['loyaltyId']
+                'loyaltyId': eventBody['userId']
             }
         )
         if 'Item' not in item:
             return returnResponse(400, {'message': 'Invalid loyaltyId, Loyalty does not exist'})
         logger.debug('[LOYALTY] item: {}'.format(item))
         logger.debug('[LOYALTY] item type: {}'.format(type(item)))
-        # convert sharedWith to list
-        
-        #l = Loyalty(item['Item']['loyaltyId'], item['Item']['ownerId'], item['Item']['amount'], item['Item']['sharable'], item['Item']['sharedWith'])
+        l = Loyalty(item['Item']['loyaltyId'], item['Item']['ownerId'], item['Item']['amount'], item['Item']['sharable'], item['Item']['sharedWith'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
-    return returnResponse(200, {'message': 'Success?'})
-    #return returnResponse(200, {'Loyalty': l.toJson()})
+    return returnResponse(200, {'loyalty': l.toDict()})
 
 def returnResponse(statusCode, body):
     logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
