@@ -27,3 +27,6 @@ class Loyalty:
             self.amount = self.amount - amount
         else:
             raise Exception('[ERROR] Not enough points\nid: {}\namount: {}\nrequested: {}'.format(self.id, self.amount, amount))
+    
+    def add(self, amount):
+        self.amount = self.amount + amount
