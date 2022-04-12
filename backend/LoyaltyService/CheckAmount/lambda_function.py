@@ -27,6 +27,10 @@ def lambda_handler(event, context):
     
     if 'loyalty' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no loyalty'})
+
+    if type(eventBody['loyalty']) == str:
+        eventBody['loyalty'] = json.loads(eventBody['loyalty'])
+    
     eventBody = eventBody['loyalty']
 
     if 'loyaltyId' not in eventBody:
