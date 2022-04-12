@@ -38,6 +38,9 @@ def lambda_handler(event, context):
     loyaltyId = eventBody['loyaltyId']
     amount = eventBody['amount']
 
+    if not validateInputs({'loyaltyId': loyaltyId, 'amount': amount}):
+        return returnResponse(400, {'message': 'Invalid input, invalid type'})
+
     loyalty = getLoyalty(loyaltyId)
     loyalty.add(float(amount))
     updateLoyalty(loyalty)
@@ -96,3 +99,10 @@ def returnResponse(statusCode, body):
             'Content-Type': 'application/json'
         }
     }
+
+def validateInputs(arr):
+    if type(arr['loyaltyId']) != str:
+        return False
+    if type(arr['amount']) != float and type(arr['amount']) != int:
+        return False
+    return True
