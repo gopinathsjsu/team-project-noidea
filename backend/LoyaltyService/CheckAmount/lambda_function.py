@@ -47,7 +47,7 @@ def lambda_handler(event, context):
                                    'loyaltyId': loyaltyId,})
     else:
         return returnResponse(200, {'message': '{} has enough points'.format(loyaltyId),
-                                    'points': loyalty.amount,
+                                    'points': float(loyalty.amount),
                                     'status': 'OK'})
 
 def getLoyalty(loyaltyId):
@@ -57,7 +57,7 @@ def getLoyalty(loyaltyId):
         item = LoyaltyTable.get_item(
             TableName=os.environ['TABLE_LOYALTY'],
             Key={
-                'loyaltyId': eventBody['userId']
+                'loyaltyId': loyaltyId
             }
         )
         if 'Item' not in item:
