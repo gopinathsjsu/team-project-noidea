@@ -13,6 +13,7 @@ pipeline {
         ZIP_USER_VERIFY="UserService-Verify.zip"
         ZIP_USER_GETROLE="UserService-GetRole.zip"
         ZIP_LOYALTY_CHECK="LoyaltyService-CheckAmount.zip"
+        ZIP_LOYALTY_REDEEM="LoyaltyService-Redeem.zip"
     }
 
     // Different pipeline stages
@@ -40,6 +41,7 @@ pipeline {
 
                     echo "LoyaltyService"
                     zip archive: true, dir: "backend/LoyaltyService/CheckAmount", overwrite: true, zipFile: "${env.ZIP_LOYALTY_CHECK}"
+                    zip archive: true, dir: "backend/LoyaltyService/Redeem", overwrite: true, zipFile: "${env.ZIP_LOYALTY_REDEEM}"
                     echo "SearchService"
                     echo "Misc"
                 }
@@ -56,6 +58,7 @@ pipeline {
                         string(credentialsId: 'hootel-dev-lambda-UserGetRole', variable: 'LAMBDA2'),
                         string(credentialsId: 'hootel-dev-lambda-UserRegister', variable: 'LAMBDA3'),
                         string(credentialsId: 'hootel-dev-lambda-LoyaltyCheck', variable: 'LOYALTY_CHECK'),
+                        string(credentialsId: 'hootel-dev-lambda-LoyaltyRedeem', variable: 'LOYALTY_REDEEM'),
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
                             credentialsId: "AWS-hootel-dev",
@@ -69,10 +72,12 @@ pipeline {
                         AWS("s3 cp ${env.ZIP_USER_GETROLE} s3://${BUCKET}")
                         AWS("s3 cp ${env.ZIP_USER_REGISTER} s3://${BUCKET}")
                         AWS("s3 cp ${env.ZIP_LOYALTY_CHECK} s3://${BUCKET}")
+                        AWS("s3 cp ${env.ZIP_LOYALTY_REDEEM} s3://${BUCKET}")
                         AWS("lambda update-function-code --function-name ${LAMBDA} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_LOGIN} --region ${AWS_DEFAULT_REGION}")
                         AWS("lambda update-function-code --function-name ${LAMBDA2} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_GETROLE} --region ${AWS_DEFAULT_REGION}")
                         AWS("lambda update-function-code --function-name ${LAMBDA3} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_USER_REGISTER} --region ${AWS_DEFAULT_REGION}")
                         AWS("lambda update-function-code --function-name ${LOYALTY_CHECK} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_LOYALTY_CHECK} --region ${AWS_DEFAULT_REGION}")
+                        AWS("lambda update-function-code --function-name ${LOYALTY_REDEEM} --s3-bucket ${BUCKET} --s3-key ${env.ZIP_LOYALTY_REDEEM} --region ${AWS_DEFAULT_REGION}")
                     }
                 }
             }
