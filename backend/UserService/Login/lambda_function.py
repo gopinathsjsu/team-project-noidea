@@ -38,7 +38,7 @@ def lambda_handler(event, context):
         )
         if 'Item' not in item:
             return returnResponse(400, {'message': 'Invalid userId, user does not exist'})
-        u = User(item['Item']['userId'], [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], item['Item']['Country'], list(item['Item']['Roles']))
+        u = User(item['Item']['userId'], [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], item['Item']['Country'], list(item['Item']['UserRoles']))
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
     return returnResponse(200, {'user': u.toJson()})

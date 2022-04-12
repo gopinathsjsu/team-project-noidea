@@ -2,7 +2,7 @@ import json
 import logging
 import boto3
 import os
-from User import User
+import uuid
 from botocore.exceptions import ClientError
 
 logger = logging.getLogger()
@@ -24,40 +24,35 @@ def lambda_handler(event, context):
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
         logger.debug('[EVENT] eventBody: {}'.format(eventBody))
-    
-    if 'user' not in eventBody: 
-        return returnResponse(400, {'message': 'Invalid input, no user'})
 
-    user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
+    if 'userId' not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no userId'})
+    
+    userId = eventBody['userId']
+
+    loyaltyAccount = createLoyaltyAccount(userId)
+    return returnResponse(200, {'message': 'User created',
+                               'loyaltyAccount': loyaltyAccount,
+                               'userId': userId})
+
+
+def createLoyaltyAccount(userId):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(os.environ['TABLE_LOYALTY'])
     try:
-        uploadUser(user)
+        table.put_item(Item={
+            'loyaltyId': userId,
+            'ownerId': userId,
+            'referrals': 0,
+            'referred': [],
+            'sharable': True,
+            'sharedWith': [],
+            'amount': 0
+        })
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
         return returnResponse(500, {'message': 'Error uploading user'})
-    
-    return returnResponse(200, {'message': 'User created',
-                                'user': user.toJson()})
-
-def uploadUser(user):
-    logger.debug('[UPLOAD] user: {}'.format(json.dumps(user.toJson())))
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
-    try:
-        table.put_item(Item=user.toDict())
-        for role in user.role:
-            table.update_item(
-                Key={
-                    "userId": user.id
-                },
-                UpdateExpression="ADD UserRoles :role",
-                ExpressionAttributeValues={
-                    ':role': {role}
-                }
-            )
-    except ClientError as e:
-        logger.error(e.response['Error']['Message'])
-        return returnResponse(500, {'message': 'Error uploading user2'})
-
+    return userId
 
 def returnResponse(statusCode, body):
     logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
