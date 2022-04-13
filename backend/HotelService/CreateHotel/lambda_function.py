@@ -42,9 +42,14 @@ def lambda_handler(event, context):
     if 'userId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId. Cannot validate if admin'})
     u = getUser(eventBody['userId'])
-    if 'Admin' not in u.roles:
+    if 'Admin' not in u.role:
         return returnResponse(400, {'message': 'Invalid input, user is not an admin',
                                     'status': 'error'})
+    hotel = getHotel(eventBody['hotelId'])
+    if hotel is not None:
+        return returnResponse(400, {'message': 'Invalid input, hotel exists, please modify instead',
+                                    'status': 'error'})
+    uploadHotel(eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
     hotel = getHotel(eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',
                                 'status': 'success',
@@ -77,8 +82,8 @@ def getHotel(hotelId):
             }
         )
         if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid hotelId, hotel does not exist'})
-        return Hotel(hotelId, item['Item']['name'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+            return None
+        return Hotel(hotelId, item['Item']['Name'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
@@ -89,7 +94,7 @@ def uploadHotel(hotelId, address, country, email, name):
         hotelTable.put_item(
             Item={
                 'hotelId': hotelId,
-                'name': name,
+                'Name': name,
                 'email': email,
                 'Address': address,
                 'Country': country
