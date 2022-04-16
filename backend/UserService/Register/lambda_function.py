@@ -20,71 +20,30 @@ def lambda_handler(event, context):
         eventBody = eventBody['body']
     else:
         return returnResponse(400, {'message': 'Invalid input, no body'})
-
+    
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
         logger.debug('[EVENT] eventBody: {}'.format(eventBody))
     
     if 'user' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no user'})
-    eventBody = eventBody['user']
-    
-    if 'userId' not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no userId'})
 
-    user = None
-    
-    dynamodb = boto3.resource('dynamodb')
-    userTable = dynamodb.Table(os.environ['TABLE_USER'])
+    user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
     try:
-        item = userTable.get_item(
-            TableName=os.environ['TABLE_USER'],
-            Key={
-                'userId': eventBody['userId']
-            }
-        )
-        if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid userId, user does not exist'})
-        user = User(item['Item']['userId'], [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], item['Item']['Country'], list(item['Item']['UserRoles']))
+        uploadUser(user)
     except ClientError as e:
-        return returnResponse(400, e.response['Error']['Message'])
-
-    if 'firstName' in eventBody:
-        user.firstName = eventBody['firstName']
-    if 'lastName' in eventBody:
-        user.lastName = eventBody['lastName']
-    if 'email' in eventBody:
-        user.email = eventBody['email']
-    if 'address' in eventBody:
-        user.address = eventBody['address']
-    if 'country' in eventBody:
-        user.country = eventBody['country']
-    if 'roles' in eventBody:
-        user.role = eventBody['roles']
-
-    uploadUser(user)
+        logger.error(e.response['Error']['Message'])
+        return returnResponse(500, {'message': 'Error uploading user'})
     
-    return returnResponse(200, user)
+    return returnResponse(200, {'message': 'User created',
+                                'user': user.toJson()})
 
 def uploadUser(user):
     logger.debug('[UPLOAD] user: {}'.format(json.dumps(user.toJson())))
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['TABLE_USER'])
+    table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
     try:
-        table.update_item(
-            Key={
-                'userId': user.id
-            },
-            UpdateExpression="set firstName = :fName, lastName = :lName, email = :email, Address = :address, Country = :country",
-            ExpressionAttributeValues={
-                ':fName': user.firstName,
-                ':lName': user.lastName,
-                ':email': user.email,
-                ':address': user.address,
-                ':country': user.country
-            },
-            ReturnValues="UPDATED_NEW"
-        )
+        table.put_item(Item=user.toDict())
         for role in user.role:
             table.update_item(
                 Key={
@@ -98,6 +57,7 @@ def uploadUser(user):
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
         return returnResponse(500, {'message': 'Error uploading user2'})
+
 
 def returnResponse(statusCode, body):
     logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
