@@ -12,6 +12,8 @@ import { initiateUserState } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
 import GlobalUIHandler from "./components/errors/GlobalUIHandler";
 
+import "./App.css";
+
 export function HomeRedirector() {
   const userType = useSelector(getUserTypeRdx);
 

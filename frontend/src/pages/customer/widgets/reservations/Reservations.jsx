@@ -16,9 +16,9 @@ export default function Reservations() {
   }, [setReservationPage, reservationPage]);
 
   return (
-    <Container className="reservation-container">
+    <Container className="reservation-container" style={{ maxWidth: 700 }}>
       <h3>Reservations</h3>
-      <Nav fill variant="tabs" activeKey={reservType}>
+      <Nav fill variant="tabs" activeKey={reservType} style={{ marginTop: 30 }}>
         <Nav.Item>
           <Nav.Link eventKey="active" onClick={() => setReservationPage({ type: "active" })}>
             Active
@@ -35,7 +35,31 @@ export default function Reservations() {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <ReservationList reservationType={reservType} />
+      <ReservationList
+        reservationType={reservType}
+        reservations={[
+          {
+            status: "active",
+            city: "San Francisco",
+            hotelProperty: "Hyatt Regency at Ferry Terminal",
+            nights: "3",
+            rooms: "2",
+            checkin: "03/12/2019",
+            checkout: "03/21/2019",
+            totalPrice: "$2031.43"
+          },
+          {
+            status: "active",
+            city: "Los Angeles",
+            hotelProperty: "San Gabriel Sheraton",
+            nights: "3",
+            rooms: "2",
+            checkin: "04/12/2019",
+            checkout: "05/21/2019",
+            totalPrice: "$2031.43"
+          }
+        ]}
+      />
     </Container>
   );
 }

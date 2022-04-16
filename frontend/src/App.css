@@ -1,0 +1,20 @@
+.span-fake-link {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+.span-fake-link:hover {
+  cursor: pointer;
+}
+
+.listed-item-container {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px 25px 20px 25px;
+  margin-top: 20px;
+}
+
+.listed-item-container:hover {
+  border: 2px solid #0d6efd;
+  cursor: pointer;
+}
