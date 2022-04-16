@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Collapse, Container } from "react-bootstrap";
 import BookingInput from "./components/BookingInput";
 import BookingList from "./components/BookingList";
 
@@ -11,17 +11,22 @@ export default function Book(props) {
     <Container style={{ marginTop: 20, maxWidth: 700 }}>
       <h3>Book a stay</h3>
       <div style={{ marginTop: 30 }}>
-        {hotels.length === 0 ? (
-          <BookingInput
-            bookingParam={bookingParam}
-            onComplete={(foundHotels, bookParams) => {
-              setHotels(foundHotels);
-              setBookingParam(bookParams);
-            }}
-          />
-        ) : (
-          <BookingList hotels={hotels} bookingParam={bookingParam} setHotels={setHotels} />
-        )}
+        <Collapse in={hotels.length === 0}>
+          <div>
+            <BookingInput
+              bookingParam={bookingParam}
+              onComplete={(foundHotels, bookParams) => {
+                setHotels(foundHotels);
+                setBookingParam(bookParams);
+              }}
+            />
+          </div>
+        </Collapse>
+        <Collapse in={hotels.length !== 0}>
+          <div>
+            <BookingList hotels={hotels} bookingParam={bookingParam} setHotels={setHotels} />
+          </div>
+        </Collapse>
       </div>
     </Container>
   );
