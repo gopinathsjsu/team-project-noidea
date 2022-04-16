@@ -11,16 +11,19 @@ import awsExports from "./aws-exports";
 
 import "@aws-amplify/ui-react/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ErrorBoundary from "./components/errors/ErrorBoundary";
 
 Amplify.configure(awsExports);
 
 const IndexWrapper = () => (
   <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 

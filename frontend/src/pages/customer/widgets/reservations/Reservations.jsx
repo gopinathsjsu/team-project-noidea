@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { Nav, Container } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import ReservationList from "./components/ReservationList";
 import "./Reservations.css";
 
-export default function Reservations(props) {
+export default function Reservations() {
   const [reservationPage, setReservationPage] = useSearchParams();
   const reservType = reservationPage.get("type");
 
   useEffect(() => {
-    if (!reservationPage.get("type")) {
+    const qParamReservType = reservationPage.get("type");
+    if (!qParamReservType || !["active", "past", "cancelled"].includes(qParamReservType)) {
       setReservationPage({ type: "active" });
     }
   }, [setReservationPage, reservationPage]);
 
   return (
     <Container className="reservation-container">
+      <h3>Reservations</h3>
       <Nav fill variant="tabs" activeKey={reservType}>
         <Nav.Item>
           <Nav.Link eventKey="active" onClick={() => setReservationPage({ type: "active" })}>
@@ -32,9 +35,7 @@ export default function Reservations(props) {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      {reservType === "active" && <div>active</div>}
-      {reservType === "past" && <div>past</div>}
-      {reservType === "cancelled" && <div>cancelled</div>}
+      <ReservationList reservationType={reservType} />
     </Container>
   );
 }
