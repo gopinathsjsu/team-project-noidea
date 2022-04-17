@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Nav, Container, Collapse, Fade } from "react-bootstrap";
+import { Nav, Container } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import ReservationList from "./components/ReservationList";
 import "./Reservations.css";

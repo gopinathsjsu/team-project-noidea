@@ -38,16 +38,16 @@ const CustomerMenu = (props) => {
     </>
   );
 };
-const HotelMenu = () => {
+const HotelMenu = (props) => {
   return (
     <>
       <Nav className="me-auto">
-        <Nav.Link>Reservations</Nav.Link>
-        <Nav.Link>Customers</Nav.Link>
+        <Nav.Link onClick={() => props.navigate("/hotel/stays")}>Stays</Nav.Link>
+        <Nav.Link onClick={() => props.navigate("/hotel/customers")}>Customers</Nav.Link>
         <NavDropdown title="Room Management" id="collasible-nav-dropdown">
-          <NavDropdown.Item>Rooms</NavDropdown.Item>
-          <NavDropdown.Item>Amenitites</NavDropdown.Item>
-          <NavDropdown.Item>Pricing</NavDropdown.Item>
+          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Rooms</NavDropdown.Item>
+          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Amenitites</NavDropdown.Item>
+          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Pricing</NavDropdown.Item>
         </NavDropdown>
       </Nav>
       <Nav>
