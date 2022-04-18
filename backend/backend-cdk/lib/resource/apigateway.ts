@@ -3,7 +3,7 @@ import * as apigw from "aws-cdk-lib/aws-apigateway";
 import { Function } from "aws-cdk-lib/aws-lambda";
 
 export function createRestAPI(stack: Stack, id: string) {
-    return new apigw.RestApi(stack, id, {
+    const restApi =  new apigw.RestApi(stack, id, {
         defaultCorsPreflightOptions: {
             /**
              * The allow rules are a bit relaxed.
@@ -15,4 +15,5 @@ export function createRestAPI(stack: Stack, id: string) {
             allowCredentials: true
         }
     });
+    return restApi
 }
