@@ -8,7 +8,7 @@ export function createBookingLambda(stack: Stack, functionName: string, handerPa
         runtime: lambda.Runtime.PYTHON_3_8,
         functionName: functionName,
         handler: handerPath,
-        code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions/booking')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions')),
         memorySize: 512,
         timeout: Duration.minutes(12),
         environment: environVars
@@ -21,7 +21,7 @@ export function createRoomLambda(stack: Stack, functionName: string, handerPath:
         runtime: lambda.Runtime.PYTHON_3_8,
         functionName: functionName,
         handler: handerPath,
-        code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions/room')),
+        code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions')),
         memorySize: 512,
         timeout: Duration.minutes(12),
         environment: environVars
