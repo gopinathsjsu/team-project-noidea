@@ -59,24 +59,24 @@ def reservation_handler(event, context):
     season = eventBody["season"]
     days = eventBody["days"]
 
-    # 1. get customer info from DynamoDB based on customerId
-    customerInfo = get_item_db(customerTable, "userId", customerId)
-    logger.debug("**** customerInfo ---> {}".format(customerInfo))
-    
-    # 2. get room info from DynamoDB based on RoomId
-    roomInfo = get_item_db(roomTable, "roomId", roomId)
-
-    # 3. generate Amentity based on the event && insert it to DynamoDB
-    amentity_object = Amenities(amentityInfo)
-    amentity_item = amentity_object.getAmenitiesInfo()
-
+    # 1. Retrieve customer info from DynamoDB based on customerId
     try:
-        put_item_db(amentity_item, amentityTable)
+     customerInfo = get_item_db(customerTable, "userId", customerId)
+     logger.debug("**** customerInfo ---> {}".format(customerInfo))
+    
+    # 2. Retrieve room info from DynamoDB based on RoomId
+     roomInfo = get_item_db(roomTable, "roomId", roomId)
+    
+    # 3. Generate Amentity based on the event && insert it to DynamoDB
+     amentity_object = Amenities(amentityInfo)
+     amentity_item = amentity_object.getAmenitiesInfo()
+     put_item_db(amentity_item, amentityTable)
+
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, {'message': 'Something wrong with put item to DynamoDB'})
 
-    # 4. generate Reservation && insert it to DynamoDB
+    # 4. Generate Reservation && insert it to DynamoDB
     customer = User(customerInfo["userId"], customerInfo["firstName"], customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
     room = Room(roomInfo, amentity_object)
     reservation = Reservation(startDate, endDate, season, days, room, customer)
@@ -91,7 +91,7 @@ def reservation_handler(event, context):
         logger.debug(str(e))
         return returnResponse(400, {'message': 'Something wrong with put item to DynamoDB'})
     
-    # return: reservationId
+    # Return: reservationId
     return returnResponse(200, {"reservationId" : reservation.getId()})
 
 def returnResponse(statusCode, body):
