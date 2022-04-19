@@ -1,7 +1,6 @@
 from decimal import *
 import json
 import logging
-from re import A
 import boto3
 import os
 from Loyalty import Loyalty
@@ -20,18 +19,10 @@ def lambda_handler(event, context):
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
 
-    if 'body' in eventBody:
-        eventBody = eventBody['body']
+    if 'queryStringParameters' in eventBody:
+        eventBody = eventBody['queryStringParameters']
     else:
         return returnResponse(400, {'message': 'Invalid input, no queryStringParameters'})
-    
-    if 'loyalty' not in eventBody: 
-        return returnResponse(400, {'message': 'Invalid input, no loyalty'})
-
-    if type(eventBody['loyalty']) == str:
-        eventBody['loyalty'] = json.loads(eventBody['loyalty'])
-    
-    eventBody = eventBody['loyalty']
 
     if 'loyaltyId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no loyaltyId'})

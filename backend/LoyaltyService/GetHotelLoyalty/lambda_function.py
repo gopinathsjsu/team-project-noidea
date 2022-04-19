@@ -44,7 +44,9 @@ def lambda_handler(event, context):
         l = Loyalty(item['Item']['loyaltyId'], item['Item']['ownerId'], float(item['Item']['amount']), item['Item']['sharable'], item['Item']['sharedWith'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
-    return returnResponse(200, {'loyalty': l.toDict()})
+    return returnResponse(200, {'message': 'account found',
+                                'status': 'success',
+                                'loyalty': l.toDict()})
 
 def returnResponse(statusCode, body):
     logger.debug('[RESPONSE] statusCode: {} body: {}'.format(statusCode, body))
