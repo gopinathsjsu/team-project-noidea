@@ -40,8 +40,6 @@ def lambda_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no country'})
     if 'email' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no email'})
-    if 'name' not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no name'})
     if 'userId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId. Cannot validate if admin'})
     u = getUser(eventBody['userId'])
