@@ -11,6 +11,7 @@ from classes.User import User
 from constants.Season import Season
 from constants.Days import Days
 from constants.RoomStatus import RoomStatus
+from constants.ReservationStatus import ReservationStatus
 
 class Reservation:
     def __init__(self, startDate, endDate, season, days, room: Room, customer: User) -> None:
@@ -23,6 +24,7 @@ class Reservation:
         self.room = room
         self.customer = customer
         self.orignalPrice = 0
+        self.status = ReservationStatus.UNCONFIRM.value
         self.ischeckedIn = False
         self.ischeckedOut = False
 
@@ -34,6 +36,12 @@ class Reservation:
     
     def getEndDate(self):
         return self.endDate
+
+    def getConfirm(self):
+        return self.confirm
+
+    def setStatus(self, status):
+        self.status = status
 
     def getLoyalPrice(self):
         roomPrice = self.room.getPrice()
@@ -148,7 +156,11 @@ class Reservation:
             "endDate" : self.endDate,
             "price" : self.price,
             "customerId" : self.customer.id,
-            "roomId" : self.room.id
+            "hotelId" : self.room.hotelId,
+            "roomId" : self.room.id,
+            "checkIn" : self.isCheckedIn(),
+            "checkOut" : self.isCheckedOut(),
+            "reservationStatus" : self.status
         })
 
     def getReservationInfo(self):
@@ -158,7 +170,13 @@ class Reservation:
             "endDate" : self.endDate,
             "price" : self.price,
             "customerId" : self.customer.id,
-            "roomId" : self.room.id
+            "custmoerFirstName" : self.customer.fName,
+            "custmoerLastName" : self.customer.lName,
+            "roomId" : self.room.id,
+            "hotelId" : self.room.hotelId,
+            "checkIn" : self.isCheckedIn(),
+            "checkOut" : self.isCheckedOut(),
+            "reservationStatus" : self.status
         }
 
     
