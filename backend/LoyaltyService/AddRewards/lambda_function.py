@@ -23,7 +23,7 @@ def lambda_handler(event, context):
     if 'body' in eventBody:
         eventBody = eventBody['body']
     else:
-        return returnResponse(400, {'message': 'Invalid input, no queryStringParameters'})
+        return returnResponse(400, {'message': 'Invalid input, no body'})
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
 

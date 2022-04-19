@@ -31,9 +31,10 @@ def lambda_handler(event, context):
     userId = eventBody['userId']
 
     loyaltyAccount = createLoyaltyAccount(userId)
+    if loyaltyAccount == None:
+        return returnResponse(500, {'message': 'Error creating loyalty account'})
     return returnResponse(200, {'message': 'User created',
-                               'loyaltyAccount': loyaltyAccount,
-                               'userId': userId})
+                               'loyaltyAccount': loyaltyAccount})
 
 
 def createLoyaltyAccount(userId):
@@ -51,7 +52,7 @@ def createLoyaltyAccount(userId):
         })
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
-        return returnResponse(500, {'message': 'Error uploading user'})
+        return None
     return userId
 
 def returnResponse(statusCode, body):

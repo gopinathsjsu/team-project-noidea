@@ -42,13 +42,17 @@ def lambda_handler(event, context):
     if 'userId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId. Cannot validate if admin'})
     u = getUser(eventBody['userId'])
+    if u is None:
+        return returnResponse(400, {'message': 'Invalid userId',
+                                    'status': 'error'})
     if 'Admin' not in u.role:
         return returnResponse(400, {'message': 'Invalid input, user is not an admin',
                                     'status': 'error'})
     hotel = getHotel(eventBody['hotelId'])
     if hotel is not None:
         return returnResponse(400, {'message': 'Invalid input, hotel exists, please modify instead',
-                                    'status': 'error'})
+                                    'status': 'error',
+                                    'hotel': hotel.toDict()})
     uploadHotel(eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
     hotel = getHotel(eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',
@@ -66,7 +70,7 @@ def getUser(userId):
             }
         )
         if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid userId, user does not exist'})
+            return None
         return User(userId, [item['Item']['firstName'], item['Item']['lastName']], item['Item']['email'], item['Item']['Address'], item['Item']['Country'], item['Item']['UserRoles'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])    
@@ -83,7 +87,7 @@ def getHotel(hotelId):
         )
         if 'Item' not in item:
             return None
-        return Hotel(hotelId, item['Item']['Name'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
@@ -94,7 +98,7 @@ def uploadHotel(hotelId, address, country, email, name):
         hotelTable.put_item(
             Item={
                 'hotelId': hotelId,
-                'Name': name,
+                'HotelName': name,
                 'email': email,
                 'Address': address,
                 'Country': country

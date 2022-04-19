@@ -40,8 +40,6 @@ def lambda_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no country'})
     if 'email' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no email'})
-    if 'name' not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no name'})
     if 'userId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId. Cannot validate if admin'})
     u = getUser(eventBody['userId'])
@@ -51,7 +49,8 @@ def lambda_handler(event, context):
     branch = getBranch(eventBody['branchId'], eventBody['hotelId'])
     if branch is not None:
         return returnResponse(400, {'message': 'Invalid input, hotel branch exists, please modify instead',
-                                    'status': 'error'})
+                                    'status': 'error',
+                                    'branch': branch.toDict()})
     hotel = getHotel(eventBody['hotelId'])
     if hotel is None:
         return returnResponse(400, {'message': 'Invalid input, hotel does not exist',
