@@ -26,7 +26,20 @@ def lambda_handler(event, context):
     if 'hotelId' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no hotel'})
     
+    if eventBody['hotelId'] == '-1':
+        hotels = getHotelAll()
+        if hotels == None:
+            return returnResponse(400, {'message': 'No hotels found',
+                                       'status': 'error'})
+        return returnResponse(200, {'message': '{} hotels found'.format(len(hotels)),
+                                    'status': 'success',
+                                    'hotels': hotels})
+        
     hotel = getHotel(eventBody['hotelId'])
+    if (hotel == None):
+        return returnResponse(400, {'message': 'Invalid input, hotel does not exist',
+                                    'status': 'error'})
+
     return returnResponse(200, {'message': 'hotel found',
                                 'status': 'success',
                                 'hotel': hotel.toDict()})
@@ -42,8 +55,23 @@ def getHotel(hotelId):
             }
         )
         if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid hotelId, hotel does not exist'})
-        return Hotel(hotelId, item['Item']['name'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+            return None
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+    except ClientError as e:
+        return returnResponse(400, e.response['Error']['Message'])
+
+# Should return all hotels inside of DynamoDB table
+def getHotelAll():
+    dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
+    hotelTable = dynamodb.Table(os.environ['TABLE_HOTEL'])
+    try:
+        item = hotelTable.scan(
+            ProjectionExpression = "hotelId, HotelName, email"
+        )
+        logger.debug('[DEBUG] item: {}'.format(item))
+        if 'Items' not in item:
+            return None
+        return item['Items']
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 

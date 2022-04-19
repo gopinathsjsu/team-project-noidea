@@ -51,7 +51,8 @@ def lambda_handler(event, context):
     branch = getBranch(eventBody['branchId'], eventBody['hotelId'])
     if branch is not None:
         return returnResponse(400, {'message': 'Invalid input, hotel branch exists, please modify instead',
-                                    'status': 'error'})
+                                    'status': 'error',
+                                    'branch': branch.toDict()})
     hotel = getHotel(eventBody['hotelId'])
     if hotel is None:
         return returnResponse(400, {'message': 'Invalid input, hotel does not exist',
