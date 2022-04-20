@@ -90,24 +90,7 @@ def getHotel(hotelId):
         )
         if 'Item' not in item:
             return None
-        return Hotel(hotelId, item['Item']['Name'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
-    except ClientError as e:
-        return returnResponse(400, e.response['Error']['Message'])
-
-def uploadHotel(hotelId, address, country, email, name):
-    dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
-    hotelTable = dynamodb.Table(os.environ['TABLE_HOTEL'])
-    try:
-        hotelTable.put_item(
-            Item={
-                'hotelId': hotelId,
-                'Name': name,
-                'email': email,
-                'Address': address,
-                'Country': country
-            }
-        )
-        return True
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 

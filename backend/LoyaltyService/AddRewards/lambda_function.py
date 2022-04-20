@@ -42,6 +42,8 @@ def lambda_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, invalid type'})
 
     loyalty = getLoyalty(loyaltyId)
+    if loyalty is None:
+        return returnResponse(400, {'message': 'Invalid input, loyalty not found'})
     loyalty.add(float(amount))
     updateLoyalty(loyalty)
     return returnResponse(200, {'message': 'Successfully added {} points'.format(amount),
@@ -59,7 +61,7 @@ def getLoyalty(loyaltyId):
             }
         )
         if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid loyaltyId, Loyalty does not exist'})
+            return None
         logger.debug('[LOYALTY] item: {}'.format(item))
         logger.debug('[LOYALTY] item type: {}'.format(type(item)))
         return Loyalty(item['Item']['loyaltyId'], item['Item']['ownerId'], float(item['Item']['amount']), item['Item']['sharable'], item['Item']['sharedWith'])

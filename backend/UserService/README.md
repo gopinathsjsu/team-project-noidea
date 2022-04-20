@@ -1,3 +1,5 @@
+[Endpoint](https://2va96t2eh7.execute-api.us-west-2.amazonaws.com/dev)
+
 # Login endpoint (GET) /user-login
 - Requires queries
   - Only 'userId' field
