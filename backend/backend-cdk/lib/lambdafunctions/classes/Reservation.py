@@ -160,7 +160,8 @@ class Reservation:
             "roomId" : self.room.id,
             "checkIn" : self.isCheckedIn(),
             "checkOut" : self.isCheckedOut(),
-            "reservationStatus" : self.status
+            "reservationStatus" : self.status,
+            "amenityId" : self.room.getAmenitiesId()
         })
 
     def getReservationInfo(self):
@@ -176,7 +177,8 @@ class Reservation:
             "hotelId" : self.room.hotelId,
             "checkIn" : self.isCheckedIn(),
             "checkOut" : self.isCheckedOut(),
-            "reservationStatus" : self.status
+            "reservationStatus" : self.status,
+            "amenityId" : self.room.getAmenitiesId()
         }
 
     

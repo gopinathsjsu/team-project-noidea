@@ -6,6 +6,7 @@ import hotelConfig from "./config/hotelConfig.json";
 import adminConfig from "./config/adminConfig.json";
 
 import "./FirstTimeUser.css";
+import { useNavigate } from "react-router-dom";
 
 function TextField(props) {
   return (
@@ -105,7 +106,7 @@ export default function FirstTimeUser(props) {
 
   return (
     <Modal show fullscreen>
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>{config.modalHeader}</Modal.Title>
       </Modal.Header>
       <Modal.Body>

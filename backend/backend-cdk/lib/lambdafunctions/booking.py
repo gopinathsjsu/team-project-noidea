@@ -11,6 +11,9 @@ from classes.Reservation import Reservation
 from classes.Room import Room
 from classes.User import User
 from classes.Amenities import Amenities
+from constants.NoItemError import NoitemError
+from constants.Season import Season
+from constants.Days import Days
 from constants.ReservationStatus import ReservationStatus
 from aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
 
@@ -18,11 +21,11 @@ dynamodb_client = boto3.client('dynamodb')
 region = os.environ["region"]
 reservation_table = os.environ["reservation_table"]
 room_table = os.environ["room_table"]
-amentity_table = os.environ["amentity_table"]
+amenity_table = os.environ["amenity_table"]
 
 customerTable = boto3.resource("dynamodb", region).Table("User")
 roomTable = boto3.resource("dynamodb", region).Table(room_table)
-amentityTable = boto3.resource("dynamodb", region).Table(amentity_table)
+amenityTable = boto3.resource("dynamodb", region).Table(amenity_table)
 reservationTable = boto3.resource("dynamodb", region).Table(reservation_table)
 
 def reservation_handler(event, context):
@@ -42,8 +45,6 @@ def reservation_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no customerId'})
     if "roomId" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no roomId'})
-    if "amentityInfo" not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no amentityInfo'})
     if "startDate" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no startDate'})
     if "endDate" not in eventBody:
@@ -55,32 +56,49 @@ def reservation_handler(event, context):
 
     customerId = eventBody["customerId"]
     roomId = eventBody["roomId"]
-    amentityInfo = eventBody["amentityInfo"]
     startDate = eventBody["startDate"]
     endDate = eventBody["endDate"]
     season = eventBody["season"]
     days = eventBody["days"]
 
+    if not Season.loopSeason(season):
+        return returnResponse(400, "The {} season is not valid".format(season))
+    
+    if not Days.loopDays(days):
+        return returnResponse(400, "The {} days is not valid".format(days))
+
     # 1. Retrieve customer info from DynamoDB based on customerId
     try:
      customerInfo = get_item_db(customerTable, "userId", customerId)
      logger.debug("**** customerInfo ---> {}".format(customerInfo))
-    
+
     # 2. Retrieve room info from DynamoDB based on RoomId
      roomInfo = get_item_db(roomTable, "roomId", roomId)
-    
-    # 3. Generate Amentity based on the event && insert it to DynamoDB
-     amentity_object = Amenities(amentityInfo)
-     amentity_item = amentity_object.getAmenitiesInfo()
-     put_item_db(amentity_item, amentityTable)
+     logger.debug("**** roomInfo ---> {}".format(roomInfo))
+
+    # 3. Generate amenity  
+     amenityId = roomInfo["amenitiesId"]
+     amenityInfo = get_item_db(amenityTable, "amenityId", amenityId)
+     amenityInfo_list = []
+     amenityInfo_list.append(amenityInfo["amenityId"])
+     amenityInfo_list.append(amenityInfo["dailyContinentalBreakfast"])
+     amenityInfo_list.append(amenityInfo["accesstoFinessRoom"])
+     amenityInfo_list.append(amenityInfo["accesstoSummingPool"])
+     amenityInfo_list.append(amenityInfo["accesstoJacuzzi"])
+     amenityInfo_list.append(amenityInfo["dailyParking"])
+     amenityInfo_list.append(amenityInfo["allmeals"])
+     amenity_object = Amenities(amenityInfo_list)
+
+    except NoitemError as ne:
+        return returnResponse(400, str(ne))
 
     except Exception as e:
         logger.debug(str(e))
-        return returnResponse(400, {'message': 'Something wrong with put item to DynamoDB'})
+        return returnResponse(400, {'message': 'Something wrong with get item from DynamoDB'})
 
     # 4. Generate Reservation && insert it to DynamoDB
     customer = User(customerInfo["userId"], customerInfo["firstName"], customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
-    room = Room(roomInfo, amentity_object)
+    room = Room(roomInfo, amenity_object)
     reservation = Reservation(startDate, endDate, season, days, room, customer)
     logger.debug("**** total price ---> {}".format(reservation.getTotalPrice()))
 
@@ -89,7 +107,9 @@ def reservation_handler(event, context):
     
     try:
         put_item_db(item, reservationTable)
+
     except Exception as e:
+
         logger.debug(str(e))
         return returnResponse(400, {'message': 'Something wrong with put item to DynamoDB'})
     
@@ -104,25 +124,32 @@ def retrieve_handler(event, context):
     if "reservationId" not in eventBody and "hotelId" not in eventBody and "customerId" not in eventBody:
         return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
 
-    # Retrieve reservation based on customerId
-    if "customerId" in eventBody:
-        customerId = eventBody["customerId"]
-        list_reservation = get_items_db(reservationTable, "customerId", customerId)
-        return returnResponse(200, list_reservation)
-
-    # Retrieve reservation based on hotelId
-    if "hotelId" in eventBody:
-        hotelId = eventBody["hotelId"]
-        list_reservation = get_items_db(reservationTable, "hotelId", hotelId)
-        return returnResponse(200, list_reservation)
-
+    list_reservation = []
     # Retrieve reservation based on reservationId
-    if "reservationId" in eventBody:
-        reservationId = eventBody["reservationId"]
-        reservationinfo = get_item_db(reservationTable, "reservationId", reservationId)
-        return returnResponse(200, reservationinfo)
+    try:
+        if "reservationId" in eventBody:
+            reservationId = eventBody["reservationId"]
+            reservationinfo = get_item_db(reservationTable, "reservationId", reservationId)
+            return returnResponse(200, reservationinfo)
 
-    return returnResponse(400, "Someting worng with retrieve_handler()")
+        # Retrieve reservation based on customerId
+        if "customerId" in eventBody:
+            customerId = eventBody["customerId"]
+            list_reservation = get_items_db(reservationTable, "customerId", customerId)
+        # Retrieve reservation based on hotelId
+        if "hotelId" in eventBody:
+            hotelId = eventBody["hotelId"]
+            list_reservation = get_items_db(reservationTable, "hotelId", hotelId)
+
+        if not list_reservation:
+                return returnResponse(204, list_reservation)
+
+        return returnResponse(200, list_reservation)
+    except NoitemError as ne:
+        return returnResponse(400, str(ne))
+
+    except Exception as e:
+        return returnResponse(400, str(e))
 
 def checkIn_handler(event, context):
     logger.info("**** Start checkIn service --->")

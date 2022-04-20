@@ -1,15 +1,30 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Hotel } from "./widgets/hotel/Hotel";
-import { Admin } from "./widgets/admin/Admin";
-import { Customer } from "./widgets/customer/Customer";
+import { Hotel } from "./pages/hotel/Hotel";
+import { Admin } from "./pages/admin/Admin";
+import { Customer } from "./pages/customer/Customer";
 import UnknownPage from "./components/unknownPage/UnknownPage";
-import { getContextRdx } from "./redux/context/contextSelectors";
-import FirstTimeUser from "./widgets/firstTimeUser/FirstTimeUser";
+import { getContextRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
+import FirstTimeUser from "./pages/firstTimeUser/FirstTimeUser";
 import { useEffect } from "react";
 import { initiateUserState } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
+import GlobalUIHandler from "./components/errors/GlobalUIHandler";
+
+import "./App.css";
+
+export function HomeRedirector() {
+  const userType = useSelector(getUserTypeRdx);
+
+  return (
+    <>
+      {userType === "admin" && <Navigate to="/admin" />}
+      {userType === "customer" && <Navigate to="/customer" />}
+      {userType === "hotel" && <Navigate to="/hotel" />}
+    </>
+  );
+}
 
 function App() {
   const navigate = useNavigate();
@@ -27,14 +42,17 @@ function App() {
 
   return (
     <div>
-      <NavbarWrapper userType={context.userType} />
-      <Routes>
-        <Route path="ftu" element={<FirstTimeUser />}></Route>
-        <Route path="hotel/*" element={<Hotel />}></Route>
-        <Route path="admin/*" element={<Admin />}></Route>
-        <Route path="customer/*" element={<Customer />}></Route>
-        <Route path="*" element={<UnknownPage msg="Uh-oh, we can't find what you're looking for." />}></Route>
-      </Routes>
+      <GlobalUIHandler>
+        <NavbarWrapper userType={context.userType} />
+        <Routes>
+          <Route path="/ftu" element={<FirstTimeUser />}></Route>
+          <Route path="/hotel/*" element={<Hotel />}></Route>
+          <Route path="/admin/*" element={<Admin />}></Route>
+          <Route path="/customer/*" element={<Customer />}></Route>
+          <Route path="/" element={<HomeRedirector />}></Route>
+          <Route path="*" element={<UnknownPage msg="Uh-oh, we can't find what you're looking for." />}></Route>
+        </Routes>
+      </GlobalUIHandler>
     </div>
   );
 }
