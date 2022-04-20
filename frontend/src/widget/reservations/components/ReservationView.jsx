@@ -11,6 +11,11 @@ export default function ReservationView(props) {
       <p>
         {reservs.rooms} room(s) at {reservs.hotelProperty} for {reservs.nights} night(s)
       </p>
+      <p>
+        <b>Customer</b>
+        <br />
+        {reservs.customer}
+      </p>
       <div style={{ display: "flex" }}>
         <p style={{ flex: 1 }}>
           <b>Check in</b>

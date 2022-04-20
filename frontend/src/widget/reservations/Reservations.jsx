@@ -5,12 +5,13 @@ import ReservationList from "./components/ReservationList";
 import ReservationView from "./components/ReservationView";
 import "./Reservations.css";
 
-const mockReservations = [
+export const mockReservations = [
   {
     id: "231422",
     status: "active",
     city: "San Francisco",
     hotelProperty: "Hyatt Regency at Ferry Terminal",
+    customer: "Ansel Wilfried",
     nights: "3",
     rooms: "2",
     checkin: "03/12/2019",
@@ -22,6 +23,7 @@ const mockReservations = [
     status: "active",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
+    customer: "Jasmine Stanley",
     nights: "3",
     rooms: "2",
     checkin: "04/12/2019",
@@ -33,6 +35,7 @@ const mockReservations = [
     status: "past",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
+    customer: "Jacki Toni",
     nights: "3",
     rooms: "2",
     checkin: "04/12/2019",
@@ -44,6 +47,7 @@ const mockReservations = [
     status: "cancelled",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
+    customer: "Lorna Astrid",
     nights: "3",
     rooms: "2",
     checkin: "04/12/2019",
@@ -52,7 +56,7 @@ const mockReservations = [
   }
 ];
 
-const ReserverationHome = () => {
+export const ReserverationHome = () => {
   const [reservationPage, setReservationPage] = useSearchParams();
   const reservType = reservationPage.get("type");
 

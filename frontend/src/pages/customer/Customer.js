@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { OwlStatus } from "../../components/owlStatus/owlStatus";
 import { getUserTypeRdx } from "../../redux/context/contextSelectors";
+import Reservations from "../../widget/reservations/Reservations";
 import Book from "./widgets/book/Book";
 import { ActionSuggestion } from "./widgets/book/components/BookingInput";
-import { OwlStatus } from "./widgets/loyalty/components/LoyaltyStatus";
 import Loyalty from "./widgets/loyalty/Loyalty";
-import Reservations from "./widgets/reservations/Reservations";
 
 function CustomerHome() {
   return (
