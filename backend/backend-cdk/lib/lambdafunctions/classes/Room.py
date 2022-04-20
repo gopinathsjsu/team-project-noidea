@@ -8,12 +8,12 @@ from classes.Amenities import Amenities
 
 class Room:
 
-    def __init__(self, roomInfor, amentity: Amenities) -> None:
+    def __init__(self, roomInfor, amenity: Amenities) -> None:
         self.id = roomInfor["roomId"]
         self.hotelId = roomInfor["hotelId"]
         self.price = 0
         self.roomType = roomInfor["roomType"]
-        self.amentity = amentity
+        self.amenity = amenity
 
     def getId(self):
         return self.id
@@ -22,22 +22,16 @@ class Room:
         return self.hotelId
 
     def getAmenitiesId(self):
-        return self.amenitiesId
+        return self.amenity.getId()
 
     def getType(self):
         return self.roomType
-    
-    def setStatus(self, roomstatus) :
-        self.roomStatus = roomstatus
 
-    def geStatus(self):
-        return self.roomStatus
-
-    def setAmentity(self, amentity):
-        self.amentity = amentity
+    def setAmenity(self, amenity):
+        self.amenity = amenity
     
-    def getAmentity(self):
-        return self.amentity
+    def getAmenity(self):
+        return self.amenity
 
     def getPrice(self):
         if (self.roomType == RoomType.SINGLE.value):
@@ -64,16 +58,14 @@ class Room:
         return json.dumps({
             "roomId" : self.id,
             "hotelId" : self.hotelId,
-            "amenitiesId" : self.amentity.id,
-            "roomType" : self.roomType,
-            "roomStatus" : self.roomStatus
+            "amenitiesId" : self.getAmenitiesId(),
+            "roomType" : self.roomType
         })
 
     def getRoomInfo(self):
         return {
             "roomId" : self.id,
             "hotelId" : self.hotelId,
-            "amenitiesId" : self.amentity.id,
-            "roomType" : self.roomType,
-            "roomStatus" : self.roomStatus
+            "amenitiesId" : self.getAmenitiesId(),
+            "roomType" : self.roomType
         }

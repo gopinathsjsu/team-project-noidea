@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 from boto3.dynamodb.conditions import Key, Attr
+from constants.NoItemError import NoitemError
 
 def put_item_db(item, table):
 
@@ -16,14 +17,19 @@ def get_item_db(table, PK, pk_value):
         }
     )
     logger.debug("Response from get_item_db {}".format(response))
-    return response['Item']
+    if 'Item' in response:
+        return response['Item']
+    else:
+        raise NoitemError(pk_value, table)
 
 def get_items_db(table, arrtibute, arrtvalue):
     response = table.scan(
         FilterExpression=Attr(arrtibute).contains(arrtvalue)
     )
-    data = response['Items']
-    return data
+    if 'Items' in response:
+        return response['Items']
+    else:
+        raise NoitemError(arrtvalue, table)
 
 def update_item_db(table, primary_key, primary_val, attr, update):
     table.update_item(

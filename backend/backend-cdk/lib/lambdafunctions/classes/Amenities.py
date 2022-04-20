@@ -3,13 +3,13 @@ import json
 
 class Amenities:
     def __init__(self, list_info: list) -> None:
-        self.id = str(uuid.uuid4())
-        self.daily_con_breakfast = list_info[0]
-        self.acces_fitness_Room = list_info[1]
-        self.access_swimming_pool = list_info[2]
-        self.access_jacuzzi = list_info[3]
-        self.daily_parking = list_info[4]
-        self.allmeals = list_info[5]
+        self.id = list_info[0]
+        self.daily_con_breakfast = list_info[1]
+        self.acces_fitness_Room = list_info[2]
+        self.access_swimming_pool = list_info[3]
+        self.access_jacuzzi = list_info[4]
+        self.daily_parking = list_info[5]
+        self.allmeals = list_info[6]
 
     def getId(self):
         return self.id
@@ -52,7 +52,7 @@ class Amenities:
 
     def getAmenitiesInfoJson(self):
         return json.dumps({
-            "amentityId" : self.id,
+            "amenityId" : self.id,
             "dailyContinentalBreakfast" : self.daily_con_breakfast,
             "accesstoFinessRoom" : self.acces_fitness_Room,
             "accesstoSummingPool" : self.access_swimming_pool,
@@ -63,7 +63,7 @@ class Amenities:
 
     def getAmenitiesInfo(self):
         return {
-            "amentityId" : self.id,
+            "amenityId" : self.id,
             "dailyContinentalBreakfast" : self.daily_con_breakfast,
             "accesstoFinessRoom" : self.acces_fitness_Room,
             "accesstoSummingPool" : self.access_swimming_pool,
