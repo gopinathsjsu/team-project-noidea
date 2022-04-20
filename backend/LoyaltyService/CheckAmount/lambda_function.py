@@ -1,7 +1,6 @@
 from decimal import *
 import json
 import logging
-from re import A
 import boto3
 import os
 from Loyalty import Loyalty
@@ -20,18 +19,10 @@ def lambda_handler(event, context):
     if type(eventBody) == str:
         eventBody = json.loads(eventBody)
 
-    if 'body' in eventBody:
-        eventBody = eventBody['body']
+    if 'queryStringParameters' in eventBody:
+        eventBody = eventBody['queryStringParameters']
     else:
         return returnResponse(400, {'message': 'Invalid input, no queryStringParameters'})
-    
-    if 'loyalty' not in eventBody: 
-        return returnResponse(400, {'message': 'Invalid input, no loyalty'})
-
-    if type(eventBody['loyalty']) == str:
-        eventBody['loyalty'] = json.loads(eventBody['loyalty'])
-    
-    eventBody = eventBody['loyalty']
 
     if 'loyaltyId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no loyaltyId'})
@@ -40,6 +31,9 @@ def lambda_handler(event, context):
     loyaltyId = eventBody['loyaltyId']
     amount = eventBody['amount']
 
+    if not validateInputs({'loyaltyId': loyaltyId, 'amount': amount}):
+        return returnResponse(400, {'message': 'Invalid input, invalid type'})
+
     loyalty = getLoyalty(loyaltyId)
     if not loyalty.canRedeem(amount):
         logger.debug("[ERROR] Not enough points for {}\nRequested: {} Has: {}".format(loyaltyId, amount, loyalty.amount))
@@ -47,6 +41,7 @@ def lambda_handler(event, context):
                                    'loyaltyId': loyaltyId,})
     else:
         return returnResponse(200, {'message': '{} has enough points'.format(loyaltyId),
+                                    'loyaltyId': loyaltyId,
                                     'points': float(loyalty.amount),
                                     'status': 'OK'})
 
@@ -85,3 +80,10 @@ def returnResponse(statusCode, body):
             'Content-Type': 'application/json'
         }
     }
+
+def validateInputs(arr):
+    if type(arr['loyaltyId']) != str:
+        return False
+    if type(arr['amount']) != float and type(arr['amount']) != int:
+        return False
+    return True

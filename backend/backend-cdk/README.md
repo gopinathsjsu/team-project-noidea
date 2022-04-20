@@ -4,6 +4,10 @@ This is a blank project for TypeScript development with CDK.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+# Please go to the lib/lambdafunctions for more details of code implementation
+* Booking service
+
+* Room service
 ## Useful commands
 
 * `npm run build`   compile typescript to js
