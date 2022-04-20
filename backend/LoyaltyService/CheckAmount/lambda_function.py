@@ -29,12 +29,14 @@ def lambda_handler(event, context):
     if 'amount' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no amount'})
     loyaltyId = eventBody['loyaltyId']
-    amount = eventBody['amount']
+    amount = float(eventBody['amount'])
 
     if not validateInputs({'loyaltyId': loyaltyId, 'amount': amount}):
         return returnResponse(400, {'message': 'Invalid input, invalid type'})
 
     loyalty = getLoyalty(loyaltyId)
+    if loyalty == None:
+        return returnResponse(404, {'message': 'Loyalty not found'})
     if not loyalty.canRedeem(amount):
         logger.debug("[ERROR] Not enough points for {}\nRequested: {} Has: {}".format(loyaltyId, amount, loyalty.amount))
         return returnResponse(400, {'message': 'Not enough points',
@@ -56,7 +58,7 @@ def getLoyalty(loyaltyId):
             }
         )
         if 'Item' not in item:
-            return returnResponse(400, {'message': 'Invalid loyaltyId, Loyalty does not exist'})
+            return None
         logger.debug('[LOYALTY] item: {}'.format(item))
         logger.debug('[LOYALTY] item type: {}'.format(type(item)))
         return Loyalty(item['Item']['loyaltyId'], item['Item']['ownerId'], float(item['Item']['amount']), item['Item']['sharable'], item['Item']['sharedWith'])

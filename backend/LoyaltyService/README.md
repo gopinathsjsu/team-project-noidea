@@ -1,3 +1,5 @@
+[Endpoint](https://dmtt6rt1c9.execute-api.us-west-2.amazonaws.com/dev)
+
 # CheckAmount endpoint (GET) /balance
 - Requires queries
   - loyaltyId: String

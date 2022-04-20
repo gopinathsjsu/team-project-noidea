@@ -1,3 +1,5 @@
+[Endpoint](https://2pai97g6d5.execute-api.us-west-2.amazonaws.com/dev)
+
 # Register hotel endpoint (POST) /hotel-register
 - Requires body only (all fields required)
   - hotel object
@@ -21,13 +23,13 @@
 - Ex.
     {'hotel': {'hotelId': 'hotel001', 'name': Hilton, 'address': '1234 A St.', 'country': 'USA', 'email': 'hotel001@gmail.com'}}
 
-# Get Hotel endpoint (GET) /get-hotel
+# Get Hotel endpoint (GET) /hotel-get
 - Requires queries
   - 'hotelId' field
     - If 'hotelId' = '-1', then it will return a list of all hotels in the table
 - Returns the object of the requested hotel
 
-# Register branch endpoint (POST) /branch-register
+# Register branch endpoint (POST) /branch-create
 - Requires body only (all fields required)
   - hotel object
     - userId: String
@@ -50,7 +52,7 @@
 - Ex.
     {'branch': {'branchId': 'branch001', 'address': '1234 A St.', 'country': 'USA', 'email': 'hotel001branch001@gmail.com'}}
 
-# Get Branch endpoint (GET) /get-branch
+# Get Branch endpoint (GET) /branch-get
 - Requires queries
   - 'hotelId' field
   - 'branchId' field
