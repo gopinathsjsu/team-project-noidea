@@ -10,9 +10,7 @@ export default function ReservationList(props) {
         reservations
           .filter((reservs) => reservs.status === reservationType)
           .map((reservs) => (
-            <div
-              className="listed-item-container"
-              onClick={() => navigate(`/customer/stays/${reservs.id}`, { state: { ...reservs } })}>
+            <div className="listed-item-container" onClick={() => navigate(`${reservs.id}`, { state: { ...reservs } })}>
               <h5>Trip to at {reservs.city}</h5>
               <p style={{ marginBottom: 0 }}>
                 {reservs.rooms} room(s) at {reservs.hotelProperty} for {reservs.nights} night(s) between{" "}
