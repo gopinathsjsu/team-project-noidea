@@ -35,7 +35,7 @@ function App() {
     dispatch(
       initiateUserState({
         userId: "bfkwong_admin",
-        userType: "hotel"
+        userType: "customer"
       })
     );
   }, [navigate, dispatch]);

@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { Nav, Container } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { Route, Routes, useSearchParams } from "react-router-dom";
 import ReservationList from "./components/ReservationList";
+import ReservationView from "./components/ReservationView";
 import "./Reservations.css";
 
 const mockReservations = [
   {
+    id: "231422",
     status: "active",
     city: "San Francisco",
     hotelProperty: "Hyatt Regency at Ferry Terminal",
@@ -16,6 +18,7 @@ const mockReservations = [
     totalPrice: "$2031.43"
   },
   {
+    id: "2314223423",
     status: "active",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
@@ -26,6 +29,7 @@ const mockReservations = [
     totalPrice: "$2031.43"
   },
   {
+    id: "2314226433",
     status: "past",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
@@ -36,6 +40,7 @@ const mockReservations = [
     totalPrice: "$2031.43"
   },
   {
+    id: "3525231",
     status: "cancelled",
     city: "Los Angeles",
     hotelProperty: "San Gabriel Sheraton",
@@ -47,7 +52,7 @@ const mockReservations = [
   }
 ];
 
-export default function Reservations() {
+const ReserverationHome = () => {
   const [reservationPage, setReservationPage] = useSearchParams();
   const reservType = reservationPage.get("type");
 
@@ -61,7 +66,7 @@ export default function Reservations() {
   return (
     <Container className="reservation-container" style={{ maxWidth: 700 }}>
       <h3>Reservations</h3>
-      <Nav fill variant="tabs" activeKey={reservType} style={{ marginTop: 30 }}>
+      <Nav fill variant="pills" activeKey={reservType} style={{ marginTop: 30 }}>
         <Nav.Item>
           <Nav.Link eventKey="active" onClick={() => setReservationPage({ type: "active" })}>
             Active
@@ -80,5 +85,14 @@ export default function Reservations() {
       </Nav>
       <ReservationList reservationType={reservType} reservations={mockReservations} />
     </Container>
+  );
+};
+
+export default function Reservations() {
+  return (
+    <Routes>
+      <Route index element={<ReserverationHome />}></Route>
+      <Route path="/:stayId" element={<ReservationView />}></Route>
+    </Routes>
   );
 }

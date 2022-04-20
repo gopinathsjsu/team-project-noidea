@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Collapse, Container } from "react-bootstrap";
+import { Route, Routes } from "react-router-dom";
 import BookingInput from "./components/BookingInput";
 import BookingList from "./components/BookingList";
+import BookingRoom from "./components/BookingRoom";
 
 export default function Book(props) {
   const [hotels, setHotels] = useState([]);
   const [bookingParam, setBookingParam] = useState({});
 
-  return (
-    <Container style={{ marginTop: 20, maxWidth: 700 }}>
+  const BookBody = () => (
+    <Container style={{ marginTop: 20, maxWidth: 700, marginBottom: 150 }}>
       <h3>Book a stay</h3>
       <div style={{ marginTop: 30 }}>
         <Collapse in={hotels.length === 0}>
@@ -29,5 +31,12 @@ export default function Book(props) {
         </Collapse>
       </div>
     </Container>
+  );
+
+  return (
+    <Routes>
+      <Route index element={<BookBody />}></Route>
+      <Route path="/new" element={<BookingRoom />}></Route>
+    </Routes>
   );
 }
