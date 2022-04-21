@@ -45,9 +45,8 @@ const HotelMenu = (props) => {
         <Nav.Link onClick={() => props.navigate("/hotel/stays")}>Stays</Nav.Link>
         <Nav.Link onClick={() => props.navigate("/hotel/customers")}>Customers</Nav.Link>
         <NavDropdown title="Room Management" id="collasible-nav-dropdown">
-          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Rooms</NavDropdown.Item>
-          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Amenitites</NavDropdown.Item>
-          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt")}>Pricing</NavDropdown.Item>
+          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt/rooms")}>Rooms</NavDropdown.Item>
+          <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt/amenities")}>Amenitites</NavDropdown.Item>
         </NavDropdown>
       </Nav>
       <Nav>

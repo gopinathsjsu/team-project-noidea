@@ -65,7 +65,7 @@ function RoomOptionSelector(props) {
             }
             onClick={() => setFields((fls) => ({ ...fls, roomType: "double_queen" }))}>
             <h6>Double Queen</h6>
-            <p>Room 2 queen beds with basic view and amenities.</p>
+            <p>Room with 2 queen beds with basic view and amenities.</p>
           </div>
         </Col>
         <Col xs={12} sm={4}>

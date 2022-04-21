@@ -5,12 +5,14 @@ const customers = [
   {
     id: "3423523",
     name: "Ansel Wilfried",
-    loyaltyStatus: "Boreal Owl"
+    loyaltyStatus: "Boreal Owl",
+    phone: "(632) 532-1251"
   },
   {
     id: "4634135",
     name: "Jasmine Stanley",
-    loyaltyStatus: "Elf Owl"
+    loyaltyStatus: "Elf Owl",
+    phone: "(632) 532-1251"
   }
 ];
 
@@ -23,7 +25,14 @@ function CustomerList(props) {
       {customers.map((cust) => (
         <div className="skinny-item-container" onClick={() => navigate(cust.id, { state: { ...cust } })}>
           <h6>{cust.name}</h6>
-          <p>{cust.loyaltyStatus}</p>
+          <p className="no-margin">
+            <b>Tel: </b>
+            {cust.phone}
+          </p>
+          <p>
+            <b>Loyalty status: </b>
+            {cust.loyaltyStatus}
+          </p>
         </div>
       ))}
     </div>
