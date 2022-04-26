@@ -1,6 +1,6 @@
 {
   "modalHeader": "User registration",
-  "submissionText": "Submit and continue",
+  "submissionText": "Let's get started",
   "termsAndConditions": [
     "You agree to Hootel's terms of service",
     "You understand and consent to Hootel's privacy policy"
@@ -9,12 +9,17 @@
     "firstName",
     "lastName",
     "phoneNumber",
+    "email",
     "dobMonth",
     "dobDate",
     "dobYear",
     "ccNumber",
     "ccExpDate",
-    "ccZipcode"
+    "ccZipcode",
+    "addrStreet",
+    "addrCity",
+    "addrState",
+    "addrZipcode"
   ],
   "accordions": [
     {
@@ -40,12 +45,17 @@
               "colSizeXS": 12,
               "placeholder": "XXX-XXX-XXXX",
               "label": "Phone number"
+            },
+            {
+              "fieldId": "email",
+              "colSizeXS": 12,
+              "placeholder": "email@email.com",
+              "label": "Email address"
             }
           ]
         },
         {
           "subtitle": "Date of birth",
-          "nextCTA": "Finish",
           "fields": [
             {
               "fieldId": "dobMonth",
@@ -64,6 +74,36 @@
               "colSizeXS": 4,
               "placeholder": "YYYY",
               "label": "Year"
+            }
+          ]
+        },
+        {
+          "subtitle": "Address",
+          "nextCTA": "Finish",
+          "fields": [
+            {
+              "fieldId": "addrStreet",
+              "colSizeXS": 12,
+              "placeholder": "1234 San Jose St.",
+              "label": "Street"
+            },
+            {
+              "fieldId": "addrCity",
+              "colSizeXS": 4,
+              "placeholder": "Santa Clara",
+              "label": "City"
+            },
+            {
+              "fieldId": "addrState",
+              "colSizeXS": 4,
+              "placeholder": "CA",
+              "label": "State"
+            },
+            {
+              "fieldId": "addrZipcode",
+              "colSizeXS": 4,
+              "placeholder": "94618",
+              "label": "Zipcode"
             }
           ]
         }

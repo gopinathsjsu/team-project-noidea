@@ -1,53 +1,77 @@
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Hotel } from "./pages/hotel/Hotel";
-import { Admin } from "./pages/admin/Admin";
 import { Customer } from "./pages/customer/Customer";
 import UnknownPage from "./components/unknownPage/UnknownPage";
-import { getContextRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
+import { getUserDataRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
 import FirstTimeUser from "./pages/firstTimeUser/FirstTimeUser";
 import { useEffect } from "react";
-import { initiateUserState } from "./redux/context/contextSlice";
+import { setUserData, updateUserId } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
 import GlobalUIHandler from "./components/errors/GlobalUIHandler";
 
 import "./App.css";
+import { Auth } from "aws-amplify";
+import UserServiceUtil from "./util/userServiceUtil";
+import { setGlobalLoad, triggerMessage } from "./redux/globalUI/globalUISlice";
 
 export function HomeRedirector() {
   const userType = useSelector(getUserTypeRdx);
 
-  return (
-    <>
-      {userType === "admin" && <Navigate to="/admin" />}
-      {userType === "customer" && <Navigate to="/customer" />}
-      {userType === "hotel" && <Navigate to="/hotel" />}
-    </>
-  );
+  const determinePath = () => {
+    if (userType === "hotel") {
+      return <Navigate to="/hotel" />;
+    } else if (userType === "customer") {
+      return <Navigate to="/customer" />;
+    } else {
+      return <Navigate to="/unknownUser" />;
+    }
+  };
+
+  return <>{determinePath()}</>;
 }
 
 function App() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const context = useSelector(getContextRdx);
+  const userType = useSelector(getUserTypeRdx);
+  const userData = useSelector(getUserDataRdx);
 
   useEffect(() => {
-    dispatch(
-      initiateUserState({
-        userId: "bfkwong_admin",
-        userType: "hotel"
-      })
-    );
-  }, [navigate, dispatch]);
+    (async () => {
+      // Show full page spinner
+      dispatch(setGlobalLoad(true));
+
+      const cogUserId = await Auth.currentSession();
+      const userId = cogUserId?.idToken?.payload["cognito:username"];
+      if (userId) {
+        dispatch(updateUserId({ userId }));
+        const userInfoResp = await UserServiceUtil.getUserInfo(userId);
+        if (userInfoResp?.user?.userId && userInfoResp?.user?.role) {
+          dispatch(setUserData(userInfoResp.user));
+        } else {
+          dispatch(setUserData({}));
+        }
+      } else {
+        dispatch(triggerMessage({ errorType: "FATAL_ERROR" }));
+      }
+
+      // Hide full page spinner
+      dispatch(setGlobalLoad(false));
+    })();
+  }, [dispatch]);
+
+  if (!userData) {
+    return <div />;
+  }
 
   return (
     <div>
       <GlobalUIHandler>
-        <NavbarWrapper userType={context.userType} />
+        <NavbarWrapper userType={userType} />
         <Routes>
           <Route path="/ftu" element={<FirstTimeUser />}></Route>
           <Route path="/hotel/*" element={<Hotel />}></Route>
-          <Route path="/admin/*" element={<Admin />}></Route>
           <Route path="/customer/*" element={<Customer />}></Route>
           <Route path="/" element={<HomeRedirector />}></Route>
           <Route path="*" element={<UnknownPage msg="Uh-oh, we can't find what you're looking for." />}></Route>

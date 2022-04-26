@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { getUserTypeRdx } from "../../redux/context/contextSelectors";
+import { getUserDataRdx, getUserTypeRdx } from "../../redux/context/contextSelectors";
 import Reservations from "../../widget/reservations/Reservations";
 import Customer from "./widgets/customer/Customer";
 import RoomMgmt from "./widgets/roomMgmt/RoomMgmt";

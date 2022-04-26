@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userId: null,
-  userType: null
+  userType: "hotel",
+  userData: null
 };
 
 export const contextSlice = createSlice({
@@ -16,12 +17,18 @@ export const contextSlice = createSlice({
     updateUserType: (state, action) => {
       state.userType = action.payload.userType;
     },
+    updateUserId: (state, action) => {
+      state.userId = action.payload.userId;
+    },
     clearContext: (state) => {
       state = initialState;
+    },
+    setUserData: (state, action) => {
+      state.userData = action.payload;
     }
   }
 });
 
-export const { initiateUserState, updateUserType, clearContext } = contextSlice.actions;
+export const { initiateUserState, updateUserType, clearContext, updateUserId, setUserData } = contextSlice.actions;
 
 export default contextSlice.reducer;

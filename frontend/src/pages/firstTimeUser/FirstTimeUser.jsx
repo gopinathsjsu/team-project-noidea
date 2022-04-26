@@ -6,7 +6,11 @@ import hotelConfig from "./config/hotelConfig.json";
 import adminConfig from "./config/adminConfig.json";
 
 import "./FirstTimeUser.css";
-import { useNavigate } from "react-router-dom";
+import UserServiceUtil from "../../util/userServiceUtil";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDataRdx, getUserIdRdx } from "../../redux/context/contextSelectors";
+import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function TextField(props) {
   return (
@@ -20,7 +24,10 @@ function TextField(props) {
 
 export function AccordionLayout(props) {
   const { config, fields, updateFields } = props;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [activeKey, setActiveKey] = React.useState(0);
+  const userId = useSelector(getUserIdRdx);
 
   return (
     <Container fluid="sm">
@@ -81,7 +88,36 @@ export function AccordionLayout(props) {
           </div>
         </Form>
         <Col>
-          <Button disabled={config.mandatoryFields.find((fieldId) => fields[fieldId] === undefined)}>
+          <Button
+            disabled={config.mandatoryFields.find((fieldId) => fields[fieldId] === undefined)}
+            onClick={async () => {
+              dispatch(setGlobalLoad(true));
+              const response = await UserServiceUtil.registerUserInfo(userId, {
+                name: [fields.firstName, fields.lastName],
+                email: fields.email,
+                address: `${fields.addrStreet}, ${fields.addrCity}, ${fields.addrState} ${fields.addrZipcode}`,
+                country: "USA"
+              });
+              if (response.error) {
+                dispatch(
+                  triggerMessage({
+                    errorType: "TOAST_ERROR",
+                    title: "Sorry, we weren't able to register you",
+                    body: "Try again in a few minutes, if this keeps occuring, please reach out to us"
+                  })
+                );
+              } else {
+                dispatch(
+                  triggerMessage({
+                    errorType: "TOAST_SUCCESS",
+                    title: "You've been successfully registered!",
+                    body: "Time to travel more than Karl Malone."
+                  })
+                );
+                navigate("/");
+              }
+              dispatch(setGlobalLoad(false));
+            }}>
             {config.submissionText}
           </Button>
         </Col>
@@ -98,6 +134,7 @@ const configMapper = {
 
 export default function FirstTimeUser(props) {
   const [fields, setFields] = React.useState({});
+
   const config = configMapper.customer;
 
   const updateFields = React.useCallback((fieldId, fieldValue) => {

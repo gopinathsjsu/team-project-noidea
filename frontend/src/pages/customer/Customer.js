@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { OwlStatus } from "../../components/owlStatus/owlStatus";
-import { getUserTypeRdx } from "../../redux/context/contextSelectors";
+import { getUserDataRdx, getUserTypeRdx } from "../../redux/context/contextSelectors";
 import Reservations from "../../widget/reservations/Reservations";
 import Book from "./widgets/book/Book";
 import { ActionSuggestion } from "./widgets/book/components/BookingInput";
