@@ -54,7 +54,7 @@ def getCreditCard(userId):
     try:
         response = table.get_item(
             Key={
-                'userId': userId
+                'ownerId': userId
             }
         )
         if 'Item' not in response:
