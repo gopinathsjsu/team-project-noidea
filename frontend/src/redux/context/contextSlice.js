@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userId: null,
-  userType: "hotel",
+  userType: null,
   userData: null
 };
 

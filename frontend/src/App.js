@@ -7,7 +7,7 @@ import UnknownPage from "./components/unknownPage/UnknownPage";
 import { getUserDataRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
 import FirstTimeUser from "./pages/firstTimeUser/FirstTimeUser";
 import { useEffect } from "react";
-import { setUserData, updateUserId } from "./redux/context/contextSlice";
+import { setUserData, updateUserId, updateUserType } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
 import GlobalUIHandler from "./components/errors/GlobalUIHandler";
 
@@ -48,7 +48,11 @@ function App() {
         dispatch(updateUserId({ userId }));
         const userInfoResp = await UserServiceUtil.getUserInfo(userId);
         if (userInfoResp?.user?.userId && userInfoResp?.user?.role) {
-          dispatch(setUserData(userInfoResp.user));
+          if (userInfoResp?.user?.role?.length === 1) {
+            const userType = userInfoResp?.user?.role[0].toLowerCase && userInfoResp?.user?.role[0].toLowerCase();
+            dispatch(updateUserType({ userType }));
+            dispatch(setUserData(userInfoResp.user));
+          }
         } else {
           dispatch(setUserData({}));
         }
