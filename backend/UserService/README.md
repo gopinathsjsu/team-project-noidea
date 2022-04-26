@@ -17,7 +17,11 @@
     - country: String
     - roles: List [User, Customer, Admin]
       - User role is required. It's the base role that everyone will be based off of
-- Returns the user object
+  - card object
+    - number: String
+    - cvv: String
+    - expDate: String
+- Returns the user object and card object
 - Ex.
     {'user': {'userId': 'user001', 'name': ['first', 'last'], 'email': 'test1@gmail.com', 'address': '1234 A St.', 'country': 'USA', 'roles': ['User', 'Customer', 'Admin']}}
 
