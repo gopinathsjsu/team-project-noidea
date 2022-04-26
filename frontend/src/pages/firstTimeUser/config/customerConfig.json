@@ -15,7 +15,7 @@
     "dobYear",
     "ccNumber",
     "ccExpDate",
-    "ccZipcode",
+    "ccCVV",
     "addrStreet",
     "addrCity",
     "addrState",
@@ -129,11 +129,11 @@
           "placeholder": "MM/YYYY"
         },
         {
-          "fieldId": "ccZipcode",
+          "fieldId": "ccCVV",
           "colSizeXS": 6,
           "colSizeMD": 3,
-          "label": "Zip code",
-          "placeholder": "XXXXX"
+          "label": "CVV",
+          "placeholder": "XXX"
         }
       ]
     }

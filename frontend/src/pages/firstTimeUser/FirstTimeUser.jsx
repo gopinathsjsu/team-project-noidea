@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Container, Accordion, Row, Col, Modal, Button } from "react-bootstrap";
 
 import customerConfig from "./config/customerConfig.json";
@@ -10,7 +10,8 @@ import UserServiceUtil from "../../util/userServiceUtil";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDataRdx, getUserIdRdx } from "../../redux/context/contextSelectors";
 import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { setUserData } from "../../redux/context/contextSlice";
 
 function TextField(props) {
   return (
@@ -96,9 +97,13 @@ export function AccordionLayout(props) {
                 name: [fields.firstName, fields.lastName],
                 email: fields.email,
                 address: `${fields.addrStreet}, ${fields.addrCity}, ${fields.addrState} ${fields.addrZipcode}`,
-                country: "USA"
+                country: "USA",
+                cardNumber: fields.ccNumber,
+                cardCVV: fields.ccCVV,
+                cardExpDate: fields.ccExpDate
               });
-              if (response.error) {
+              const userInfoResp = await UserServiceUtil.getUserInfo(userId);
+              if (response.error || userInfoResp.error) {
                 dispatch(
                   triggerMessage({
                     errorType: "TOAST_ERROR",
@@ -106,17 +111,21 @@ export function AccordionLayout(props) {
                     body: "Try again in a few minutes, if this keeps occuring, please reach out to us"
                   })
                 );
+                dispatch(setGlobalLoad(false));
               } else {
-                dispatch(
-                  triggerMessage({
-                    errorType: "TOAST_SUCCESS",
-                    title: "You've been successfully registered!",
-                    body: "Time to travel more than Karl Malone."
-                  })
-                );
-                navigate("/");
+                dispatch(setUserData(userInfoResp.user));
+                setTimeout(() => {
+                  dispatch(
+                    triggerMessage({
+                      errorType: "TOAST_SUCCESS",
+                      title: "You've been successfully registered!",
+                      body: "Time to travel more than Karl Malone."
+                    })
+                  );
+                  navigate("/");
+                  dispatch(setGlobalLoad(false));
+                }, 500);
               }
-              dispatch(setGlobalLoad(false));
             }}>
             {config.submissionText}
           </Button>
@@ -134,8 +143,16 @@ const configMapper = {
 
 export default function FirstTimeUser(props) {
   const [fields, setFields] = React.useState({});
+  const userData = useSelector(getUserDataRdx);
+  const navigate = useNavigate();
 
   const config = configMapper.customer;
+
+  useEffect(() => {
+    if (userData?.userId) {
+      navigate("/");
+    }
+  }, [navigate, userData]);
 
   const updateFields = React.useCallback((fieldId, fieldValue) => {
     setFields((fields) => ({ ...fields, [fieldId]: fieldValue }));

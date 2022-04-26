@@ -29,6 +29,11 @@ export default class UserServiceUtil {
           address: userPayload.address,
           country: userPayload.country,
           roles: ["Customer"]
+        },
+        card: {
+          number: userPayload.cardNumber,
+          cvv: userPayload.cardCVV,
+          expDate: userPayload.cardExpDate
         }
       });
 

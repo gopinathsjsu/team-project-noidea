@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { OwlStatus } from "../../components/owlStatus/owlStatus";
 import { getUserDataRdx, getUserTypeRdx } from "../../redux/context/contextSelectors";
 import Reservations from "../../widget/reservations/Reservations";
@@ -24,13 +24,17 @@ function CustomerHome() {
 
 export function Customer() {
   const userType = useSelector(getUserTypeRdx);
+  const userData = useSelector(getUserDataRdx);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (userType && userType !== "customer") {
       navigate(`/${userType}`);
     }
-  }, [userType, navigate]);
+    if (userData && !userData.userId) {
+      navigate("/ftu");
+    }
+  }, [userType, navigate, userData]);
 
   return (
     <div>

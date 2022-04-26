@@ -97,7 +97,7 @@ export default function GlobalUIHandler(props) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 100
+            zIndex: 10000
           }}>
           <Spinner animation="border" variant="primary" />
         </div>

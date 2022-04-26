@@ -3,8 +3,6 @@ import { Auth } from "aws-amplify";
 
 import "./NavbarWrapper.css";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getUserDataRdx } from "../../redux/context/contextSelectors";
 
 const userTypeText = {
   admin: "Admin",
@@ -13,8 +11,6 @@ const userTypeText = {
 };
 
 const CustomerMenu = (props) => {
-  const userData = useSelector(getUserDataRdx);
-
   return (
     <>
       <Nav className="me-auto">
@@ -23,11 +19,6 @@ const CustomerMenu = (props) => {
         <Nav.Link onClick={() => props.navigate("/customer/loyalty")}>Loyalty</Nav.Link>
       </Nav>
       <Nav>
-        <Nav.Link>
-          <span style={{ textDecoration: "underline" }}>
-            {userData?.fName} {userData?.lName}
-          </span>
-        </Nav.Link>
         <NavDropdown title="Account" id="collasible-nav-dropdown">
           <NavDropdown.Item>Personal Info</NavDropdown.Item>
           <NavDropdown.Item>Payment</NavDropdown.Item>

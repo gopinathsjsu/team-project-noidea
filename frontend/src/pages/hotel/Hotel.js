@@ -9,13 +9,17 @@ import RoomMgmt from "./widgets/roomMgmt/RoomMgmt";
 
 export function Hotel() {
   const userType = useSelector(getUserTypeRdx);
+  const userData = useSelector(getUserDataRdx);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (userType && userType !== "hotel") {
       navigate(`/${userType}`);
     }
-  }, [userType, navigate]);
+    if (userData && !userData.userId) {
+      navigate("/ftu");
+    }
+  }, [userType, navigate, userData]);
 
   return (
     <div>
