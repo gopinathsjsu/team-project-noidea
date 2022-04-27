@@ -11,10 +11,16 @@ from classes.Reservation import Reservation
 from classes.Room import Room
 from classes.User import User
 from classes.Amenities import Amenities
+
 from constants.NoItemError import NoitemError
 from constants.Season import Season
 from constants.Days import Days
 from constants.ReservationStatus import ReservationStatus
+
+from DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
+from DAOimpl.ReservationDAOimpl import ReservationDAOimpl
+from DAOimpl.RoomDAOimpl import RoomDAOimpl
+
 from aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
 
 dynamodb_client = boto3.client('dynamodb')
@@ -28,6 +34,9 @@ roomTable = boto3.resource("dynamodb", region).Table(room_table)
 amenityTable = boto3.resource("dynamodb", region).Table(amenity_table)
 reservationTable = boto3.resource("dynamodb", region).Table(reservation_table)
 
+amenitiesDAOimpl = AmenitiesDAOimpl()
+reservationDAOimpl = ReservationDAOimpl()
+roomDAOimpl = RoomDAOimpl()
 def reservation_handler(event, context):
     # TODO implement
     logger.info("**** Start booking service --->")
@@ -73,28 +82,20 @@ def reservation_handler(event, context):
      logger.debug("**** customerInfo ---> {}".format(customerInfo))
 
     # 2. Retrieve room info from DynamoDB based on RoomId
-     roomInfo = get_item_db(roomTable, "roomId", roomId)
+     roomInfo = roomDAOimpl.getRoom(roomId)
      logger.debug("**** roomInfo ---> {}".format(roomInfo))
 
     # 3. Generate amenity  
-     amenityId = roomInfo["amenitiesId"]
-     amenityInfo = get_item_db(amenityTable, "amenityId", amenityId)
-     amenityInfo_list = []
-     amenityInfo_list.append(amenityInfo["amenityId"])
-     amenityInfo_list.append(amenityInfo["dailyContinentalBreakfast"])
-     amenityInfo_list.append(amenityInfo["accesstoFinessRoom"])
-     amenityInfo_list.append(amenityInfo["accesstoSummingPool"])
-     amenityInfo_list.append(amenityInfo["accesstoJacuzzi"])
-     amenityInfo_list.append(amenityInfo["dailyParking"])
-     amenityInfo_list.append(amenityInfo["allmeals"])
-     amenity_object = Amenities(amenityInfo_list)
+     amenityId = roomInfo["amenityId"]
+     amenityInfo = amenitiesDAOimpl.getAmenity(amenityId)
+     amenity_object = Amenities(amenityInfo)
 
     except NoitemError as ne:
         return returnResponse(400, str(ne))
 
     except Exception as e:
         logger.debug(str(e))
-        return returnResponse(400, {'message': 'Something wrong with get item from DynamoDB'})
+        return returnResponse(400, {'message': str(e)})
 
     # 4. Generate Reservation && insert it to DynamoDB
     customer = User(customerInfo["userId"], customerInfo["firstName"], customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
@@ -106,7 +107,7 @@ def reservation_handler(event, context):
     logger.debug("**** the reservation information {}".format(item))
     
     try:
-        put_item_db(item, reservationTable)
+        reservationDAOimpl.addReservation(item)
 
     except Exception as e:
 
@@ -122,24 +123,24 @@ def retrieve_handler(event, context):
     eventBody = event['queryStringParameters']
 
     if "reservationId" not in eventBody and "hotelId" not in eventBody and "customerId" not in eventBody:
-        return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
+        return returnResponse(400, {"message": "Invalid input, no reservationId or hotelId or customerId"})
 
     list_reservation = []
     # Retrieve reservation based on reservationId
     try:
         if "reservationId" in eventBody:
             reservationId = eventBody["reservationId"]
-            reservationinfo = get_item_db(reservationTable, "reservationId", reservationId)
+            reservationinfo = reservationDAOimpl.getReservation(reservationId)
             return returnResponse(200, reservationinfo)
 
         # Retrieve reservation based on customerId
         if "customerId" in eventBody:
             customerId = eventBody["customerId"]
-            list_reservation = get_items_db(reservationTable, "customerId", customerId)
+            list_reservation = reservationDAOimpl.getReservationbycustomerId(customerId)
         # Retrieve reservation based on hotelId
         if "hotelId" in eventBody:
             hotelId = eventBody["hotelId"]
-            list_reservation = get_items_db(reservationTable, "hotelId", hotelId)
+            list_reservation = reservationDAOimpl.getReservationbyhotelIdId(hotelId)
 
         if not list_reservation:
                 return returnResponse(204, list_reservation)
@@ -170,9 +171,7 @@ def checkIn_handler(event, context):
 
     # Update status to True
     try:
-        update_item_db(reservationTable, "reservationId", reservationId, "checkIn", True)
-        reservationInfor = get_item_db(reservationTable, "reservationId", reservationId)
-
+        reservationDAOimpl.updateReservation(reservationId, {"checkIn" : True})
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, "Someting worng with confirm_handler()")
@@ -199,8 +198,7 @@ def checkOut_handler(event, context):
 
     # Update status to True
     try:
-        update_item_db(reservationTable, "reservationId", reservationId, "checkOut", True)
-        reservationInfor = get_item_db(reservationTable, "reservationId", reservationId)
+        reservationDAOimpl.updateReservation(reservationId, {"checkOut" : True})
 
     except Exception as e:
         logger.debug(str(e))
@@ -227,7 +225,7 @@ def confirm_handler(event, context):
 
     # Update status to CONFIRMED
     try:
-        update_item_db(reservationTable, "reservationId", reservationId, "reservationStatus", ReservationStatus.CONFIRM.value)
+        reservationDAOimpl.updateReservation(reservationId, {"reservationStatus": ReservationStatus.CONFIRM.value})
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, "Someting worng with confirm_handler()")
@@ -253,7 +251,7 @@ def cancel_handler(event, context):
 
     # Update status to CANCELED
     try:
-        update_item_db(reservationTable, "reservationId", reservationId, "reservationStatus", ReservationStatus.CANCEL.value)
+        reservationDAOimpl.updateReservation(reservationId, {"reservationStatus" : ReservationStatus.CANCEL.value})
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, "Someting worng with cancel_handler()")

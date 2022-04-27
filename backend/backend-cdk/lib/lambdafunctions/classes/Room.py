@@ -21,7 +21,7 @@ class Room:
     def getHotelId(self):
         return self.hotelId
 
-    def getAmenitiesId(self):
+    def getAmenityId(self):
         return self.amenity.getId()
 
     def getType(self):
@@ -58,7 +58,7 @@ class Room:
         return json.dumps({
             "roomId" : self.id,
             "hotelId" : self.hotelId,
-            "amenitiesId" : self.getAmenitiesId(),
+            "amenityId" : self.getAmenityId(),
             "roomType" : self.roomType
         })
 
@@ -66,6 +66,6 @@ class Room:
         return {
             "roomId" : self.id,
             "hotelId" : self.hotelId,
-            "amenitiesId" : self.getAmenitiesId(),
+            "amenityId" : self.getAmenityId(),
             "roomType" : self.roomType
         }

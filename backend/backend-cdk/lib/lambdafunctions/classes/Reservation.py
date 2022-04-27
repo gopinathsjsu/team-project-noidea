@@ -25,8 +25,8 @@ class Reservation:
         self.customer = customer
         self.orignalPrice = 0
         self.status = ReservationStatus.UNCONFIRM.value
-        self.ischeckedIn = False
-        self.ischeckedOut = False
+        self.checkIn = False
+        self.checkOut = False
 
     def getId(self):
         return self.id
@@ -136,18 +136,16 @@ class Reservation:
         self.price = newprice
 
     def isCheckedIn(self):
-        return self.ischeckedIn
+        return self.checkIn
 
     def setCheckedIn(self, newcheckIn):
-        self.ischeckedIn = newcheckIn
-        self.room.setStatus(RoomStatus.NOT_EMPTY.value)
+        self.checkIn = newcheckIn
 
     def isCheckedOut(self):
-        return self.ischeckedOut
+        return self.checkOut
 
     def setCheckOut(self, newcheckOut):
-        self.ischeckedOut = newcheckOut
-        self.room.setStatus(RoomStatus.EMPTY.value)
+        self.checkOut = newcheckOut
 
     def getReservationInfoJson(self):
         return json.dumps({
@@ -161,7 +159,7 @@ class Reservation:
             "checkIn" : self.isCheckedIn(),
             "checkOut" : self.isCheckedOut(),
             "reservationStatus" : self.status,
-            "amenityId" : self.room.getAmenitiesId()
+            "amenityId" : self.room.getAmenityId()
         })
 
     def getReservationInfo(self):
@@ -178,7 +176,7 @@ class Reservation:
             "checkIn" : self.isCheckedIn(),
             "checkOut" : self.isCheckedOut(),
             "reservationStatus" : self.status,
-            "amenityId" : self.room.getAmenitiesId()
+            "amenityId" : self.room.getAmenityId()
         }
 
     

@@ -5,7 +5,7 @@ logger.setLevel(logging.DEBUG)
 from boto3.dynamodb.conditions import Key, Attr
 from constants.NoItemError import NoitemError
 
-def put_item_db(item, table):
+def put_item_db(table, item):
 
     table.put_item(Item=item)
     logger.debug("Inserted the {} in DynamoDB".format(item))
@@ -30,6 +30,11 @@ def get_items_db(table, arrtibute, arrtvalue):
         return response['Items']
     else:
         raise NoitemError(arrtvalue, table)
+
+def scan_items_db(table):
+    response = table.scan()
+    data = response["Items"]
+    return data
 
 def update_item_db(table, primary_key, primary_val, attr, update):
     table.update_item(
