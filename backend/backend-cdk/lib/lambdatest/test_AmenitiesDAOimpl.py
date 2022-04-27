@@ -1,7 +1,4 @@
-import sys
-sys.path.append("..")
-from lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
-from lambdafunctions.aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
+from lib.lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
 
 from moto import mock_dynamodb2
 import unittest

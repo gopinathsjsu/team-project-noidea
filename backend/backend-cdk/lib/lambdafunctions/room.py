@@ -2,18 +2,16 @@ import json
 import logging
 import decimal
 import os
-import sys
 import boto3
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-sys.path.append("..")
 from constants.RoomType import RoomType
 from classes.Amenities import Amenities
 from classes.Room import Room
 from constants.NoItemError import NoitemError
 from DAOimpl.RoomDAOimpl import RoomDAOimpl
-from lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
+from DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
 
 region = os.environ["region"]
 room_table = os.environ["room_table"]

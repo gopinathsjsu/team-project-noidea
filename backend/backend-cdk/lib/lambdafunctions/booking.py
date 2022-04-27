@@ -1,12 +1,11 @@
 import json
 import os
-import sys
 import boto3
 import decimal
 import logging
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-sys.path.append("..")
+
 from classes.Reservation import Reservation
 from classes.Room import Room
 from classes.User import User

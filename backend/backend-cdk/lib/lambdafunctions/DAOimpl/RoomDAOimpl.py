@@ -1,10 +1,8 @@
 import os
 import boto3
-import sys
-sys.path.append("..")
-from lambdafunctions.DAO.RoomDAO import RoomDAO
-from lambdafunctions.aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
-from lambdafunctions.constants.NoItemError import NoitemError
+
+from DAO.RoomDAO import RoomDAO
+from aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
 
 region = os.environ["region"]
 room_table = os.environ["room_table"]

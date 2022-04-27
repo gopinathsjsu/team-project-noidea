@@ -1,13 +1,10 @@
-from distutils.command import check
-import sys
-sys.path.append("..")
-from lambdafunctions.booking import *
-from lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
-from lambdafunctions.DAOimpl.ReservationDAOimpl import ReservationDAOimpl
-from lambdafunctions.DAOimpl.RoomDAOimpl import RoomDAOimpl
-from constants.ReservationStatus import ReservationStatus
+from lib.lambdafunctions.booking import *
+from lib.lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
+from lib.lambdafunctions.DAOimpl.ReservationDAOimpl import ReservationDAOimpl
+from lib.lambdafunctions.DAOimpl.RoomDAOimpl import RoomDAOimpl
+from lib.lambdafunctions.constants.ReservationStatus import ReservationStatus
 
-from aws_helper.dynamodb import put_item_db
+from lib.lambdafunctions.aws_helper.dynamodb import put_item_db
 from moto import mock_dynamodb2
 import unittest
 import boto3
@@ -222,7 +219,7 @@ class test_booking(unittest.TestCase):
         response = checkIn_handler(event, "")
         assert 200 == response["statusCode"]
 
-    def test_checkIn_hanlder(self):
+    def test_checkOut_hanlder(self):
         dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
         table_name = 'test_table2'
         dynamodb.create_table(TableName=table_name,

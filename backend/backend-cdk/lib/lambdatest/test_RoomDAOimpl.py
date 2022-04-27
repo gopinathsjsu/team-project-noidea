@@ -1,7 +1,5 @@
-import sys
-sys.path.append("..")
-from lambdafunctions.DAOimpl.RoomDAOimpl import RoomDAOimpl
-from lambdafunctions.aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
+
+from lib.lambdafunctions.DAOimpl.RoomDAOimpl import RoomDAOimpl
 
 from moto import mock_dynamodb2
 import unittest
@@ -31,10 +29,11 @@ class test_RoomDAPimpl(unittest.TestCase):
                     'customerId':'customertest',
                     'hotelId': 'hotelIdtest'       
                 }
-        put_item_db(table, data1)
-        put_item_db(table, data2)
+
         
         roomDaoimpl = RoomDAOimpl()
+        roomDaoimpl.addRoom(data1)
+        roomDaoimpl.addRoom(data2)
         response = roomDaoimpl.getAllRooms()
         assert len(response) == 2
         assert data1 == response[0]
@@ -57,8 +56,9 @@ class test_RoomDAPimpl(unittest.TestCase):
                     'customerId':'customertest',
                     'hotelId': 'hotelIdtest'                        
                 }
-        put_item_db(table, data1)
+        
         roomDaoimpl = RoomDAOimpl()
+        roomDaoimpl.addRoom(data1)
         response = roomDaoimpl.getRoom("room001")
         assert data1 == response
 
@@ -79,8 +79,8 @@ class test_RoomDAPimpl(unittest.TestCase):
                     'customerId':'customertest',
                     'hotelId': 'hotelIdtest'                        
                 }
-        put_item_db(table, data1)
         roomDaoimpl = RoomDAOimpl()
+        roomDaoimpl.addRoom(data1)
         response = roomDaoimpl.getRoom("room002")
         assert None == response
 
@@ -102,8 +102,8 @@ class test_RoomDAPimpl(unittest.TestCase):
                     'hotelId': 'hotelIdtest',
                     "roomType" : "Single"                        
                 }
-        put_item_db(table, data1)
         roomDaoimpl = RoomDAOimpl()
+        roomDaoimpl.addRoom(data1)
         fields = {"roomType" : "Double"}
         response = roomDaoimpl.updateRoom("room001", fields)
         assert True == response

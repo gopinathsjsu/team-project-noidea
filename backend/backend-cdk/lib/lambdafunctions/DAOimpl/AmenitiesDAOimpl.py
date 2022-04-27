@@ -1,9 +1,8 @@
 import os
 import boto3
-import sys
-sys.path.append("..")
-from lambdafunctions.DAO.AmenitiesDAO import AmenitiesDAO
-from lambdafunctions.aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
+
+from DAO.AmenitiesDAO import AmenitiesDAO
+from aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
 
 region = os.environ["region"]
 amenity_table = os.environ["amenity_table"]

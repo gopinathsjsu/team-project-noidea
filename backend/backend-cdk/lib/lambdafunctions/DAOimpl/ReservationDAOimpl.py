@@ -1,9 +1,9 @@
 import os
 import boto3
-import sys
-sys.path.append("..")
-from lambdafunctions.DAO.ReservationDAO import ReservationDAO
-from lambdafunctions.aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
+
+
+from DAO.ReservationDAO import ReservationDAO
+from aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
 
 region = os.environ["region"]
 reservation_table = os.environ["reservation_table"]
