@@ -1,4 +1,3 @@
-
 from lib.lambdafunctions.room import room_handler, roomInfo_handler, roomType_handler, amenity_handler, amenityInfo_handler
 from lib.lambdafunctions.DAOimpl.RoomDAOimpl import RoomDAOimpl
 from lib.lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl

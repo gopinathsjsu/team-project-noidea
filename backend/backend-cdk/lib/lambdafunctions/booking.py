@@ -20,7 +20,7 @@ from DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
 from DAOimpl.ReservationDAOimpl import ReservationDAOimpl
 from DAOimpl.RoomDAOimpl import RoomDAOimpl
 
-from aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
+from aws_helper.dynamodb import get_item_db
 
 dynamodb_client = boto3.client('dynamodb')
 region = os.environ["region"]

@@ -1,17 +1,19 @@
 import os
 import boto3
 
-
+import sys 
+sys.path.append("..") 
 from DAO.ReservationDAO import ReservationDAO
 from aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
 
-region = os.environ["region"]
-reservation_table = os.environ["reservation_table"]
+
 class ReservationDAOimpl(ReservationDAO):
    
     def __init__(self) -> None:
-        self.reservationTable = boto3.resource("dynamodb", region).Table(reservation_table)
         self.reservations = {}
+        self.region = os.environ["region"]
+        self.reservation_table = os.environ["reservation_table"]
+        self.reservationTable = boto3.resource("dynamodb", self.region).Table(self.reservation_table)
 
     #override
     def getAllReservation(self):

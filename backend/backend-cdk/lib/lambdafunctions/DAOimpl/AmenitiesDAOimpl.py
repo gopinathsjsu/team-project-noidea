@@ -1,6 +1,7 @@
 import os
 import boto3
-
+import sys 
+sys.path.append("..")
 from DAO.AmenitiesDAO import AmenitiesDAO
 from aws_helper.dynamodb import update_item_db, scan_items_db, put_item_db
 

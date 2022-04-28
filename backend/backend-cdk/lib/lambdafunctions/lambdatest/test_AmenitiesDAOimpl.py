@@ -1,3 +1,4 @@
+
 from lib.lambdafunctions.DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
 
 from moto import mock_dynamodb2

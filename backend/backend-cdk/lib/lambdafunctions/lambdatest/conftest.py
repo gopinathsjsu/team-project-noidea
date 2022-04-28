@@ -19,6 +19,9 @@ def aws_credentials():
     os.environ["region"] = "us-east-1"
     os.environ["room_table"] = "test_table"
 
+@pytest.fixture(autouse=True)
+def change_test_dir(request, monkeypatch):
+    monkeypatch.chdir(request.fspath.dirname)
 @pytest.fixture
 def s3(aws_credentials):
     with mock_s3():

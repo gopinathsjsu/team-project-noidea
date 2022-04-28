@@ -1,7 +1,9 @@
 import logging
-
+import sys 
+sys.path.append("..") 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
 from boto3.dynamodb.conditions import Key, Attr
 from constants.NoItemError import NoitemError
 
