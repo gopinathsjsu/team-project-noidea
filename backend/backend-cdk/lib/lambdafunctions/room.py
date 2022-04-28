@@ -2,17 +2,16 @@ import json
 import logging
 import decimal
 import os
-import sys
 import boto3
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-sys.path.append("..")
 from constants.RoomType import RoomType
 from classes.Amenities import Amenities
 from classes.Room import Room
 from constants.NoItemError import NoitemError
-from aws_helper.dynamodb import put_item_db, get_item_db, get_items_db, update_item_db
+from DAOimpl.RoomDAOimpl import RoomDAOimpl
+from DAOimpl.AmenitiesDAOimpl import AmenitiesDAOimpl
 
 region = os.environ["region"]
 room_table = os.environ["room_table"]
@@ -20,6 +19,8 @@ amenity_table = os.environ["amenity_table"]
 
 roomTable = boto3.resource("dynamodb", region).Table(room_table)
 amenityTable = boto3.resource("dynamodb", region).Table(amenity_table)
+amenitiesDAOimpl = AmenitiesDAOimpl()
+roomDaoimpl = RoomDAOimpl()
 
 def room_handler(event, context):
     logger.info("**** Start room service --->")
@@ -46,12 +47,12 @@ def room_handler(event, context):
     # Generate amenity object based on amenity Info
     amenity_object = Amenities(amenityInfo)
     amenity_item = amenity_object.getAmenitiesInfo()
-    put_item_db(amenity_item, amenityTable)
+    amenitiesDAOimpl.addAmenity(amenity_item)
 
     # Generate room based on roomInfo and amenity obj
     room_object = Room(roomInfo, amenity_object)
     room_item = room_object.getRoomInfo()
-    put_item_db(room_item, roomTable)
+    roomDaoimpl.addRoom(room_item)
     
     return returnResponse(200, {"roomId" : room_object.getId()})
 
@@ -64,7 +65,9 @@ def roomInfo_handler(event, context):
         return returnResponse(400, {"message": "Invalid input, no roomId"})
     try:
         roomId = eventBody["roomId"]
-        roomInfo = get_item_db(roomTable, "roomId", roomId)
+        roomInfo = roomDaoimpl.getRoom(roomId)
+        if roomInfo == None:
+            return returnResponse(400, {"message" : "roomId NO FOUND"})
         return returnResponse(200, roomInfo)
         
     except NoitemError as ne:
@@ -91,12 +94,11 @@ def roomType_handler(event, context):
 
     roomId = eventBody["roomId"]
     roomType = eventBody["roomType"]
-
+    roomTypeDict = {"roomType" : roomType}
     if not RoomType.loopType(roomType):
         return returnResponse(400, {"message": "Invalid roomType input"})
     try:
-        get_item_db(roomTable, "roomId", roomId)
-        update_item_db(roomTable, "roomId", roomId, "roomType", roomType)
+        roomDaoimpl.updateRoom(roomId, roomTypeDict)
         return returnResponse(200, "Update roomType to {} succeeded".format(roomType))
     
     except NoitemError as ne:
@@ -120,13 +122,12 @@ def amenity_handler(event, context):
 
     if "amenityInfo" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no amenityInfo'})
-    
-    amenityInfo = eventBody["amenityInfo"]
-
+    if "amenityId" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no amenityId'})
+    amenityInfo = eventBody["amenityInfo"] # {"allmeal" : true, "Jazz" : true, ...}
+    amenityId = eventBody["amenityId"]
     try:
-        amenity_object = Amenities(amenityInfo)
-        amenity_item = amenity_object.getAmenitiesInfo()
-        put_item_db(amenity_item, amenityTable)
+        amenitiesDAOimpl.updateAmenity(amenityId, amenityInfo)
         return returnResponse(200, "Update amenity succeeded")
 
     except Exception as e:
@@ -142,7 +143,7 @@ def amenityInfo_handler(event, context):
         return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
     try:
         amenityId = eventBody["amenityId"]
-        amenityInfo = get_item_db(amenityTable, "amenityId", amenityId)
+        amenityInfo = amenitiesDAOimpl.getAmenity(amenityId)
         return returnResponse(200, amenityInfo)
     
     except NoitemError as ne:
