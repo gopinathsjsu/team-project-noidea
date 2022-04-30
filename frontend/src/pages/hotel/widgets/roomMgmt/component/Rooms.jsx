@@ -1,38 +1,118 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
+import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
 
-const mockRooms = [
-  {
-    name: "Standard Queen",
-    price: "$100",
-    description: "The standard single room with basic view and amenities."
-  },
-  {
-    name: "Double Queen",
-    price: "$150",
-    description: "Room with 2 queen beds with basic view and amenities."
-  },
-  {
-    name: "Deluxe Suite",
-    price: "$300",
-    description: "Luxurious suite with 2 bedroom each with a King bed."
-  }
-];
+function RoomEditing(props) {
+  const { setAdding, fields, setFields } = props;
+
+  return (
+    <div>
+      <div style={{ display: "flex" }}>
+        <Form.Group className="mb-3" style={{ flex: 1 }}>
+          <Form.Label>Room name</Form.Label>
+          <Form.Control
+            placeholder="Standard room"
+            value={fields.roomName}
+            onChange={(e) => setFields((fls) => ({ ...fls, roomName: e.target.value }))}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" style={{ marginLeft: 10 }}>
+          <Form.Label>Price</Form.Label>
+          <Form.Control
+            value={fields.roomPrice}
+            onChange={(e) => setFields((fls) => ({ ...fls, roomPrice: e.target.value }))}
+          />
+        </Form.Group>
+      </div>
+      <Form.Group className="mb-3">
+        <Form.Label>Description</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={1}
+          value={fields.roomType}
+          onChange={(e) => setFields((fls) => ({ ...fls, roomType: e.target.value }))}
+        />
+      </Form.Group>
+      <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          variant="outline-primary"
+          style={{ marginRight: 5 }}
+          onClick={() => {
+            setAdding(false);
+            props.onCancel && props.onCancel();
+          }}>
+          Cancel
+        </Button>
+        <Button style={{ marginLeft: 5 }} onClick={() => setAdding(false)}>
+          Add amenity
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function RoomItem(props) {
+  const { room } = props;
+  const [editing, setEditing] = useState(false);
+  const [fields, setFields] = useState({
+    roomName: room.roomName,
+    roomPrice: room.roomPrice,
+    roomType: room.roomType
+  });
+
+  return (
+    <div className="skinny-item-container">
+      <Collapse in={!editing}>
+        <div onClick={() => setEditing(true)}>
+          <div>
+            <h6>
+              {fields.roomName} - ${fields.roomPrice}
+            </h6>
+          </div>
+          <p>{fields.roomType}</p>
+        </div>
+      </Collapse>
+      <Collapse in={editing}>
+        <div>
+          <RoomEditing
+            setAdding={setEditing}
+            fields={fields}
+            setFields={setFields}
+            onCancel={() =>
+              setFields({
+                roomName: room.roomName,
+                roomPrice: room.roomPrice,
+                roomType: room.roomType
+              })
+            }
+          />
+        </div>
+      </Collapse>
+    </div>
+  );
+}
 
 export default function Rooms(props) {
   const [adding, setAdding] = useState(false);
+  const [rooms, setRooms] = useState([]);
+  const [newRoom, setNewRoom] = useState({
+    roomName: "",
+    roomType: "",
+    roomPrice: ""
+  });
+
+  useEffect(() => {
+    (async () => {
+      const resp = await BookingServiceUtil.getRooms();
+      if (resp && !resp.error) {
+        setRooms(resp);
+      }
+    })();
+  }, []);
 
   return (
     <div style={{ maxWidth: 700, marginBottom: 150 }}>
-      {mockRooms &&
-        mockRooms.map((room) => (
-          <div className="skinny-item-container">
-            <h6>
-              {room.name} - {room.price}
-            </h6>
-            <p>{room.description}</p>
-          </div>
-        ))}
+      {rooms && rooms.map((room) => <RoomItem room={room} />)}
       <div className="skinny-item-container">
         <Collapse in={!adding}>
           <div>
@@ -43,28 +123,18 @@ export default function Rooms(props) {
         </Collapse>
         <Collapse in={adding}>
           <div>
-            <div style={{ display: "flex" }}>
-              <Form.Group className="mb-3" style={{ flex: 1 }}>
-                <Form.Label>Room name</Form.Label>
-                <Form.Control placeholder="Standard room" />
-              </Form.Group>
-              <Form.Group className="mb-3" style={{ marginLeft: 10 }}>
-                <Form.Label>Price</Form.Label>
-                <Form.Control />
-              </Form.Group>
-            </div>
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows={3} />
-            </Form.Group>
-            <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
-              <Button variant="outline-primary" style={{ marginRight: 5 }} onClick={() => setAdding(false)}>
-                Cancel
-              </Button>
-              <Button style={{ marginLeft: 5 }} onClick={() => setAdding(false)}>
-                Add amenity
-              </Button>
-            </div>
+            <RoomEditing
+              setAdding={setAdding}
+              fields={newRoom}
+              setFields={setNewRoom}
+              onCancel={() =>
+                setNewRoom({
+                  roomName: "",
+                  roomType: "",
+                  roomPrice: ""
+                })
+              }
+            />
           </div>
         </Collapse>
       </div>

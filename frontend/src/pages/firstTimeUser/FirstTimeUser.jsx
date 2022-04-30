@@ -13,7 +13,6 @@ import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlic
 import { useNavigate } from "react-router-dom";
 import { setHotelData, setUserData, updateUserType } from "../../redux/context/contextSlice";
 import HotelServiceUtil from "../../util/hotelServiceUtil";
-import { Auth } from "aws-amplify";
 
 function TextField(props) {
   return (
