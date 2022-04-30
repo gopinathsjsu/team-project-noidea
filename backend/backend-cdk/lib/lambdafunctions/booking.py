@@ -9,7 +9,7 @@ logger.setLevel(logging.DEBUG)
 from classes.Reservation import Reservation
 from classes.Room import Room
 from classes.User import User
-from classes.Amenities import Amenities
+from classes.Amenity import Amenity
 
 from constants.NoItemError import NoitemError
 from constants.Season import Season
@@ -49,10 +49,12 @@ def reservation_handler(event, context):
         return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
 
     # input: CustomerId, RoomId, AmentitiesInfo
-    if "customerId" not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no customerId'})
+    if "userId" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no userId'})
     if "roomId" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no roomId'})
+    if "amenityIds" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no amenityIds'})
     if "startDate" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no startDate'})
     if "endDate" not in eventBody:
@@ -62,8 +64,9 @@ def reservation_handler(event, context):
     if "days" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no days'})
 
-    customerId = eventBody["customerId"]
+    userId = eventBody["userId"]
     roomId = eventBody["roomId"]
+    amenityIds = eventBody["amenityIds"]
     startDate = eventBody["startDate"]
     endDate = eventBody["endDate"]
     season = eventBody["season"]
@@ -76,30 +79,17 @@ def reservation_handler(event, context):
         return returnResponse(400, "The {} days is not valid".format(days))
 
     # 1. Retrieve customer info from DynamoDB based on customerId
-    try:
-     customerInfo = get_item_db(customerTable, "userId", customerId)
-     logger.debug("**** customerInfo ---> {}".format(customerInfo))
+    customerInfo = get_item_db(customerTable, "userId", userId)
+    logger.debug("**** customerInfo ---> {}".format(customerInfo))
 
     # 2. Retrieve room info from DynamoDB based on RoomId
-     roomInfo = roomDAOimpl.getRoom(roomId)
-     logger.debug("**** roomInfo ---> {}".format(roomInfo))
+    roomInfo = roomDAOimpl.getRoom(roomId)
+    logger.debug("**** roomInfo ---> {}".format(roomInfo))
 
-    # 3. Generate amenity  
-     amenityId = roomInfo["amenityId"]
-     amenityInfo = amenitiesDAOimpl.getAmenity(amenityId)
-     amenity_object = Amenities(amenityInfo)
-
-    except NoitemError as ne:
-        return returnResponse(400, str(ne))
-
-    except Exception as e:
-        logger.debug(str(e))
-        return returnResponse(400, {'message': str(e)})
-
-    # 4. Generate Reservation && insert it to DynamoDB
-    customer = User(customerInfo["userId"], customerInfo["firstName"], customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
-    room = Room(roomInfo, amenity_object)
-    reservation = Reservation(startDate, endDate, season, days, room, customer)
+    # 3. Generate Reservation && insert it to DynamoDB
+    customer = User(customerInfo["userId"], customerInfo["firstName"],customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
+    room = Room(roomInfo)
+    reservation = Reservation(startDate, endDate, season, days, room, customer, amenityIds)
     logger.debug("**** total price ---> {}".format(reservation.getTotalPrice()))
 
     item = reservation.getReservationInfo()
@@ -256,6 +246,14 @@ def cancel_handler(event, context):
         return returnResponse(400, "Someting worng with cancel_handler()")
     
     return returnResponse(200, "cancel reservation succeeded")
+
+def getallreservation_hanlder(event, context):
+    logger.info("**** Start get all reservation service --->")
+    try:
+        reseravations = reservationDAOimpl.getAllReservation()
+    except Exception as e:
+        return returnResponse(400, str(e))
+    return returnResponse(200, reseravations)
 
 def returnResponse(statusCode, body):
     logger.debug("[RESPONSE] statusCode: {} body: {}".format(statusCode, body))
