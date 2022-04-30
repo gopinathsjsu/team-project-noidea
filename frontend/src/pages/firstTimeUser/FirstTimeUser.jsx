@@ -11,8 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDataRdx, getUserIdRdx } from "../../redux/context/contextSelectors";
 import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlice";
 import { useNavigate } from "react-router-dom";
-import { setUserData, updateUserType } from "../../redux/context/contextSlice";
+import { setHotelData, setUserData, updateUserType } from "../../redux/context/contextSlice";
 import HotelServiceUtil from "../../util/hotelServiceUtil";
+import { Auth } from "aws-amplify";
 
 function TextField(props) {
   return (
@@ -111,6 +112,12 @@ export function AccordionLayout(props) {
                   address: `${fields.addrStreet}, ${fields.addrCity}, ${fields.addrState} ${fields.addrZipcode}`,
                   email: fields.email
                 });
+                const hotelInfo = await HotelServiceUtil.getHotels();
+                dispatch(
+                  setHotelData(
+                    hotelInfo?.hotels?.find ? hotelInfo.hotels.find((hotel) => hotel.ownerId === userId) : {}
+                  )
+                );
               }
               const userInfoResp = await UserServiceUtil.getUserInfo(userId);
               dispatch(updateUserType({ userType: props.userType }));

@@ -51,7 +51,9 @@ function App() {
             const userType = userInfoResp?.user?.role[0].toLowerCase && userInfoResp?.user?.role[0].toLowerCase();
             if (userType === "hotel") {
               const hotelInfo = await HotelServiceUtil.getHotels();
-              dispatch(setHotelData(hotelInfo));
+              dispatch(
+                setHotelData(hotelInfo?.hotels?.find ? hotelInfo.hotels.find((hotel) => hotel.ownerId === userId) : {})
+              );
             }
             dispatch(updateUserType({ userType }));
             dispatch(setUserData(userInfoResp.user));

@@ -28,9 +28,7 @@ export const contextSlice = createSlice({
       state.userData = action.payload;
     },
     setHotelData: (state, action) => {
-      if (state.userType === "hotel") {
-        state.hotelData = action.payload;
-      }
+      state.hotelData = action.payload;
     }
   }
 });

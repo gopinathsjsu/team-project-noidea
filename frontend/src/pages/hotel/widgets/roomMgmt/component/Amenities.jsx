@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
+import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
 
 const mockAmenities = [
   {
@@ -22,6 +23,14 @@ const mockAmenities = [
 
 export default function Amenities(props) {
   const [adding, setAdding] = useState(false);
+  const [amenities, setAmenities] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const resp = await BookingServiceUtil.getAmenitites();
+      setAmenities(mockAmenities);
+    })();
+  }, []);
 
   return (
     <div style={{ maxWidth: 700 }}>
