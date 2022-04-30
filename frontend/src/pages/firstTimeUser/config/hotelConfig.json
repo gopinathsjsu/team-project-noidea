@@ -1,6 +1,6 @@
 {
-  "modalHeader": "User registration",
-  "submissionText": "Submit and continue",
+  "modalHeader": "Hotel registration",
+  "submissionText": "Let's get started",
   "termsAndConditions": [
     "You agree to Hootel's terms of service",
     "You understand and consent to Hootel's privacy policy"
@@ -9,12 +9,18 @@
     "firstName",
     "lastName",
     "phoneNumber",
+    "email",
     "dobMonth",
     "dobDate",
     "dobYear",
     "ccNumber",
     "ccExpDate",
-    "ccZipcode"
+    "ccCVV",
+    "addrStreet",
+    "addrCity",
+    "addrState",
+    "addrZipcode",
+    "hotelName"
   ],
   "accordions": [
     {
@@ -40,12 +46,17 @@
               "colSizeXS": 12,
               "placeholder": "XXX-XXX-XXXX",
               "label": "Phone number"
+            },
+            {
+              "fieldId": "email",
+              "colSizeXS": 12,
+              "placeholder": "email@email.com",
+              "label": "Email address"
             }
           ]
         },
         {
           "subtitle": "Date of birth",
-          "nextCTA": "Finish",
           "fields": [
             {
               "fieldId": "dobMonth",
@@ -72,7 +83,7 @@
     {
       "title": "Payments information",
       "hasSubSections": false,
-      "nextCTA": "Finish",
+      "nextCTA": "Continue",
       "fields": [
         {
           "fieldId": "ccNumber",
@@ -89,11 +100,48 @@
           "placeholder": "MM/YYYY"
         },
         {
-          "fieldId": "ccZipcode",
+          "fieldId": "ccCVV",
           "colSizeXS": 6,
           "colSizeMD": 3,
-          "label": "Zip code",
-          "placeholder": "XXXXX"
+          "label": "CVV",
+          "placeholder": "XXX"
+        }
+      ]
+    },
+    {
+      "title": "Hotel information",
+      "hasSubSections": false,
+      "nextCTA": "Finish",
+      "fields": [
+        {
+          "fieldId": "hotelName",
+          "colSizeXS": 12,
+          "placeholder": "Mary-ought hotel",
+          "label": "Hotel name"
+        },
+        {
+          "fieldId": "addrStreet",
+          "colSizeXS": 12,
+          "placeholder": "1234 San Jose St.",
+          "label": "Hotel Street"
+        },
+        {
+          "fieldId": "addrCity",
+          "colSizeXS": 4,
+          "placeholder": "Santa Clara",
+          "label": "Hotel City"
+        },
+        {
+          "fieldId": "addrState",
+          "colSizeXS": 4,
+          "placeholder": "CA",
+          "label": "Hotel State"
+        },
+        {
+          "fieldId": "addrZipcode",
+          "colSizeXS": 4,
+          "placeholder": "94618",
+          "label": "Hotel Zipcode"
         }
       ]
     }

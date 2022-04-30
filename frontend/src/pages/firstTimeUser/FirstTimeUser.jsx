@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Container, Accordion, Row, Col, Modal, Button } from "react-bootstrap";
 
 import customerConfig from "./config/customerConfig.json";
@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDataRdx, getUserIdRdx } from "../../redux/context/contextSelectors";
 import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlice";
 import { useNavigate } from "react-router-dom";
-import { setUserData } from "../../redux/context/contextSlice";
+import { setUserData, updateUserType } from "../../redux/context/contextSlice";
+import HotelServiceUtil from "../../util/hotelServiceUtil";
 
 function TextField(props) {
   return (
@@ -31,7 +32,7 @@ export function AccordionLayout(props) {
   const userId = useSelector(getUserIdRdx);
 
   return (
-    <Container fluid="sm">
+    <Container fluid="sm" style={{ maxWidth: 700 }}>
       <Accordion defaultActiveKey="0" activeKey={`${activeKey}`}>
         {config.accordions.map((section, idx) => (
           <Accordion.Item eventKey={`${idx}`}>
@@ -100,10 +101,20 @@ export function AccordionLayout(props) {
                 country: "USA",
                 cardNumber: fields.ccNumber,
                 cardCVV: fields.ccCVV,
-                cardExpDate: fields.ccExpDate
+                cardExpDate: fields.ccExpDate,
+                roles: [props.userType === "hotel" ? "Hotel" : "Customer"]
               });
+              let responseHotel;
+              if (props.userType === "hotel") {
+                responseHotel = await HotelServiceUtil.registerHotel({
+                  hotelName: fields.hotelName,
+                  address: `${fields.addrStreet}, ${fields.addrCity}, ${fields.addrState} ${fields.addrZipcode}`,
+                  email: fields.email
+                });
+              }
               const userInfoResp = await UserServiceUtil.getUserInfo(userId);
-              if (response.error || userInfoResp.error) {
+              dispatch(updateUserType({ userType: props.userType }));
+              if (response.error || userInfoResp.error || (props.userType === "hotel" && responseHotel.error)) {
                 dispatch(
                   triggerMessage({
                     errorType: "TOAST_ERROR",
@@ -138,15 +149,16 @@ export function AccordionLayout(props) {
 const configMapper = {
   customer: customerConfig,
   admin: adminConfig,
-  hotelConfig: hotelConfig
+  hotel: hotelConfig
 };
 
 export default function FirstTimeUser(props) {
+  const [signUpType, setSignUpType] = useState(null);
   const [fields, setFields] = React.useState({});
   const userData = useSelector(getUserDataRdx);
   const navigate = useNavigate();
 
-  const config = configMapper.customer;
+  const config = configMapper[signUpType ?? "customer"];
 
   useEffect(() => {
     if (userData?.userId) {
@@ -164,7 +176,26 @@ export default function FirstTimeUser(props) {
         <Modal.Title>{config.modalHeader}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <AccordionLayout fields={fields} updateFields={updateFields} config={config} />
+        {signUpType ? (
+          <AccordionLayout fields={fields} updateFields={updateFields} config={config} userType={signUpType} />
+        ) : (
+          <Container
+            style={{
+              maxWidth: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column"
+            }}>
+            <h4>What would you like to do?</h4>
+            <Button onClick={() => setSignUpType("customer")} style={{ width: 250, margin: "40px 0px 10px 0px" }}>
+              Sign up as customer
+            </Button>
+            <Button onClick={() => setSignUpType("hotel")} style={{ width: 250, margin: "10px 0px 10px 0px" }}>
+              Sign up as hotel
+            </Button>
+          </Container>
+        )}
       </Modal.Body>
     </Modal>
   );

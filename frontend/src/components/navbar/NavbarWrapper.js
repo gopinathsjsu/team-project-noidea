@@ -44,6 +44,7 @@ const HotelMenu = (props) => {
       <Nav className="me-auto">
         <Nav.Link onClick={() => props.navigate("/hotel/stays")}>Stays</Nav.Link>
         <Nav.Link onClick={() => props.navigate("/hotel/customers")}>Customers</Nav.Link>
+        <Nav.Link onClick={() => props.navigate("/hotel/branches")}>Branches</Nav.Link>
         <NavDropdown title="Room Management" id="collasible-nav-dropdown">
           <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt/rooms")}>Rooms</NavDropdown.Item>
           <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt/amenities")}>Amenitites</NavDropdown.Item>

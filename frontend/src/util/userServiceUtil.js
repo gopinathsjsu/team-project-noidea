@@ -4,7 +4,7 @@ const BASE_URL = "https://2va96t2eh7.execute-api.us-west-2.amazonaws.com";
 
 export default class UserServiceUtil {
   static async getUserInfo(userId) {
-    return APIUtil.apiUtilDecorator(async () => {
+    return await APIUtil.apiUtilDecorator(async () => {
       const url = new URL(`/dev/user-login?userId=${userId}`, BASE_URL);
       const reqOpts = await APIUtil.buildRequestOptions("GET");
 
@@ -19,7 +19,7 @@ export default class UserServiceUtil {
   }
 
   static async registerUserInfo(userId, userPayload) {
-    return APIUtil.apiUtilDecorator(async () => {
+    return await APIUtil.apiUtilDecorator(async () => {
       const url = new URL(`/dev/user-register`, BASE_URL);
       const reqOpts = await APIUtil.buildRequestOptions("POST", {
         user: {
@@ -28,7 +28,7 @@ export default class UserServiceUtil {
           email: userPayload.email,
           address: userPayload.address,
           country: userPayload.country,
-          roles: ["Customer"]
+          roles: userPayload.roles
         },
         card: {
           number: userPayload.cardNumber,
@@ -45,7 +45,7 @@ export default class UserServiceUtil {
   }
 
   static async updateUserInfo(userId, userPayload) {
-    return APIUtil.apiUtilDecorator(async () => {
+    return await APIUtil.apiUtilDecorator(async () => {
       const url = new URL(`/dev/user-update`, BASE_URL);
       const reqOpts = await APIUtil.buildRequestOptions("POST", {
         user: {
@@ -66,7 +66,7 @@ export default class UserServiceUtil {
   }
 
   static async getUserInfoByRole(userId, userRole) {
-    return APIUtil.apiUtilDecorator(async () => {
+    return await APIUtil.apiUtilDecorator(async () => {
       const url = new URL(`/dev/get-role?userId=${userId}&role=${userRole}`, BASE_URL);
       const reqOpts = await APIUtil.buildRequestOptions("GET");
 

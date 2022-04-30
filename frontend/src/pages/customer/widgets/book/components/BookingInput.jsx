@@ -29,16 +29,12 @@ export default function BookingInput(props) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [fields, setFields] = useState({
-    location: "",
     checkin: "",
     checkout: "",
     rooms: "1"
   });
 
   useEffect(() => {
-    if (searchParams.get("location")) {
-      setFields((fls) => ({ ...fls, location: searchParams.get("location") }));
-    }
     if (searchParams.get("checkin")) {
       setFields((fls) => ({ ...fls, checkin: searchParams.get("checkin") }));
     }
@@ -54,16 +50,6 @@ export default function BookingInput(props) {
     <div>
       <div style={{ border: "2px solid #e0e0e0", borderRadius: 10, padding: "30px 40px 30px 40px" }}>
         <Row>
-          <Col xs={12}>
-            <Form.Group className="mb-3">
-              <Form.Label>Where do you want to go?</Form.Label>
-              <Form.Control
-                placeholder="Hogwarts"
-                value={fields.location}
-                onChange={(e) => setFields((fls) => ({ ...fls, location: e.target.value }))}
-              />
-            </Form.Group>
-          </Col>
           <Col xs={12} sm={5}>
             <Form.Group className="mb-3">
               <Form.Label>Check-in</Form.Label>
@@ -96,7 +82,7 @@ export default function BookingInput(props) {
           <Col xs={12} style={{ marginTop: 20 }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Button
-                disabled={!fields.location || !fields.checkin || !fields.checkout || !fields.rooms}
+                disabled={!fields.checkin || !fields.checkout || !fields.rooms}
                 style={{ paddingLeft: 30, paddingRight: 30 }}
                 onClick={() => {
                   setSearchParams(fields);

@@ -11,8 +11,7 @@ export default function BookingList(props) {
     <div>
       <div>
         <p style={{ color: "#999999" }}>
-          Results for {bookingParam.rooms} room(s) in {bookingParam.location} between {bookingParam.checkin} and{" "}
-          {bookingParam.checkout}.{" "}
+          Results for {bookingParam.rooms} room(s) between {bookingParam.checkin} and {bookingParam.checkout}.{" "}
           <span className="span-fake-link" onClick={() => setHotels([])}>
             Change.
           </span>

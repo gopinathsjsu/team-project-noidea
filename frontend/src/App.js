@@ -7,7 +7,7 @@ import UnknownPage from "./components/unknownPage/UnknownPage";
 import { getUserDataRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
 import FirstTimeUser from "./pages/firstTimeUser/FirstTimeUser";
 import { useEffect } from "react";
-import { setUserData, updateUserId, updateUserType } from "./redux/context/contextSlice";
+import { setHotelData, setUserData, updateUserId, updateUserType } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
 import GlobalUIHandler from "./components/errors/GlobalUIHandler";
 
@@ -15,6 +15,7 @@ import "./App.css";
 import { Auth } from "aws-amplify";
 import UserServiceUtil from "./util/userServiceUtil";
 import { setGlobalLoad, triggerMessage } from "./redux/globalUI/globalUISlice";
+import HotelServiceUtil from "./util/hotelServiceUtil";
 
 export function HomeRedirector() {
   const userType = useSelector(getUserTypeRdx);
@@ -22,10 +23,8 @@ export function HomeRedirector() {
   const determinePath = () => {
     if (userType === "hotel") {
       return <Navigate to="/hotel" />;
-    } else if (userType === "customer") {
-      return <Navigate to="/customer" />;
     } else {
-      return <Navigate to="/unknownUser" />;
+      return <Navigate to="/customer" />;
     }
   };
 
@@ -50,6 +49,10 @@ function App() {
         if (userInfoResp?.user?.userId && userInfoResp?.user?.role) {
           if (userInfoResp?.user?.role?.length === 1) {
             const userType = userInfoResp?.user?.role[0].toLowerCase && userInfoResp?.user?.role[0].toLowerCase();
+            if (userType === "hotel") {
+              const hotelInfo = await HotelServiceUtil.getHotels();
+              dispatch(setHotelData(hotelInfo));
+            }
             dispatch(updateUserType({ userType }));
             dispatch(setUserData(userInfoResp.user));
           }

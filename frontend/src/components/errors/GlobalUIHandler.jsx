@@ -61,7 +61,7 @@ function ToastMessageHandler(props) {
       <Alert
         variant={errorClasses[error.errorType]}
         dismissible
-        style={{ position: "absolute", left: "5%", right: "5%", bottom: 20, zIndex: 5000 }}
+        style={{ position: "absolute", left: "5%", right: "5%", top: 90, zIndex: 5000 }}
         onClose={() => dispatch(clearMessage())}>
         <Alert.Heading>{error?.title ?? "Uh-oh, something went wrong"}</Alert.Heading>
         <p>{error?.body ?? "Something went wrong and we're not sure why. Refresh the page and try again"}</p>
