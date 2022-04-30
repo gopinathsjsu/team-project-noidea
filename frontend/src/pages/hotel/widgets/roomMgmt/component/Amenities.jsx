@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { getHotelDataRdx } from "../../../../../redux/context/contextSelectors";
+import { setGlobalLoad } from "../../../../../redux/globalUI/globalUISlice";
 import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
+import { v4 as uuid4 } from "uuid";
 
 function AmenityEdit(props) {
   const { setEditing, fields, setFields } = props;
@@ -78,8 +82,10 @@ function AmenityItem(props) {
 }
 
 export default function Amenities(props) {
+  const hotelData = useSelector(getHotelDataRdx);
   const [adding, setAdding] = useState(false);
   const [amenities, setAmenities] = useState([]);
+  const dispatch = useDispatch();
   const [newAmenity, setNewAmenity] = useState({
     amenityPrice: "",
     amenityName: ""
@@ -110,6 +116,16 @@ export default function Amenities(props) {
               fields={newAmenity}
               setFields={setNewAmenity}
               onCancel={() => setNewAmenity({ amenityPrice: "", amenityName: "" })}
+              onSubmit={async () => {
+                dispatch(setGlobalLoad(true));
+                await BookingServiceUtil.updateAmenity({
+                  hotelId: hotelData.hotelId,
+                  amenityId: uuid4(),
+                  amenityName: newAmenity.amenityName,
+                  amenityPrice: newAmenity.amenityPrice
+                });
+                dispatch(setGlobalLoad(false));
+              }}
             />
           </div>
         </Collapse>

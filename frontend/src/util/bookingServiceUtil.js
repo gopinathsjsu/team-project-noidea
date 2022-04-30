@@ -12,6 +12,21 @@ export default class BookingServiceUtil {
 
     return data;
   }
+  static async updateAmenity(amenityPayload) {
+    const url = new URL(`/prod/buildamentity`, BASE_URL);
+    const reqOpts = await APIUtil.buildRequestOptions("POST", {
+      body: {
+        amenityIfo: {
+          ...amenityPayload
+        }
+      }
+    });
+
+    const response = await fetch(url, reqOpts);
+    const data = await response.json();
+
+    return data;
+  }
   static async getRooms() {
     const url = new URL(`/prod/allroomInfo`, BASE_URL);
     const reqOpts = await APIUtil.buildRequestOptions("GET");
