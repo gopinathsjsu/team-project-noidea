@@ -57,7 +57,7 @@ def lambda_handler(event, context):
     if hotel is None:
         return returnResponse(400, {'message': 'Invalid input, hotel does not exist',
                                     'status': 'error'})
-    branch = Branch(eventBody['branchId'], eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
+    branch = Branch(eventBody['branchId'], eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'], eventBody['userId'])
     uploadBranch(branch)
     branch = getBranch(eventBody['branchId'], eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',

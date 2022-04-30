@@ -53,8 +53,8 @@ def lambda_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, hotel exists, please modify instead',
                                     'status': 'error',
                                     'hotel': hotel.toJson()})
-    hotel = Hotel(eventBody['hotelId'], eventBody['name'], eventBody['email'], eventBody['address'], eventBody['country'])
-    uploadHotel(eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
+    hotel = Hotel(eventBody['hotelId'], eventBody['name'], eventBody['email'], eventBody['address'], eventBody['country'], eventBody['userId'])
+    uploadHotel(hotel)
     hotel = getHotel(eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',
                                 'status': 'success',
