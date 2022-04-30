@@ -93,7 +93,7 @@ def getHotel(hotelId):
         )
         if 'Item' not in item:
             return None
-        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'], item['Item']['ownerId'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
@@ -126,7 +126,7 @@ def getBranch(branchId, hotelId):
         )
         if 'Item' not in item:
             return None
-        return Branch(branchId, item['Item']['hotelId'], item['Item']['Address'], item['Item']['Country'], item['Item']['email'])
+        return Branch(branchId, item['Item']['hotelId'], item['Item']['Address'], item['Item']['Country'], item['Item']['email'], item['Item']['BranchName'], item['Item']['ownerId'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
@@ -135,7 +135,7 @@ def uploadBranch(branch):
     branchTable = dynamodb.Table(os.environ['TABLE_BRANCH'])
     try:
         branchTable.put_item(
-            Item={branch.toDict()}
+            Item=branch.toDict()
         )
         return True
     except ClientError as e:

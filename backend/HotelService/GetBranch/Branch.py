@@ -15,7 +15,7 @@ class Branch:
             'address': self.address,
             'country': self.country,
             'email': self.email,
-            'branchName': self.branchName
+            'branchName': self.name
         }
 
     def toDict(self):
