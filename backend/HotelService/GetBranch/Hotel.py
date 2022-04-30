@@ -6,7 +6,7 @@ class Hotel:
         self.country = hotelCountry
         self.email = hotelEmail
     
-    def toDict(self):
+    def toJson(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -14,7 +14,16 @@ class Hotel:
             'country': self.country,
             'email': self.email
         }
-    
+
+    def toDict(self):
+        return {
+            'hotelId': self.id,
+            'HotelName': self.name,
+            'Address': self.address,
+            'Country': self.country,
+            'email': self.email
+        }
+
     def redeemRewards(self, loyaltyAccount, amount):
         if loyaltyAccount.canRedeem(amount):
             loyaltyAccount.redeem(amount)

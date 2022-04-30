@@ -42,6 +42,8 @@ def lambda_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no email'})
     if 'userId' not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId. Cannot validate if admin'})
+    if 'name' not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no name for branch'})
     u = getUser(eventBody['userId'])
     if 'Admin' not in u.role:
         return returnResponse(400, {'message': 'Invalid input, user is not an admin',
@@ -50,17 +52,18 @@ def lambda_handler(event, context):
     if branch is not None:
         return returnResponse(400, {'message': 'Invalid input, hotel branch exists, please modify instead',
                                     'status': 'error',
-                                    'branch': branch.toDict()})
+                                    'branch': branch.toJson()})
     hotel = getHotel(eventBody['hotelId'])
     if hotel is None:
         return returnResponse(400, {'message': 'Invalid input, hotel does not exist',
                                     'status': 'error'})
-    uploadBranch(eventBody['branchId'], eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'])
+    branch = Branch(eventBody['branchId'], eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
+    uploadBranch(branch)
     branch = getBranch(eventBody['branchId'], eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',
                                 'status': 'success',
-                                'hotel': hotel.toDict(),
-                                'branch': branch.toDict()})
+                                'hotel': hotel.toJson(),
+                                'branch': branch.toJson()})
 
 def getUser(userId):
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
@@ -127,18 +130,12 @@ def getBranch(branchId, hotelId):
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
-def uploadBranch(branchId, hotelId, address, country, email):
+def uploadBranch(branch):
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
     branchTable = dynamodb.Table(os.environ['TABLE_BRANCH'])
     try:
         branchTable.put_item(
-            Item={
-                'branchId': branchId,
-                'hotelId': hotelId,
-                'Address': address,
-                'Country': country,
-                'email': email
-            }
+            Item={branch.toDict()}
         )
         return True
     except ClientError as e:

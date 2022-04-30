@@ -52,7 +52,7 @@ def lambda_handler(event, context):
 
     return returnResponse(200, {'message': 'branch found',
                                 'status': 'success',
-                                'branch': branch.toDict()})
+                                'branch': branch.toJson()})
     
 def getHotel(hotelId):
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
