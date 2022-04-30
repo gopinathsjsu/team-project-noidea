@@ -2,14 +2,14 @@ import uuid
 import json
 
 class Amenities:
-    def __init__(self, list_info: list) -> None:
-        self.id = list_info[0]
-        self.daily_con_breakfast = list_info[1]
-        self.acces_fitness_Room = list_info[2]
-        self.access_swimming_pool = list_info[3]
-        self.access_jacuzzi = list_info[4]
-        self.daily_parking = list_info[5]
-        self.allmeals = list_info[6]
+    def __init__(self, list_info: dict) -> None:
+        self.id = list_info["amenityId"]
+        self.daily_con_breakfast = list_info["dailyContinentalBreakfast"]
+        self.acces_fitness_Room = list_info["accesstoFinessRoom"]
+        self.access_swimming_pool = list_info["accesstoSummingPool"]
+        self.access_jacuzzi = list_info["accesstoJacuzzi"]
+        self.daily_parking = list_info["dailyParking"]
+        self.allmeals = list_info["allmeals"]
 
     def getId(self):
         return self.id

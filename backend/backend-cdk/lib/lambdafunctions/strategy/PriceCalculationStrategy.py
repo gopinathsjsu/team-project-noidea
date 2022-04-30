@@ -1,6 +1,3 @@
-import uuid
-import json
-
 class PriceCalculationStrategy:
 
     def calculate_price(self, origin_price):

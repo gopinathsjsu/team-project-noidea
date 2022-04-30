@@ -5,7 +5,7 @@ import * as path from 'path';
 
 export function createBookingLambda(stack: Stack, functionName: string, handerPath: string, environVars: {}): Function {
     let lambdaFunction = new Function(stack, functionName,{
-        runtime: lambda.Runtime.PYTHON_3_8,
+        runtime: lambda.Runtime.PYTHON_3_9,
         functionName: functionName,
         handler: handerPath,
         code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions')),
@@ -18,7 +18,7 @@ export function createBookingLambda(stack: Stack, functionName: string, handerPa
 
 export function createRoomLambda(stack: Stack, functionName: string, handerPath: string, environVars: {}): Function {
     let lambdaFunction = new Function(stack, functionName,{
-        runtime: lambda.Runtime.PYTHON_3_8,
+        runtime: lambda.Runtime.PYTHON_3_9,
         functionName: functionName,
         handler: handerPath,
         code: lambda.Code.fromAsset(path.join(__dirname, '../lambdafunctions')),

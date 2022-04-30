@@ -3,7 +3,7 @@
 # Login endpoint (GET) /user-login
 - Requires queries
   - Only 'userId' field
-- Returns the user object
+- Returns the user object and the credit card linked to the user if there is a credit card linked
 - Ex.
     .../user-login?userId=user001
 
