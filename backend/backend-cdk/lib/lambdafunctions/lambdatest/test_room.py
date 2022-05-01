@@ -18,26 +18,10 @@ class test_room(unittest.TestCase):
                 'ReadCapacityUnits': 5,
                 'WriteCapacityUnits': 5  
         })
-        table_name = 'test_table1'
-        dynamodb.create_table(TableName=table_name,
-                KeySchema=[{'AttributeName': 'amenityId','KeyType': 'HASH'}],
-                AttributeDefinitions=[{'AttributeName': 'amenityId','AttributeType': 'S'}],
-                ProvisionedThroughput={
-                'ReadCapacityUnits': 5,
-                'WriteCapacityUnits': 5  
-        })
+    
         event = {
             "body" : {
-            "amenityInfo" : {
-                "amenityId" : "amenitytest",
-                "dailyContinentalBreakfast" : True,
-                "accesstoFinessRoom" : True,
-                "accesstoSummingPool" : True,
-                "accesstoJacuzzi" : True,
-                "dailyParking" : True,
-                "allmeals": True
-            },
-            "roomInfo" : {"roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single"}
+            "roomInfo" : {"roomName" : "test","roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single"}
             }
         }
         response = room_handler(event, "")

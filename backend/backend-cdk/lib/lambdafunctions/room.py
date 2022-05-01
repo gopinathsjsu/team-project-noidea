@@ -7,7 +7,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 from constants.RoomType import RoomType
-from classes.Amenities import Amenities
+from classes.Amenity import Amenity
 from classes.Room import Room
 from constants.NoItemError import NoitemError
 from DAOimpl.RoomDAOimpl import RoomDAOimpl
@@ -30,27 +30,17 @@ def room_handler(event, context):
     if "body" in eventBody:
         eventBody = eventBody["body"]
     else:
-        return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
-
-    if "amenityInfo" not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no amenityInfo'})
-    
+        return returnResponse(400, {"message": "Invalid input, no `body` in request"})
     if "roomInfo" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no roomInfo'})
     
-    amenityInfo = eventBody["amenityInfo"]
     roomInfo = eventBody["roomInfo"]
     roomType = roomInfo["roomType"]
     if not RoomType.loopType(roomType):
         return returnResponse(400, "No such {} room type".format(roomType))
 
-    # Generate amenity object based on amenity Info
-    amenity_object = Amenities(amenityInfo)
-    amenity_item = amenity_object.getAmenitiesInfo()
-    amenitiesDAOimpl.addAmenity(amenity_item)
-
     # Generate room based on roomInfo and amenity obj
-    room_object = Room(roomInfo, amenity_object)
+    room_object = Room(roomInfo)
     room_item = room_object.getRoomInfo()
     roomDaoimpl.addRoom(room_item)
     
@@ -107,6 +97,21 @@ def roomType_handler(event, context):
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, "Something wrong with roomType_handler()")
+def allrooms_handler(event, conext):
+    logger.info("**** Start get all rooms service --->")
+    try:
+        allrooms = roomDaoimpl.getAllRooms()
+    except Exception as e:
+        return returnResponse(400, str(e))
+    return returnResponse(200, allrooms)
+
+def allamenity_handler(event, conext):
+    logger.info("**** Start get all amenity service --->")
+    try:
+        allamenity = amenitiesDAOimpl.getAllAmenities()
+    except Exception as e:
+        return returnResponse(400, str(e))
+    return returnResponse(200, allamenity)
 
 def amenity_handler(event, context):
     logger.info("**** Start change amenity service --->")
@@ -124,7 +129,7 @@ def amenity_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no amenityInfo'})
     if "amenityId" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no amenityId'})
-    amenityInfo = eventBody["amenityInfo"] # {"allmeal" : true, "Jazz" : true, ...}
+    amenityInfo = eventBody["amenityInfo"] 
     amenityId = eventBody["amenityId"]
     try:
         amenitiesDAOimpl.updateAmenity(amenityId, amenityInfo)
@@ -152,6 +157,27 @@ def amenityInfo_handler(event, context):
     except Exception as e:
         logger.debug(str(e))
         return returnResponse(400, "Something wrong with amenityInfo_handler()")
+def createamenity_handler(event, context):
+    
+    logger.info("**** Start room service --->")
+    eventBody = event
+    if type(event) == str:
+        eventBody = event
+    if "body" in eventBody:
+        eventBody = eventBody["body"]
+    else:
+        return returnResponse(400, {"message": "Invalid input, no `body` in request"})
+    if "amenityIfo" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no amenityIfo'})
+    
+    amenityIfo = eventBody["amenityIfo"]
+    
+    # Generate room based on roomInfo and amenity obj
+    amenityObj = Amenity(amenityIfo)
+    amenityItem = amenityObj.getAmenitysInfo()
+    amenitiesDAOimpl.addAmenity(amenityItem)
+    
+    return returnResponse(200, {"amenityId" : amenityObj.getId()})
 
 def returnResponse(statusCode, body):
     logger.debug("[RESPONSE] statusCode: {} body: {}".format(statusCode, body))

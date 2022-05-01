@@ -4,41 +4,33 @@ import sys
 sys.path.append("..")
 
 from constants.RoomType import RoomType
-from classes.Amenities import Amenities
 
 class Room:
 
-    def __init__(self, roomInfor, amenity: Amenities) -> None:
-        self.id = roomInfor["roomId"]
+    def __init__(self, roomInfor) -> None:
+        self.id = str(uuid.uuid4())
         self.hotelId = roomInfor["hotelId"]
         self.price = 0
         self.roomType = roomInfor["roomType"]
-        self.amenity = amenity
+        self.name = roomInfor["roomName"]
 
     def getId(self):
         return self.id
 
     def getHotelId(self):
         return self.hotelId
-
-    def getAmenityId(self):
-        return self.amenity.getId()
-
+    
     def getType(self):
         return self.roomType
-
-    def setAmenity(self, amenity):
-        self.amenity = amenity
+    def getName(self):
+        return self.name
     
-    def getAmenity(self):
-        return self.amenity
-
     def getPrice(self):
         if (self.roomType == RoomType.SINGLE.value):
             return 100
         elif (self.roomType == RoomType.DOUBLE.value):
             return 198
-        elif (self.roomType == RoomType.TRIPE.value):
+        elif (self.roomType == RoomType.Triple.value):
             return 289
         elif (self.roomType == RoomType.QUAD.value):
             return 369
@@ -56,16 +48,18 @@ class Room:
 
     def getRoomInfoJson(self):
         return json.dumps({
-            "roomId" : self.id,
-            "hotelId" : self.hotelId,
-            "amenityId" : self.getAmenityId(),
-            "roomType" : self.roomType
+            "roomId" : self.getId(),
+            "hotelId" : self.getHotelId(),
+            "roomType" : self.getType(),
+            "roomPrice" : str(self.getPrice()),
+            "roomName" : self.getName()
         })
 
     def getRoomInfo(self):
         return {
-            "roomId" : self.id,
-            "hotelId" : self.hotelId,
-            "amenityId" : self.getAmenityId(),
-            "roomType" : self.roomType
+            "roomId" : self.getId(),
+            "hotelId" : self.getHotelId(),
+            "roomType" : self.getType(),
+            "roomPrice" : str(self.getPrice()),
+            "roomName" : self.getName()
         }
