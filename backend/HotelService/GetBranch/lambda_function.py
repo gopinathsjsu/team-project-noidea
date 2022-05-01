@@ -29,19 +29,39 @@ def lambda_handler(event, context):
     if 'hotelId' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no hotel'})
     
-    hotel = getHotel(eventBody['hotelId'])
+    hotel = None
+    if eventBody['hotelId'] == '-1':
+        hotel = getHotelAll()
+    else:
+        hotel = getHotel(eventBody['hotelId'])
     if hotel is None:
         return returnResponse(400, {'message': 'Invalid hotelId'})
 
     if 'branchId' not in eventBody: 
         return returnResponse(400, {'message': 'Invalid input, no branch'})
     
-    if eventBody['branchId'] == '-1':
+    if eventBody['branchId'] == '-1' and eventBody['hotelId'] != '-1':
         branches = getBranchAll(eventBody['hotelId'])
         if branches == None:
             return returnResponse(400, {'message': 'No branches found',
                                        'status': 'error'})
         return returnResponse(200, {'message': '{} branches found'.format(len(branches)),
+                                    'status': 'success',
+                                    'branches': branches})
+    elif eventBody['branchId'] == '-1' and eventBody['hotelId'] == '-1':
+        branches = {}
+        hotels = getHotelAll()
+        if hotels == None:
+            return returnResponse(400, {'message': 'No hotels found',
+                                       'status': 'error'})
+        for hotel in hotels:
+            logger.debug('[DEBUG] hotel: {}'.format(hotel))
+            if branches.get(hotel['hotelId']) is None:
+                branches[hotel['hotelId']] = getBranchAll(hotel['hotelId'])
+        if branches == None:
+            return returnResponse(400, {'message': 'No branches found',
+                                       'status': 'error'})
+        return returnResponse(200, {'message': '{} hotels found with'.format(len(branches)),
                                     'status': 'success',
                                     'branches': branches})
         
@@ -100,6 +120,20 @@ def getBranchAll(hotelId):
         if 'Items' not in item:
             return None
         if len(item['Items']) == 0:
+            return None
+        return item['Items']
+    except ClientError as e:
+        return returnResponse(400, e.response['Error']['Message'])
+
+def getHotelAll():
+    dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
+    hotelTable = dynamodb.Table(os.environ['TABLE_HOTEL'])
+    try:
+        item = hotelTable.scan(
+            ProjectionExpression = "hotelId, HotelName, email, ownerId, Address"
+        )
+        logger.debug('[DEBUG] item: {}'.format(item))
+        if 'Items' not in item:
             return None
         return item['Items']
     except ClientError as e:
