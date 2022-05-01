@@ -66,7 +66,7 @@ def getHotelAll():
     hotelTable = dynamodb.Table(os.environ['TABLE_HOTEL'])
     try:
         item = hotelTable.scan(
-            ProjectionExpression = "hotelId, HotelName, email, ownerId"
+            ProjectionExpression = "hotelId, HotelName, email, ownerId, Address"
         )
         logger.debug('[DEBUG] item: {}'.format(item))
         if 'Items' not in item:

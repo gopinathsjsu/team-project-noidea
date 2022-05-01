@@ -93,7 +93,7 @@ def getBranchAll(hotelId):
     branchTable = dynamodb.Table(os.environ['TABLE_BRANCH'])
     try:
         item = branchTable.scan(
-            ProjectionExpression = "branchId, BranchName, email, ownerId",
+            ProjectionExpression = "branchId, BranchName, email, ownerId, Address",
             FilterExpression = Attr('hotelId').eq(hotelId)
         )
         logger.debug('[DEBUG] item: {}'.format(item))
