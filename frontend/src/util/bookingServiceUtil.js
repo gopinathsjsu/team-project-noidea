@@ -52,4 +52,35 @@ export default class BookingServiceUtil {
 
     return data;
   }
+  static async updateRoom(roomPayload) {
+    const url = new URL(`/prod/room`, BASE_URL);
+    const reqOpts = await APIUtil.buildRequestOptions("POST", {
+      body: {
+        roomInfo: {
+          ...roomPayload
+        }
+      }
+    });
+
+    const response = await fetch(url, reqOpts);
+    const data = await response.json();
+
+    return data;
+  }
+  static async updateExistingRoom(roomId, roomPayload) {
+    const url = new URL(`/prod/roomtype`, BASE_URL);
+    const reqOpts = await APIUtil.buildRequestOptions("PATCH", {
+      body: {
+        roomId,
+        roomInfo: {
+          ...roomPayload
+        }
+      }
+    });
+
+    const response = await fetch(url, reqOpts);
+    const data = await response.json();
+
+    return data;
+  }
 }

@@ -40,4 +40,41 @@ export default class HotelServiceUtil {
       return data;
     });
   }
+
+  static async getBranches(hotelId) {
+    return APIUtil.apiUtilDecorator(async () => {
+      const url = new URL(`/dev/branch-get?hotelId=${hotelId}&branchId=-1`, BASE_URL);
+
+      const reqOpts = await APIUtil.buildRequestOptions("GET");
+
+      const response = await fetch(url, reqOpts);
+      const data = await response.json();
+
+      return data;
+    });
+  }
+
+  static async registerBranch(payload) {
+    return APIUtil.apiUtilDecorator(async () => {
+      const url = new URL(`/dev/branch-create`, BASE_URL);
+      const cogUserId = await Auth.currentSession();
+
+      const reqOpts = await APIUtil.buildRequestOptions("POST", {
+        hotel: {
+          branchId: uuidv4(),
+          hotelId: payload.hotelId,
+          userId: cogUserId?.idToken?.payload["cognito:username"],
+          address: payload.address,
+          country: "USA",
+          email: payload.email,
+          name: payload.name
+        }
+      });
+
+      const response = await fetch(url, reqOpts);
+      const data = await response.json();
+
+      return data;
+    });
+  }
 }

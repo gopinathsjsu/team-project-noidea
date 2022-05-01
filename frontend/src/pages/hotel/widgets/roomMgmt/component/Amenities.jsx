@@ -120,7 +120,7 @@ export default function Amenities(props) {
   }, [dispatch, amenitiesRdx]);
 
   return (
-    <div style={{ maxWidth: 700 }}>
+    <div style={{ maxWidth: 700, paddingBottom: 150 }}>
       {amenitiesRdx &&
         amenitiesRdx.map((amen, idx) => (
           <div key={`${idx}_${amen.amenityId}`}>

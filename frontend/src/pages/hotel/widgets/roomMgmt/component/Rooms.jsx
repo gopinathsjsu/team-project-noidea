@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { getHotelDataRdx } from "../../../../../redux/context/contextSelectors";
+import { setGlobalLoad } from "../../../../../redux/globalUI/globalUISlice";
 import { getRoomsRdx } from "../../../../../redux/hotelData/hotelDataSelector";
 import { updateRoom } from "../../../../../redux/hotelData/hotelDataSlice";
 import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
@@ -28,27 +30,39 @@ function RoomEditing(props) {
         </Form.Group>
       </div>
       <Form.Group className="mb-3">
-        <Form.Label>Description</Form.Label>
-        <Form.Control
-          as="textarea"
-          rows={1}
+        <Form.Label>Room Type</Form.Label>
+        <Form.Select
           value={fields.roomType}
-          onChange={(e) => setFields((fls) => ({ ...fls, roomType: e.target.value }))}
-        />
+          onChange={(e) => setFields((fls) => ({ ...fls, roomType: e.target.value }))}>
+          <option value="Single">Single</option>
+          <option value="Double">Double</option>
+          <option value="Triple">Triple</option>
+          <option value="Quad">Quad</option>
+        </Form.Select>
       </Form.Group>
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="outline-primary"
-          style={{ marginRight: 5 }}
-          onClick={() => {
-            setAdding(false);
-            props.onCancel && props.onCancel();
-          }}>
-          Cancel
-        </Button>
-        <Button style={{ marginLeft: 5 }} onClick={() => setAdding(false)}>
-          Add amenity
-        </Button>
+        <div style={{ flex: 1 }}>
+          <Button variant="outline-danger">Delete</Button>
+        </div>
+        <div>
+          <Button
+            variant="outline-primary"
+            style={{ marginRight: 5 }}
+            onClick={() => {
+              setAdding(false);
+              props.onCancel && props.onCancel();
+            }}>
+            Cancel
+          </Button>
+          <Button
+            style={{ marginLeft: 5 }}
+            onClick={() => {
+              setAdding(false);
+              props.onSubmit && props.onSubmit();
+            }}>
+            Save
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -56,6 +70,7 @@ function RoomEditing(props) {
 
 function RoomItem(props) {
   const { room } = props;
+  const dispatch = useDispatch();
   const [editing, setEditing] = useState(false);
   const [fields, setFields] = useState({
     roomName: room.roomName,
@@ -88,6 +103,17 @@ function RoomItem(props) {
                 roomType: room.roomType
               })
             }
+            onSubmit={async () => {
+              dispatch(setGlobalLoad(true));
+              await BookingServiceUtil.updateExistingRoom(room.roomId, {
+                ...fields
+              });
+              const resp = await BookingServiceUtil.getRooms();
+              if (resp && !resp.error) {
+                dispatch(updateRoom(resp));
+              }
+              dispatch(setGlobalLoad(false));
+            }}
           />
         </div>
       </Collapse>
@@ -96,10 +122,10 @@ function RoomItem(props) {
 }
 
 export default function Rooms(props) {
+  const hotelData = useSelector(getHotelDataRdx);
   const dispatch = useDispatch();
   const roomsRdx = useSelector(getRoomsRdx);
   const [adding, setAdding] = useState(false);
-  const [rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState({
     roomName: "",
     roomType: "",
@@ -117,13 +143,14 @@ export default function Rooms(props) {
     }
   }, [dispatch, roomsRdx]);
 
-  useEffect(() => {
-    setRooms(roomsRdx);
-  }, [roomsRdx]);
-
   return (
     <div style={{ maxWidth: 700, marginBottom: 150 }}>
-      {rooms && rooms.map((room) => <RoomItem room={room} />)}
+      {roomsRdx &&
+        roomsRdx.map((room, idx) => (
+          <div key={`${idx}_${room.roomId}`}>
+            <RoomItem room={room} />
+          </div>
+        ))}
       <div className="skinny-item-container">
         <Collapse in={!adding}>
           <div>
@@ -145,6 +172,23 @@ export default function Rooms(props) {
                   roomPrice: ""
                 })
               }
+              onSubmit={async () => {
+                dispatch(setGlobalLoad(true));
+                await BookingServiceUtil.updateRoom({
+                  hotelId: hotelData.hotelId,
+                  ...newRoom
+                });
+                const resp = await BookingServiceUtil.getRooms();
+                if (resp && !resp.error) {
+                  dispatch(updateRoom(resp));
+                }
+                setNewRoom({
+                  roomName: "",
+                  roomType: "",
+                  roomPrice: ""
+                });
+                dispatch(setGlobalLoad(false));
+              }}
             />
           </div>
         </Collapse>
