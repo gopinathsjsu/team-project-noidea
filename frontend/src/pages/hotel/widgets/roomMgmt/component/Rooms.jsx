@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoomsRdx } from "../../../../../redux/hotelData/hotelDataSelector";
+import { updateRoom } from "../../../../../redux/hotelData/hotelDataSlice";
 import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
 
 function RoomEditing(props) {
@@ -93,6 +96,8 @@ function RoomItem(props) {
 }
 
 export default function Rooms(props) {
+  const dispatch = useDispatch();
+  const roomsRdx = useSelector(getRoomsRdx);
   const [adding, setAdding] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState({
@@ -102,13 +107,19 @@ export default function Rooms(props) {
   });
 
   useEffect(() => {
-    (async () => {
-      const resp = await BookingServiceUtil.getRooms();
-      if (resp && !resp.error) {
-        setRooms(resp);
-      }
-    })();
-  }, []);
+    if (!roomsRdx || roomsRdx.length === 0) {
+      (async () => {
+        const resp = await BookingServiceUtil.getRooms();
+        if (resp && !resp.error) {
+          dispatch(updateRoom(resp));
+        }
+      })();
+    }
+  }, [dispatch, roomsRdx]);
+
+  useEffect(() => {
+    setRooms(roomsRdx);
+  }, [roomsRdx]);
 
   return (
     <div style={{ maxWidth: 700, marginBottom: 150 }}>

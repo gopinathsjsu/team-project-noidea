@@ -5,9 +5,12 @@ import { getHotelDataRdx } from "../../../../../redux/context/contextSelectors";
 import { setGlobalLoad } from "../../../../../redux/globalUI/globalUISlice";
 import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
 import { v4 as uuid4 } from "uuid";
+import { updateAmenities } from "../../../../../redux/hotelData/hotelDataSlice";
+import { getAmenitiesRdx } from "../../../../../redux/hotelData/hotelDataSelector";
 
 function AmenityEdit(props) {
   const { setEditing, fields, setFields } = props;
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -41,9 +44,13 @@ function AmenityEdit(props) {
         </Button>
         <Button
           style={{ marginLeft: 5 }}
-          onClick={() => {
+          onClick={async () => {
             setEditing(false);
-            props.onSubmit && props.onSubmit();
+            props.onSubmit && (await props.onSubmit());
+            const resp = await BookingServiceUtil.getAmenitites();
+            if (resp && !resp.error) {
+              dispatch(updateAmenities(resp));
+            }
           }}>
           Save changes
         </Button>
@@ -55,6 +62,7 @@ function AmenityEdit(props) {
 function AmenityItem(props) {
   const { amen } = props;
   const [editing, setEditing] = useState(false);
+  const dispatch = useDispatch();
   const [fields, setFields] = useState({
     amenityName: amen.amenityName,
     amenityPrice: amen.amenityPrice
@@ -74,6 +82,15 @@ function AmenityItem(props) {
             fields={fields}
             setFields={setFields}
             onCancel={() => setFields({ amenityName: amen.amenityName, amenityPrice: amen.amenityPrice })}
+            onSubmit={async () => {
+              dispatch(setGlobalLoad(true));
+              await BookingServiceUtil.updateExistingAmenity(amen.amenityId, fields);
+              const resp = await BookingServiceUtil.getAmenitites();
+              if (resp && !resp.error) {
+                dispatch(updateAmenities(resp));
+              }
+              dispatch(setGlobalLoad(false));
+            }}
           />
         </div>
       </Collapse>
@@ -83,26 +100,33 @@ function AmenityItem(props) {
 
 export default function Amenities(props) {
   const hotelData = useSelector(getHotelDataRdx);
-  const [adding, setAdding] = useState(false);
-  const [amenities, setAmenities] = useState([]);
+  const amenitiesRdx = useSelector(getAmenitiesRdx);
   const dispatch = useDispatch();
+  const [adding, setAdding] = useState(false);
   const [newAmenity, setNewAmenity] = useState({
     amenityPrice: "",
     amenityName: ""
   });
 
   useEffect(() => {
-    (async () => {
-      const resp = await BookingServiceUtil.getAmenitites();
-      if (resp && !resp.error) {
-        setAmenities(resp);
-      }
-    })();
-  }, []);
+    if (!amenitiesRdx || amenitiesRdx.length === 0) {
+      (async () => {
+        const resp = await BookingServiceUtil.getAmenitites();
+        if (resp && !resp.error) {
+          dispatch(updateAmenities(resp));
+        }
+      })();
+    }
+  }, [dispatch, amenitiesRdx]);
 
   return (
     <div style={{ maxWidth: 700 }}>
-      {amenities && amenities.map((amen) => <AmenityItem amen={amen} />)}
+      {amenitiesRdx &&
+        amenitiesRdx.map((amen, idx) => (
+          <div key={`${idx}_${amen.amenityId}`}>
+            <AmenityItem amen={amen} />
+          </div>
+        ))}
       <div className="skinny-item-container">
         <Collapse in={!adding}>
           <div onClick={() => setAdding(true)} style={{ marginBottom: 10 }}>
@@ -124,6 +148,10 @@ export default function Amenities(props) {
                   amenityName: newAmenity.amenityName,
                   amenityPrice: newAmenity.amenityPrice
                 });
+                const resp = await BookingServiceUtil.getAmenitites();
+                if (resp && !resp.error) {
+                  dispatch(updateAmenities(resp));
+                }
                 dispatch(setGlobalLoad(false));
               }}
             />
