@@ -86,25 +86,8 @@ export default function BookingInput(props) {
                 style={{ paddingLeft: 30, paddingRight: 30 }}
                 onClick={() => {
                   setSearchParams(fields);
-                  props.onComplete(
-                    [
-                      {
-                        name: "Hyatt Regency",
-                        location: "San Francisco, CA",
-                        price: "$209.33",
-                        totalPrice: "$1083.32",
-                        amenities: ["Pool and Gymnasium", "Free parking", "Free breakfast"]
-                      },
-                      {
-                        name: "Hyatt Place",
-                        location: "San Jose, CA",
-                        price: "$73.54",
-                        totalPrice: "$487.64",
-                        amenities: ["Free parking", "Free breakfast", "Pool"]
-                      }
-                    ],
-                    fields
-                  );
+                  props.onQuery();
+                  props.onComplete(fields);
                 }}>
                 Search
               </Button>

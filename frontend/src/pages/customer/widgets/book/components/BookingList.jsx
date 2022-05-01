@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { getUserTypeRdx } from "../../../../../redux/context/contextSelectors";
 
 export default function BookingList(props) {
@@ -18,29 +18,17 @@ export default function BookingList(props) {
         </p>
       </div>
       {hotels &&
-        hotels.map((hotel) => (
+        hotels.map((hotel, idx) => (
           <div
+            key={`${hotel.branchId}_${idx}`}
             className="listed-item-container"
             onClick={() => {
               if (userType === "customer") {
                 navigate("/customer/book/new", { state: { hotel, bookingParam } });
               }
             }}>
-            <h5 style={{ marginBottom: 2 }}>{hotel.name}</h5>
-            <p style={{ margin: "0px 0px 10px 0px" }}>{hotel.location}</p>
-            <div style={{ display: "flex" }}>
-              <div style={{ flex: 1 }}>
-                <ul style={{ marginBottom: 0 }}>
-                  {hotel.amenities.map((ameni) => (
-                    <li>{ameni}</li>
-                  ))}
-                </ul>
-              </div>
-              <div style={{ alignSelf: "flex-end", textAlign: "right" }}>
-                <h4 style={{ margin: 0 }}>{hotel.price}</h4>
-                <p style={{ margin: 0, color: "#999999" }}>{hotel.totalPrice} total</p>
-              </div>
-            </div>
+            <h5 style={{ marginBottom: 2 }}>{hotel.BranchName}</h5>
+            <p style={{ margin: "0px 0px 10px 0px" }}>{hotel.Address}</p>
           </div>
         ))}
     </div>

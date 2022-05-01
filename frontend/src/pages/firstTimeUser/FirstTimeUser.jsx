@@ -13,6 +13,7 @@ import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlic
 import { useNavigate } from "react-router-dom";
 import { setHotelData, setUserData, updateUserType } from "../../redux/context/contextSlice";
 import HotelServiceUtil from "../../util/hotelServiceUtil";
+import LoyaltyServiceUtil from "../../util/loyaltyServiceUtil";
 
 function TextField(props) {
   return (
@@ -120,6 +121,7 @@ export function AccordionLayout(props) {
               }
               const userInfoResp = await UserServiceUtil.getUserInfo(userId);
               dispatch(updateUserType({ userType: props.userType }));
+              await LoyaltyServiceUtil.createLoyaltyAccount();
               if (response.error || userInfoResp.error || (props.userType === "hotel" && responseHotel.error)) {
                 dispatch(
                   triggerMessage({
