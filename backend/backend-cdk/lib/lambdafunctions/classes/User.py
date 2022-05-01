@@ -1,13 +1,15 @@
+from associate.loyaltyPoint import getloatyPoint
 class User:
-    def __init__(self, userId, firstName, lastName, email, address, country, role):
+    def __init__(self, userId, firstname, lastname, email, address, country, role):
         self.id = userId
-        self.fName = firstName
-        self.lName = lastName
+        self.fName = firstname
+        self.lName = lastname
         self.address = address
         self.country = country
         self.email = email
         self.role = role
-    
+        self.loyalty = -1
+        
     def getName(self):
         return [self.fName, self.lName]
 
@@ -31,7 +33,9 @@ class User:
         return self.country
         
     def getLoyalty(self):
-        return 66
+        if self.loyalty == -1: 
+            self.loyalty = getloatyPoint(self.id)
+        return self.loyalty
 
     def setCountry(self, country):
         self.country = country

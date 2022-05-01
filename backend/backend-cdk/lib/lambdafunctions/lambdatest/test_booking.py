@@ -43,7 +43,7 @@ class test_booking(unittest.TestCase):
                 'WriteCapacityUnits': 5  
         })
         room_data = {
-            "roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single", "amenityId" : "amenitytest"
+            "roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single", "roomName" : "test"
         }
         roomDaoimpl.addRoom(room_data)
         
@@ -57,12 +57,9 @@ class test_booking(unittest.TestCase):
         })
         amenity_data = {
             "amenityId" : "amenitytest",
-            "dailyContinentalBreakfast" : True,
-            "accesstoFinessRoom" : True,
-            "accesstoSummingPool" : True,
-            "accesstoJacuzzi" : True,
-            "dailyParking" : True,
-            "allmeals": True
+            "hotelId" : "hotel001",
+            "amenityName" : "lunch",
+            "amenityPrice" : 12
         }
         amenitiesDAOimpl.addAmenity(amenity_data)
         
@@ -81,7 +78,8 @@ class test_booking(unittest.TestCase):
                 "startDate" : "08/02/2021",
                 "endDate" : "09/20/2021",
                 "season" : "Summer",
-                "days" : "Weekdays"
+                "days" : "Weekdays",
+                "amenityIds" : ["amenitytest"]
             }
         }
         response = reservation_handler(event, "")

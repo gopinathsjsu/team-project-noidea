@@ -1,10 +1,11 @@
-import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
+import { Stack, StackProps, CfnOutput, Duration} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { createBookingLambda, createRoomLambda }  from './resource/lambda'
+import { createBookingLambda, createRoomLambda, createAssociateLambda }  from './resource/lambda'
 import { createRestAPI } from './resource/apigateway'
 import * as apigw from "aws-cdk-lib/aws-apigateway";
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import { createTable } from './resource/dynamodb'
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 export class BackEndCdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -24,7 +25,7 @@ export class BackEndCdkStack extends Stack {
     const amenity_table = createTable(this, 'amenity_table', 'amenityId')
     const room_table = createTable(this, 'room_table', 'roomId');
     const user_table = dynamodb.Table.fromTableArn(this, 'user_table', 'arn:aws:dynamodb:us-west-2:568187732893:table/User');
-    
+    const loyalty_table = dynamodb.Table.fromTableArn(this, 'loyalty_table', 'arn:aws:dynamodb:us-west-2:568187732893:table/HotelLoyalty');
     // Lambdas
     const booking_service = createBookingLambda(this, 'Hotel_booking', 'booking.reservation_handler', {
       "region": this.region,
@@ -105,6 +106,13 @@ export class BackEndCdkStack extends Stack {
       "amenity_table" : amenity_table.tableName,
       "user_table" : user_table.tableName
     });
+    const createamenity_handler = createRoomLambda(this, 'Hotel_create_amenity', 'room.createamenity_handler', {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    });
 
     const get_amenity = createRoomLambda(this, 'Hotel_get_amenity', 'room.amenityInfo_handler', {
       "region": this.region,
@@ -114,11 +122,57 @@ export class BackEndCdkStack extends Stack {
       "user_table" : user_table.tableName
     });
 
+    const allrooms_handler = createRoomLambda(this, 'Hotel_get_allrooms', 'room.allrooms_handler', {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    })
+
+    const allamenity_handler = createRoomLambda(this, 'Hotel_get_allamenity', 'room.allamenity_handler', {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    })
+
+    const getallreservation_hanlder = createBookingLambda(this, "Hotel_get_allreservation", "booking.getallreservation_hanlder", {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    })
+    const amenityTotalPrice = createAssociateLambda(this, "Hotel_amenityTotalPrice", "amenityTotalPrice.amenityTotalPrice", {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    })
+    const getloatyPoint = createAssociateLambda(this, "Hotel_getloatyPoint", "loyaltyPoint.getloatyPoint", {
+      "region": this.region,
+      "room_table": room_table.tableName,
+      "reservation_table" : reservation_table.tableName,
+      "amenity_table" : amenity_table.tableName,
+      "user_table" : user_table.tableName
+    })
+
+    
     // API Resource
     const bookingtResource = APIBooking.root.addResource("booking", {
       defaultCorsPreflightOptions: {
           allowOrigins: ['*'],
-          allowCredentials: true
+          allowCredentials: true,
+          allowHeaders: [
+            'Content-Type',
+            'X-Amz-Date',
+            'Authorization',
+            'X-Api-Key',
+          ],
+          allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -129,11 +183,59 @@ export class BackEndCdkStack extends Stack {
         }]
       }
     });
-
-    const retrieveReservation = APIBooking.root.addResource("reservationinfo", {
+    const createamentiyRes = APIRoom.root.addResource("buildamentity", {
       defaultCorsPreflightOptions: {
           allowOrigins: ['*'],
-          allowCredentials: true
+          allowCredentials: true,
+          allowHeaders: [
+            'Content-Type',
+            'X-Amz-Date',
+            'Authorization',
+            'X-Api-Key',
+          ],
+          allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+      },
+      defaultMethodOptions: {
+        methodResponses: [{
+            statusCode: "200",
+            responseParameters: {
+              'method.response.header.Content-Type': true 
+            }
+        }]
+      }
+    });
+    const getallreservation = APIBooking.root.addResource("allreservation", {
+      defaultCorsPreflightOptions: {
+          allowOrigins: ['*'],
+          allowCredentials: true,
+          allowHeaders: [
+            'Content-Type',
+            'X-Amz-Date',
+            'Authorization',
+            'X-Api-Key',
+          ],
+          allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+      },
+      defaultMethodOptions: {
+        methodResponses: [{
+            statusCode: "200",
+            responseParameters: {
+              'method.response.header.Content-Type': true 
+            }
+        }]
+      }
+    });
+    const retrieveReservation = APIBooking.root.addResource("reservationinfo", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -146,8 +248,15 @@ export class BackEndCdkStack extends Stack {
     });
     const confirmReservation = APIBooking.root.addResource("confirm", {
       defaultCorsPreflightOptions: {
-          allowOrigins: ['*'],
-          allowCredentials: true
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -160,8 +269,15 @@ export class BackEndCdkStack extends Stack {
     });
     const cancelReservation = APIBooking.root.addResource("cancel", {
       defaultCorsPreflightOptions: {
-          allowOrigins: ['*'],
-          allowCredentials: true
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -175,8 +291,15 @@ export class BackEndCdkStack extends Stack {
 
     const checkInReservation = APIBooking.root.addResource("checkin", {
       defaultCorsPreflightOptions: {
-          allowOrigins: ['*'],
-          allowCredentials: true
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -190,8 +313,15 @@ export class BackEndCdkStack extends Stack {
 
     const checkOutReservation = APIBooking.root.addResource("checkout", {
       defaultCorsPreflightOptions: {
-          allowOrigins: ['*'],
-          allowCredentials: true
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -202,17 +332,18 @@ export class BackEndCdkStack extends Stack {
         }]
       }
     });
-    bookingtResource.addMethod('ANY');
-    retrieveReservation.addMethod('ANY');
-    confirmReservation.addMethod('ANY');
-    cancelReservation.addMethod('ANY');
-    checkInReservation.addMethod('ANY');
-    checkOutReservation.addMethod('ANY');
 
     const roomResource = APIRoom.root.addResource("room", {
       defaultCorsPreflightOptions: {
-          allowOrigins: ['*'],
-          allowCredentials: true
+        allowOrigins: ['*'],
+        allowCredentials: true,
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       },
       defaultMethodOptions: {
         methodResponses: [{
@@ -226,8 +357,15 @@ export class BackEndCdkStack extends Stack {
 
   const roomInfo = APIRoom.root.addResource("roominfo", {
     defaultCorsPreflightOptions: {
-        allowOrigins: ['*'],
-        allowCredentials: true
+      allowOrigins: ['*'],
+      allowCredentials: true,
+      allowHeaders: [
+        'Content-Type',
+        'X-Amz-Date',
+        'Authorization',
+        'X-Api-Key',
+      ],
+      allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     },
     defaultMethodOptions: {
       methodResponses: [{
@@ -238,10 +376,39 @@ export class BackEndCdkStack extends Stack {
       }]
     }
 });
+
+const allroomInfo = APIRoom.root.addResource("allroomInfo", {
+  defaultCorsPreflightOptions: {
+    allowOrigins: ['*'],
+    allowCredentials: true,
+    allowHeaders: [
+      'Content-Type',
+      'X-Amz-Date',
+      'Authorization',
+      'X-Api-Key',
+    ],
+    allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  },
+  defaultMethodOptions: {
+    methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true 
+        }
+    }]
+  }
+});
   const roomType = APIRoom.root.addResource("roomtype", {
     defaultCorsPreflightOptions: {
-        allowOrigins: ['*'],
-        allowCredentials: true
+      allowOrigins: ['*'],
+      allowCredentials: true,
+      allowHeaders: [
+        'Content-Type',
+        'X-Amz-Date',
+        'Authorization',
+        'X-Api-Key',
+      ],
+      allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     },
     defaultMethodOptions: {
       methodResponses: [{
@@ -254,8 +421,15 @@ export class BackEndCdkStack extends Stack {
   });
   const changeamenity = APIRoom.root.addResource("amenity", {
     defaultCorsPreflightOptions: {
-        allowOrigins: ['*'],
-        allowCredentials: true
+      allowOrigins: ['*'],
+      allowCredentials: true,
+      allowHeaders: [
+        'Content-Type',
+        'X-Amz-Date',
+        'Authorization',
+        'X-Api-Key',
+      ],
+      allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     },
     defaultMethodOptions: {
       methodResponses: [{
@@ -268,8 +442,15 @@ export class BackEndCdkStack extends Stack {
   });
   const amenityInfo = APIRoom.root.addResource("amenityinfo", {
     defaultCorsPreflightOptions: {
-        allowOrigins: ['*'],
-        allowCredentials: true
+      allowOrigins: ['*'],
+      allowCredentials: true,
+      allowHeaders: [
+        'Content-Type',
+        'X-Amz-Date',
+        'Authorization',
+        'X-Api-Key',
+      ],
+      allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     },
     defaultMethodOptions: {
       methodResponses: [{
@@ -280,12 +461,27 @@ export class BackEndCdkStack extends Stack {
       }]
     }
 });
-  roomResource.addMethod('ANY');
-  roomInfo.addMethod('ANY');
-  roomType.addMethod("ANY");
-  changeamenity.addMethod("ANY");
-  amenityInfo.addMethod('ANY');
-
+const allamenityInfo = APIRoom.root.addResource("allamenityInfo", {
+  defaultCorsPreflightOptions: {
+    allowOrigins: ['*'],
+    allowCredentials: true,
+    allowHeaders: [
+      'Content-Type',
+      'X-Amz-Date',
+      'Authorization',
+      'X-Api-Key',
+    ],
+    allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  },
+  defaultMethodOptions: {
+    methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true 
+        }
+    }]
+  }
+});
   // API Method
     bookingtResource.addMethod(
       "POST",
@@ -306,6 +502,29 @@ export class BackEndCdkStack extends Stack {
         ]
       }
     );
+    createamentiyRes.addMethod(
+      "POST",
+      new apigw.LambdaIntegration(createamenity_handler, {proxy: false, 
+        integrationResponses: [
+        {statusCode: "200"}
+        ]}),
+      {
+        methodResponses: [
+          {
+            statusCode: "200",
+            responseParameters: {
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Origin": true
+            }
+          }
+        ]
+      }
+    )
+    getallreservation.addMethod(
+      "GET",
+      new apigw.LambdaIntegration(getallreservation_hanlder, {proxy: true})
+    )
     retrieveReservation.addMethod(
       "GET",
       new apigw.LambdaIntegration(get_reservation, {proxy: true})
@@ -452,22 +671,36 @@ export class BackEndCdkStack extends Stack {
       "GET",
       new apigw.LambdaIntegration(get_amenity, {proxy: true})
     );
+    allamenityInfo.addMethod(
+      "GET",
+      new apigw.LambdaIntegration(allamenity_handler, {proxy: true})
+    )
+    allroomInfo.addMethod(
+      "GET",
+      new apigw.LambdaIntegration(allrooms_handler, {proxy: true})
+    )
     // Access Permission
     user_table.grantFullAccess(booking_service);
     amenity_table.grantFullAccess(booking_service);
     amenity_table.grantFullAccess(room_service);
     amenity_table.grantFullAccess(change_amenity);
     amenity_table.grantFullAccess(get_amenity);
+    amenity_table.grantFullAccess(allamenity_handler);
+    amenity_table.grantFullAccess(createamenity_handler);
+    amenity_table.grantFullAccess(amenityTotalPrice);
     reservation_table.grantFullAccess(booking_service);
     reservation_table.grantFullAccess(get_reservation);
     reservation_table.grantFullAccess(confirm_reservation);
     reservation_table.grantFullAccess(cancel_reservation);
     reservation_table.grantFullAccess(checkIn_reservation);
     reservation_table.grantFullAccess(checkOut_reservation);
+    reservation_table.grantFullAccess(getallreservation_hanlder);
     room_table.grantFullAccess(booking_service);
     room_table.grantFullAccess(room_service);
-    room_table.grantFullAccess(room_info)
-    room_table.grantFullAccess(room_type)
-    
+    room_table.grantFullAccess(room_info);
+    room_table.grantFullAccess(room_type);
+    room_table.grantFullAccess(allrooms_handler);
+    loyalty_table.grantFullAccess(getloatyPoint);
+    loyalty_table.grantFullAccess(booking_service);
   }
 }

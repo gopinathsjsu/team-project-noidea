@@ -45,8 +45,19 @@ It returns a reservation information if the queryStringParameters is reservation
 # /amenity [PATCH]
 ## This endpoint is used to udpate amenity information. 
 - Requires body only
-  - amenityInfo: List
-
+  - amenityInfo: Object
+```
+Request Example:
+{
+    "body" : {
+	"amenityId": "amenity001",
+	"amenityInfo" : {
+	    "allmeals" : false,
+	    "dailyParking" : false
+	}
+    }
+ }
+```
 # /amenityinfo[GET]
 ## This endpoint is used to get amenity information.
 - Request field
@@ -55,20 +66,25 @@ It returns a reservation information if the queryStringParameters is reservation
 # /room[POST]
 ## This endpoint is used to creat room.
 - Requires body only
-  - amenityInfo: List
+  - amenityInfo: Object
   - roomInfo: Object
 ```
 Example:
 {
     "body" : {
-        "amenityInfo" : ["amenity2", false, false,true, true, false, false, true],
-        "roomInfo" : {
-            "roomId" : "room007",
-            "hotelId" : "hotel2",
-            "roomType" : "Single"
-        }
+    "amenityInfo" : {
+	"amenityId" : "amenitytest",
+	"dailyContinentalBreakfast" : True,
+	"accesstoFinessRoom" : True,
+	"accesstoSummingPool" : True,
+	"accesstoJacuzzi" : True,
+	"dailyParking" : True,
+	"allmeals": True
+    },
+    "roomInfo" : {"roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single"}
     }
 }
+
 ```
 # /roominfo[GET]
 ## This endpoint is used to get room information.
