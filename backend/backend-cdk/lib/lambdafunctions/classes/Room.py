@@ -30,7 +30,7 @@ class Room:
             return 100
         elif (self.roomType == RoomType.DOUBLE.value):
             return 198
-        elif (self.roomType == RoomType.TRIPE.value):
+        elif (self.roomType == RoomType.Triple.value):
             return 289
         elif (self.roomType == RoomType.QUAD.value):
             return 369

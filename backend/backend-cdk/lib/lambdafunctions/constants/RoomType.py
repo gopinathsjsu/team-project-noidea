@@ -3,7 +3,7 @@ import enum
 class RoomType(enum.Enum):
     SINGLE = "Single"
     DOUBLE = "Double"
-    TRIPE = "Tripe"
+    Triple = "Triple"
     QUAD = "Quad"
 
     def loopType(comingStr):
