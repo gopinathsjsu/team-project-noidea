@@ -52,12 +52,13 @@ def lambda_handler(event, context):
     if hotel is not None:
         return returnResponse(400, {'message': 'Invalid input, hotel exists, please modify instead',
                                     'status': 'error',
-                                    'hotel': hotel.toDict()})
-    uploadHotel(eventBody['hotelId'], eventBody['address'], eventBody['country'], eventBody['email'], eventBody['name'])
+                                    'hotel': hotel.toJson()})
+    hotel = Hotel(eventBody['hotelId'], eventBody['name'], eventBody['email'], eventBody['address'], eventBody['country'], eventBody['userId'])
+    uploadHotel(hotel)
     hotel = getHotel(eventBody['hotelId'])
     return returnResponse(200, {'message': 'hotel created',
                                 'status': 'success',
-                                'hotel': hotel.toDict()})
+                                'hotel': hotel.toJson()})
 
 def getUser(userId):
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
@@ -87,22 +88,16 @@ def getHotel(hotelId):
         )
         if 'Item' not in item:
             return None
-        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'], item['Item']['ownerId'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
-def uploadHotel(hotelId, address, country, email, name):
+def uploadHotel(hotel):
     dynamodb = boto3.resource('dynamodb', region_name=os.environ['AWS_REGION'])
     hotelTable = dynamodb.Table(os.environ['TABLE_HOTEL'])
     try:
         hotelTable.put_item(
-            Item={
-                'hotelId': hotelId,
-                'HotelName': name,
-                'email': email,
-                'Address': address,
-                'Country': country
-            }
+            Item=hotel.toDict()
         )
         return True
     except ClientError as e:

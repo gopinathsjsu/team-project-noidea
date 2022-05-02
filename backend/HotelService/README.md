@@ -38,6 +38,7 @@
     - address: String
     - country: String
     - email: String
+    - name: String
 
 - Returns the created Branch object
 - Ex.
