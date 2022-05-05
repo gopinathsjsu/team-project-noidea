@@ -52,7 +52,7 @@ class ReservationDAOimpl(ReservationDAO):
         self.reservations = scan_items_db(self.reservationTable)
         list = []
         for reservation in self.reservations:
-            if reservation.get("customerId") == customerId:
+            if reservation.get("userId") == customerId:
                 list.append(reservation)
         if list:
             return list
