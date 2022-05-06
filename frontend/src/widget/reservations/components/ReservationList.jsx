@@ -11,7 +11,7 @@ export default function ReservationList(props) {
     <div style={{ marginTop: 30 }}>
       {reservations &&
         reservations
-          .filter((reservs) => (reservationType ? reservs.status === reservationType : true))
+          .filter((reservs) => (reservationType ? true : true))
           .map((reservs) => (
             <div
               className="listed-item-container"

@@ -1,48 +1,40 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { triggerMessage } from "../../../../../redux/globalUI/globalUISlice";
+import * as dayjs from "dayjs";
+
+import { getUserIdRdx } from "../../../../../redux/context/contextSelectors";
+import { setGlobalLoad, triggerMessage } from "../../../../../redux/globalUI/globalUISlice";
 import BookingServiceUtil from "../../../../../util/bookingServiceUtil";
 
-function PricingWidget(props) {
-  return (
-    <div>
-      <div style={{ maxWidth: 700 }}>
-        <h5>Pricing</h5>
-        <div style={{ display: "flex" }}>
-          <p style={{ flex: 1 }} className="no-margin">
-            Room subtotal
-          </p>
-          <p className="no-margin">$945.21</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="no-margin" style={{ flex: 1 }}>
-            Amentities add on
-          </p>
-          <p className="no-margin">$47.32</p>
-        </div>
-        <div style={{ display: "flex" }} className="no-margin">
-          <p style={{ flex: 1 }} className="no-margin">
-            Taxes and fees
-          </p>
-          <p className="no-margin">$107.42</p>
-        </div>
-        <div style={{ display: "flex", marginTop: 10 }}>
-          <p style={{ flex: 1 }}>
-            <b>Total</b>
-          </p>
-          <p>
-            <b>$1,261.21</b>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+const DAY_MAPPER = {
+  0: "Weekends",
+  1: "Weekdays",
+  2: "Weekdays",
+  3: "Weekdays",
+  4: "Weekdays",
+  5: "Weekdays",
+  6: "Weekends"
+};
+
+const SEASON_MAPPER = {
+  0: "Regular",
+  1: "Regular",
+  2: "Regular",
+  3: "Regular",
+  4: "Regular",
+  5: "Regular",
+  6: "Summer",
+  7: "Summer",
+  8: "Summer",
+  9: "Regular",
+  10: "Regular",
+  11: "Christmas"
+};
 
 function RoomOptionSelector(props) {
-  const [fields, setFields] = useState({});
+  const { fields, setFields } = props;
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -54,14 +46,15 @@ function RoomOptionSelector(props) {
             <Col xs={12} sm={4}>
               <div
                 className={
-                  "skinny-item-container " + (fields.roomId === h.roomId ? "skinny-item-container-selected" : "")
+                  "skinny-item-container " +
+                  (fields[props.roomId]?.roomId === h.roomId ? "skinny-item-container-selected" : "")
                 }
                 onClick={() =>
                   setFields((fls) => {
                     if (fls.roomId === h.roomId) {
-                      return { ...fls, roomId: undefined };
+                      return { ...fls, [props.roomId]: { ...(fls[props.roomId] ?? {}), roomId: undefined } };
                     }
-                    return { ...fls, roomId: h.roomId };
+                    return { ...fls, [props.roomId]: { ...(fls[props.roomId] ?? {}), roomId: h.roomId } };
                   })
                 }>
                 <h6>{h.roomName}</h6>
@@ -78,7 +71,16 @@ function RoomOptionSelector(props) {
           props.hotelAmenity.map((a) => (
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Check type="checkbox" label={`${a.amenityName} $${a.amenityPrice}`} />
+                <Form.Check
+                  type="checkbox"
+                  label={`${a.amenityName} $${a.amenityPrice}`}
+                  onClick={(e) => {
+                    setFields((fls) => ({
+                      ...fls,
+                      [props.roomId]: { ...(fls[props.roomId] ?? {}), [`amenity_${a.amenityId}`]: e.target.checked }
+                    }));
+                  }}
+                />
               </Form.Group>
             </Col>
           ))}
@@ -91,8 +93,9 @@ export default function BookingRoom(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const navLocation = useLocation();
-  const navState = navLocation.state;
-  const navStateHotel = navState.hotel;
+  const userId = useSelector(getUserIdRdx);
+  const navState = navLocation?.state;
+  const navStateHotel = navState?.hotel;
   const [hotelAmenity, setHotelAmenity] = useState([]);
   const [hotelRoom, setHotelRoom] = useState([]);
   const [fields, setFields] = useState({});
@@ -128,12 +131,17 @@ export default function BookingRoom(props) {
           <div>
             {[...Array(parseInt(navState.bookingParam.rooms) ?? 1)].map((_, idx) => (
               <div key={`${idx}`}>
-                <RoomOptionSelector roomId={idx + 1} hotelAmenity={hotelAmenity} hotelRoom={hotelRoom} />
+                <RoomOptionSelector
+                  roomId={idx + 1}
+                  hotelAmenity={hotelAmenity}
+                  hotelRoom={hotelRoom}
+                  fields={fields}
+                  setFields={setFields}
+                />
               </div>
             ))}
             <hr />
           </div>
-          <PricingWidget />
           <div style={{ marginTop: 30, marginBottom: 150 }}>
             <Form.Group>
               <Form.Check
@@ -144,7 +152,34 @@ export default function BookingRoom(props) {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button
                 style={{ margin: "20px 0px 0px 0px", paddingLeft: 30, paddingRight: 30 }}
-                onClick={() => {
+                onClick={async () => {
+                  dispatch(setGlobalLoad(true));
+                  const resp = await BookingServiceUtil.bookRoom({
+                    userId,
+                    room: Object.keys(fields).map((bookingRoomId) => {
+                      const bookRoomInfo = fields[bookingRoomId];
+                      const amenityIds = Object.keys(bookRoomInfo)
+                        .filter((fieldKey) => fieldKey.includes("amenity_"))
+                        .map((fieldKey) => fieldKey.split("_")[1]);
+                      return {
+                        amenityIds,
+                        roomId: bookRoomInfo.roomId
+                      };
+                    }),
+                    startDate: navState.bookingParam.checkin,
+                    endDate: navState.bookingParam.checkout,
+                    days: DAY_MAPPER[dayjs(navState.bookingParam.checkin).day()],
+                    season: SEASON_MAPPER[dayjs(navState.bookingParam.checkin).month()]
+                  });
+                  if (resp.error) {
+                    dispatch(
+                      triggerMessage({
+                        errorType: "TOAST_ERROR",
+                        title: "Something went wrong",
+                        body: "Try again later and it should work"
+                      })
+                    );
+                  }
                   navigate("/customer/stays?type=active");
                   dispatch(
                     triggerMessage({
@@ -153,6 +188,7 @@ export default function BookingRoom(props) {
                       body: `Confirmed for ${navState.bookingParam.rooms} room(s) at ${navState.hotel.BranchName} between ${navState.bookingParam.checkin} and ${navState.bookingParam.checkout}`
                     })
                   );
+                  dispatch(setGlobalLoad(false));
                 }}>
                 Book
               </Button>

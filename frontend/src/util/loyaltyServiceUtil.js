@@ -17,4 +17,13 @@ export default class LoyaltyServiceUtil {
 
     return data;
   }
+  static async getLoyaltyAccountId(userId) {
+    return APIUtil.apiUtilDecorator(async () => {
+      const url = new URL(`/dev/loyalty-get?userId=${userId}`, BASE_URL);
+      const response = await fetch(url);
+      const data = await response.json();
+
+      return data;
+    });
+  }
 }

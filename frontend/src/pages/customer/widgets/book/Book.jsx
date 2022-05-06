@@ -24,7 +24,6 @@ export default function Book(props) {
           tmpHotel = [...tmpHotel, ...tmpVal];
         }
       });
-      console.log(tmpHotel);
       setHotels(tmpHotel);
     }
     dispatch(setGlobalLoad(false));

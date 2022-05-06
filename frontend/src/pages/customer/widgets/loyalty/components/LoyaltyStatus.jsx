@@ -1,28 +1,14 @@
+import { useSelector } from "react-redux";
 import { OwlStatus } from "../../../../../components/owlStatus/owlStatus";
+import { getUserIdRdx } from "../../../../../redux/context/contextSelectors";
 
 export default function LoyaltyStatus() {
+  const userId = useSelector(getUserIdRdx);
+
   return (
     <div>
       <div style={{ marginTop: 35 }}>
-        <OwlStatus />
-      </div>
-      <div style={{ border: "2px solid #e0e0e0", borderRadius: 10, padding: "30px 40px 30px 40px", marginTop: 25 }}>
-        <h5 style={{ marginBottom: 25 }}>Recent reward activities</h5>
-        <div style={{ display: "flex" }}>
-          <h6 style={{ flex: 1 }}>Hyatt Regency at Ferry Terminal</h6>
-          <h6>+3 nights</h6>
-        </div>
-        <div style={{ display: "flex" }}>
-          <h6 style={{ flex: 1 }}>Intercontinental SF</h6>
-          <h6>+6 nights</h6>
-        </div>
-        <div style={{ display: "flex" }}>
-          <h6 style={{ flex: 1 }}>Hyatt Place San Jose Airport</h6>
-          <h6>+2 nights</h6>
-        </div>
-        <p style={{ margin: 0, textAlign: "center", width: "100%" }} className="span-fake-link">
-          See more
-        </p>
+        <OwlStatus userId={userId} />
       </div>
       <div
         style={{

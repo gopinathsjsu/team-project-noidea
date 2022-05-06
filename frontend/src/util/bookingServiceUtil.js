@@ -72,11 +72,29 @@ export default class BookingServiceUtil {
     const reqOpts = await APIUtil.buildRequestOptions("PATCH", {
       body: {
         roomId,
-        roomInfo: {
-          ...roomPayload
-        }
+        ...roomPayload
       }
     });
+
+    const response = await fetch(url, reqOpts);
+    const data = await response.json();
+
+    return data;
+  }
+  static async bookRoom(body) {
+    const url = new URL(`/prod/booking`, "https://5mbz63m677.execute-api.us-west-2.amazonaws.com/prod");
+    const reqOpts = await APIUtil.buildRequestOptions("POST", {
+      body
+    });
+
+    const response = await fetch(url, reqOpts);
+    const data = await response.json();
+
+    return data;
+  }
+  static async allReservations() {
+    const url = new URL(`/prod/allreservation`, "https://5mbz63m677.execute-api.us-west-2.amazonaws.com/prod");
+    const reqOpts = await APIUtil.buildRequestOptions("GET");
 
     const response = await fetch(url, reqOpts);
     const data = await response.json();

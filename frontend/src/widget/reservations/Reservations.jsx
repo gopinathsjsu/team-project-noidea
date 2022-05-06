@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Nav, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Route, Routes, useSearchParams } from "react-router-dom";
+import { getHotelDataRdx, getUserIdRdx, getUserTypeRdx } from "../../redux/context/contextSelectors";
+import BookingServiceUtil from "../../util/bookingServiceUtil";
 import ReservationList from "./components/ReservationList";
 import ReservationView from "./components/ReservationView";
 import "./Reservations.css";
@@ -58,14 +61,31 @@ export const mockReservations = [
 
 export const ReserverationHome = () => {
   const [reservationPage, setReservationPage] = useSearchParams();
+  const userType = useSelector(getUserTypeRdx);
+  const userId = useSelector(getUserIdRdx);
+  const hotelData = useSelector(getHotelDataRdx);
   const reservType = reservationPage.get("type");
+  const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
     const qParamReservType = reservationPage.get("type");
-    if (!qParamReservType || !["active", "past", "cancelled"].includes(qParamReservType)) {
+    if (!qParamReservType || !["active", "cancelled"].includes(qParamReservType)) {
       setReservationPage({ type: "active" });
     }
   }, [setReservationPage, reservationPage]);
+
+  useEffect(() => {
+    (async () => {
+      const reser = await BookingServiceUtil.allReservations();
+      if (!reser.error) {
+        if (userType === "hotel") {
+          setReservations(reser.filter((r) => r.hotelId === hotelData.hotelId));
+        } else {
+          setReservations(reser.filter((r) => r.userId === userId));
+        }
+      }
+    })();
+  }, [hotelData, userId, userType]);
 
   return (
     <Container className="reservation-container" style={{ maxWidth: 700 }}>
@@ -77,17 +97,12 @@ export const ReserverationHome = () => {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="past" onClick={() => setReservationPage({ type: "past" })}>
-            Past
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
           <Nav.Link eventKey="cancelled" onClick={() => setReservationPage({ type: "cancelled" })}>
             Cancelled
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <ReservationList reservationType={reservType} reservations={mockReservations} />
+      <ReservationList reservationType={reservType} reservations={reservations} />
     </Container>
   );
 };
