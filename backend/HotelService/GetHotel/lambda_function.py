@@ -56,7 +56,7 @@ def getHotel(hotelId):
         )
         if 'Item' not in item:
             return None
-        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'])
+        return Hotel(hotelId, item['Item']['HotelName'], item['Item']['email'] , item['Item']['Address'], item['Item']['Country'], item['Item']['ownerId'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
