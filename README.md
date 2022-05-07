@@ -21,3 +21,5 @@ Make sure you have `yarn` installed on your system. If you do, then run the foll
 yarn
 yarn start
 ```
+
+## Feature Sets
