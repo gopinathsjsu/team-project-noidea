@@ -16,9 +16,9 @@ We initially met everyday on Zoom for our daily stand ups, but we found that mos
 During our first sprint, we had used Jira to assign and manage our work. However, what we found out is that our working speed and efficiency varied widely throughout the project, thus there was no way to correctly predict the amount of work at the beginning of the sprint. Sometimes, we would finish early and not have anything to do, but other times we finish later and have to roll over our sprint. So for efficiency's sake, we stopped assigning work at the beginning and just agreed that we would take stories off the board as we work, this way, someone would always have something to do. This way, we operate more to complete the team’s task, rather than just the individual’s task. This system was inspired by the system currently being used at Bryan’s workplace. 
 
 ## Component Leads 
-Building frontend and then integrate with backend: Bryan 
-AWS account manager and BookingService and HotelService: Nick
-LoyaltyService, UserService, HotelSearchService: Patrick
+- Building frontend and then integrate with backend: Bryan 
+- AWS account manager and BookingService and HotelService: Nick
+- LoyaltyService, UserService, HotelSearchService: Patrick
 
 # Sprint 1: Feb 28 - Mar 14
 ## Sprint Planning
