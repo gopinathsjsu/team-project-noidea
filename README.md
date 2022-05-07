@@ -1,5 +1,11 @@
 # Hootel Web Application
 
+## Team member and component lead
+
+- Bryan Kwong: Building frontend and then integrate with backend
+- Fuyu (Nick) Zhang: AWS account manager and BookingService and HotelService
+- Patrick Daniel Bustos: LoyaltyService, UserService, HotelSearchService
+
 ## Important Links
 
 - [AWS login](https://568187732893.signin.aws.amazon.com/console)
