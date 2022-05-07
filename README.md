@@ -2,25 +2,23 @@
 
 ## Important Links
 
-- [Jira Board](https://noideasjsu.atlassian.net/jira/software/c/projects/HOT/boards/1)
-- [GitHub](https://github.com/gopinathsjsu/team-project-noidea)
 - [AWS login](https://568187732893.signin.aws.amazon.com/console)
 - [Class Zoom Link](https://sjsu.zoom.us/j/88308650468?pwd=WG50SkZyWnJtVjNxTElraU5RR3dUQT09)
 
-## Frontend
+## Design Decisions
 
-To run the frontend, go to the frontend folder by doing:
+### Frontend
 
-```
-cd frontend
-```
+## Diagrams 
 
-Make sure you have `yarn` installed on your system. If you do, then run the following commands:
+### Use Case Diagrams
 
-```
-yarn
-yarn start
-```
+### Frontend Architecture Diagrams 
+
+#### Frontend Flow Diagram
+
+### Backend Architecture Diagrams
+
 
 ## Feature Sets
 
