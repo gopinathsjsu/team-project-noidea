@@ -33,8 +33,9 @@ LoyaltyService, UserService, HotelSearchService: Patrick
 
 ## Retrospective
 
-<img width="500" src="https://raw.githubusercontent.com/gopinathsjsu/team-project-noidea/main/images/sprint1.png?token=GHSAT0AAAAAABR7JNGJ4D5RXYGLEQX5ZYSAYTW5OOA" />
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint1.png?raw=true" />
 
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint1r.png?raw=true" />
 
 ## Stand Ups (once every 3 days)
 Despite only having official stands ups once every 3 days, we communicate continuously through messages
@@ -68,7 +69,9 @@ Despite only having official stands ups once every 3 days, we communicate contin
 
 ## Retrospective
 
-<img width="500" src="https://raw.githubusercontent.com/gopinathsjsu/team-project-noidea/main/images/sprint2.png?token=GHSAT0AAAAAABR7JNGILQ4S24MFGPB2ESTIYTW5PTA" />
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint2.png?raw=true" />
+
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint2r.png?raw=true" />
 
 ## Stand Ups (once every 3 days)
 Despite only having official stands ups once every 3 days, we communicate continuously through messages
@@ -100,7 +103,9 @@ Despite only having official stands ups once every 3 days, we communicate contin
 
 ## Retrospective
 
-<img width="500" src="https://raw.githubusercontent.com/gopinathsjsu/team-project-noidea/main/images/sprint3.png?token=GHSAT0AAAAAABR7JNGI6RO6EVKRT6OJ3QBQYTW5ROA" />
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint3.png?raw=true" />
+
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint3r.png?raw=true"/>
 
 
 ## Stand Ups (once every 3 days)
@@ -133,7 +138,9 @@ Despite only having official stands ups once every 3 days, we communicate contin
 
 ## Retrospective
 
-<img width="500" src="https://raw.githubusercontent.com/gopinathsjsu/team-project-noidea/main/images/sprint4.png?token=GHSAT0AAAAAABR7JNGJ4VD5JFC3ZZEXSNCQYTW5RXQ" />
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint4.png?raw=true" />
+
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint4r.png?raw=true" />
 
 
 ## Stand Ups (once every 3 days)
@@ -168,7 +175,9 @@ Despite only having official stands ups once every 3 days, we communicate contin
 	- Use GatsbyJS to simplify frontend development 
 ## Retrospective
 
-<img width="500" src="https://raw.githubusercontent.com/gopinathsjsu/team-project-noidea/main/images/sprint5.png?token=GHSAT0AAAAAABR7JNGICHCXS777I6EFDHVUYTW5SBA" />
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint5.png?raw=true" />
+
+<img width="500" src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/sprint5r.png?raw=true" />
 
 ## Stand Ups (once every 3 days)
 Despite only having official stands ups once every 3 days, we communicate continuously through messages
