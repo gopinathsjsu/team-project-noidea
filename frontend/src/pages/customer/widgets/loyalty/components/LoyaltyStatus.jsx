@@ -25,7 +25,7 @@ export default function LoyaltyStatus() {
         </p>
         <h6 style={{ marginTop: 20, marginBottom: 10 }}>Elf Owl Status</h6>
         <ul>
-          <li>2.5% off hotel bookings</li>
+          <li>2% off hotel bookings</li>
         </ul>
         <h6 style={{ marginTop: 20, marginBottom: 10 }}>Boreal Owl Status</h6>
         <ul>
@@ -34,6 +34,10 @@ export default function LoyaltyStatus() {
         <h6 style={{ marginTop: 20, marginBottom: 10 }}>Snowy Owl Status</h6>
         <ul>
           <li>10% off hotel bookings</li>
+        </ul>
+        <h6 style={{ marginTop: 20, marginBottom: 10 }}>Great Horned Owl Status</h6>
+        <ul>
+          <li>15% off hotel bookings</li>
         </ul>
       </div>
     </div>

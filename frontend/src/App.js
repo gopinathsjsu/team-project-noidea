@@ -7,7 +7,7 @@ import UnknownPage from "./components/unknownPage/UnknownPage";
 import { getUserDataRdx, getUserTypeRdx } from "./redux/context/contextSelectors";
 import FirstTimeUser from "./pages/firstTimeUser/FirstTimeUser";
 import { useEffect } from "react";
-import { setHotelData, setUserData, updateUserId, updateUserType } from "./redux/context/contextSlice";
+import { setCardData, setHotelData, setUserData, updateUserId, updateUserType } from "./redux/context/contextSlice";
 import { NavbarWrapper } from "./components/navbar/NavbarWrapper";
 import GlobalUIHandler from "./components/errors/GlobalUIHandler";
 
@@ -57,6 +57,7 @@ function App() {
             }
             dispatch(updateUserType({ userType }));
             dispatch(setUserData(userInfoResp.user));
+            dispatch(setCardData(userInfoResp.card));
           }
         } else {
           dispatch(setUserData({}));

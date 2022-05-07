@@ -20,9 +20,6 @@ const CustomerMenu = (props) => {
       </Nav>
       <Nav>
         <NavDropdown title="Account" id="collasible-nav-dropdown">
-          <NavDropdown.Item>Personal Info</NavDropdown.Item>
-          <NavDropdown.Item>Payment</NavDropdown.Item>
-          <NavDropdown.Divider />
           <NavDropdown.Item
             onClick={async () => {
               try {
@@ -43,7 +40,6 @@ const HotelMenu = (props) => {
     <>
       <Nav className="me-auto">
         <Nav.Link onClick={() => props.navigate("/hotel/stays")}>Stays</Nav.Link>
-        <Nav.Link onClick={() => props.navigate("/hotel/customers")}>Customers</Nav.Link>
         <Nav.Link onClick={() => props.navigate("/hotel/branches")}>Branches</Nav.Link>
         <NavDropdown title="Room Management" id="collasible-nav-dropdown">
           <NavDropdown.Item onClick={() => props.navigate("/hotel/room-mgmt/rooms")}>Rooms</NavDropdown.Item>
@@ -52,10 +48,6 @@ const HotelMenu = (props) => {
       </Nav>
       <Nav>
         <NavDropdown title="Account" id="collasible-nav-dropdown">
-          <NavDropdown.Item>Personal Info</NavDropdown.Item>
-          <NavDropdown.Item>Payment</NavDropdown.Item>
-          <NavDropdown.Item>User Access</NavDropdown.Item>
-          <NavDropdown.Divider />
           <NavDropdown.Item
             onClick={async () => {
               try {

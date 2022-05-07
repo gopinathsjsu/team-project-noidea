@@ -27,10 +27,10 @@ export function OwlStatus(props) {
       <ProgressBar
         variant="success"
         animated
-        now={(loyaltyAccnt.amount / 25) * 100}
+        now={(loyaltyAccnt.amount / 20) * 100}
         style={{ marginTop: 10, marginBottom: 5 }}
       />
-      <p style={{ textAlign: "right" }}>{loyaltyAccnt.amount} out of 25 nights</p>
+      <p style={{ textAlign: "right" }}>{loyaltyAccnt.amount} out of 20 nights</p>
 
       <h6 style={{ marginTop: 20, marginBottom: 0 }}>Boreal Owl Status</h6>
       <ProgressBar
@@ -45,10 +45,19 @@ export function OwlStatus(props) {
       <ProgressBar
         variant="secondary"
         animated
-        now={(loyaltyAccnt.amount / 100) * 100}
+        now={(loyaltyAccnt.amount / 70) * 100}
         style={{ marginTop: 10, marginBottom: 5 }}
       />
-      <p style={{ textAlign: "right" }}>{loyaltyAccnt.amount} out of 100 nights</p>
+      <p style={{ textAlign: "right" }}>{loyaltyAccnt.amount} out of 70 nights</p>
+
+      <h6 style={{ marginTop: 20, marginBottom: 0 }}>Great Horned Owl Status</h6>
+      <ProgressBar
+        variant="info"
+        animated
+        now={(loyaltyAccnt.amount / 85) * 100}
+        style={{ marginTop: 10, marginBottom: 5 }}
+      />
+      <p style={{ textAlign: "right" }}>{loyaltyAccnt.amount} out of 85 nights</p>
     </div>
   );
 }

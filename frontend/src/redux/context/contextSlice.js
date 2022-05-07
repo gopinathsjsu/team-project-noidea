@@ -29,11 +29,14 @@ export const contextSlice = createSlice({
     },
     setHotelData: (state, action) => {
       state.hotelData = action.payload;
+    },
+    setCardData: (state, action) => {
+      state.cardData = action.payload;
     }
   }
 });
 
-export const { initiateUserState, updateUserType, clearContext, updateUserId, setUserData, setHotelData } =
+export const { initiateUserState, updateUserType, clearContext, updateUserId, setUserData, setHotelData, setCardData } =
   contextSlice.actions;
 
 export default contextSlice.reducer;

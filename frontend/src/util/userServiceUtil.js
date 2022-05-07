@@ -76,4 +76,21 @@ export default class UserServiceUtil {
       return data;
     });
   }
+
+  static async updateCardInfo(userId, userPayload) {
+    return await APIUtil.apiUtilDecorator(async () => {
+      const url = new URL(`/dev/user-update`, BASE_URL);
+      const reqOpts = await APIUtil.buildRequestOptions("POST", {
+        card: {
+          userId,
+          ...userPayload
+        }
+      });
+
+      const response = await fetch(url, reqOpts);
+      const data = await response.json();
+
+      return data;
+    });
+  }
 }

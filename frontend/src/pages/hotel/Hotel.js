@@ -29,7 +29,6 @@ export function Hotel() {
           <Route index element={<Navigate to="/hotel/stays" />} />
           <Route path="/branches/*" element={<Branches />}></Route>
           <Route path="/stays/*" element={<Reservations />}></Route>
-          <Route path="/customers/*" element={<Customer />}></Route>
           <Route path="/room-mgmt/*" element={<RoomMgmt />}></Route>
         </Routes>
       </Container>

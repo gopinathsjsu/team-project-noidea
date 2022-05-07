@@ -9,6 +9,8 @@ import { updateAmenities } from "../../../../../redux/hotelData/hotelDataSlice";
 import { getAmenitiesRdx } from "../../../../../redux/hotelData/hotelDataSelector";
 
 function AmenityEdit(props) {
+  const hotelData = useSelector(getHotelDataRdx);
+
   const { setEditing, fields, setFields } = props;
   const dispatch = useDispatch();
 
@@ -49,7 +51,7 @@ function AmenityEdit(props) {
             props.onSubmit && (await props.onSubmit());
             const resp = await BookingServiceUtil.getAmenitites();
             if (resp && !resp.error) {
-              dispatch(updateAmenities(resp));
+              dispatch(updateAmenities(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
             }
           }}>
           Save changes
@@ -60,6 +62,8 @@ function AmenityEdit(props) {
 }
 
 function AmenityItem(props) {
+  const hotelData = useSelector(getHotelDataRdx);
+
   const { amen } = props;
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
@@ -87,7 +91,7 @@ function AmenityItem(props) {
               await BookingServiceUtil.updateExistingAmenity(amen.amenityId, fields);
               const resp = await BookingServiceUtil.getAmenitites();
               if (resp && !resp.error) {
-                dispatch(updateAmenities(resp));
+                dispatch(updateAmenities(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
               }
               dispatch(setGlobalLoad(false));
             }}
@@ -103,21 +107,23 @@ export default function Amenities(props) {
   const amenitiesRdx = useSelector(getAmenitiesRdx);
   const dispatch = useDispatch();
   const [adding, setAdding] = useState(false);
+  const [callMade, setCallMade] = useState(false);
   const [newAmenity, setNewAmenity] = useState({
     amenityPrice: "",
     amenityName: ""
   });
 
   useEffect(() => {
-    if (!amenitiesRdx || amenitiesRdx.length === 0) {
+    if (!callMade) {
       (async () => {
         const resp = await BookingServiceUtil.getAmenitites();
         if (resp && !resp.error) {
-          dispatch(updateAmenities(resp));
+          dispatch(updateAmenities(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
+          setCallMade(true);
         }
       })();
     }
-  }, [dispatch, amenitiesRdx]);
+  }, [dispatch, amenitiesRdx, hotelData?.hotelId, callMade]);
 
   return (
     <div style={{ maxWidth: 700, paddingBottom: 150 }}>
@@ -143,14 +149,14 @@ export default function Amenities(props) {
               onSubmit={async () => {
                 dispatch(setGlobalLoad(true));
                 await BookingServiceUtil.updateAmenity({
-                  hotelId: hotelData.hotelId,
+                  hotelId: hotelData?.hotelId,
                   amenityId: uuid4(),
                   amenityName: newAmenity.amenityName,
                   amenityPrice: newAmenity.amenityPrice
                 });
                 const resp = await BookingServiceUtil.getAmenitites();
                 if (resp && !resp.error) {
-                  dispatch(updateAmenities(resp));
+                  dispatch(updateAmenities(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
                 }
                 dispatch(setGlobalLoad(false));
               }}

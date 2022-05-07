@@ -41,9 +41,9 @@ export default class HotelServiceUtil {
     });
   }
 
-  static async getBranches(hotelId) {
+  static async getBranches(hotelId, branchId = "-1") {
     return APIUtil.apiUtilDecorator(async () => {
-      const url = new URL(`/dev/branch-get?hotelId=${hotelId}&branchId=-1`, BASE_URL);
+      const url = new URL(`/dev/branch-get?hotelId=${hotelId}&branchId=${branchId}`, BASE_URL);
 
       const reqOpts = await APIUtil.buildRequestOptions("GET");
 

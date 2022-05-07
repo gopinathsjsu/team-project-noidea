@@ -13,6 +13,18 @@ export default class APIUtil {
     };
   }
 
+  static async buildRequestOptionsNoJSON(method, body, addHeaders) {
+    const cogUserId = await Auth.currentSession();
+    return {
+      method,
+      headers: {
+        Authorization: cogUserId?.idToken?.jwtToken,
+        ...addHeaders
+      },
+      body: JSON.stringify(body)
+    };
+  }
+
   static async apiUtilDecorator(method, onError, onFinally) {
     try {
       const methodResp = await method();

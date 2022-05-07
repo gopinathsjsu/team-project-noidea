@@ -16,6 +16,7 @@ function RoomEditing(props) {
         <Form.Group className="mb-3" style={{ flex: 1 }}>
           <Form.Label>Room name</Form.Label>
           <Form.Control
+            disabled={!props.newRoom}
             placeholder="Standard room"
             value={fields.roomName}
             onChange={(e) => setFields((fls) => ({ ...fls, roomName: e.target.value }))}
@@ -24,6 +25,7 @@ function RoomEditing(props) {
         <Form.Group className="mb-3" style={{ marginLeft: 10 }}>
           <Form.Label>Price</Form.Label>
           <Form.Control
+            disabled={!props.newRoom}
             value={fields.roomPrice}
             onChange={(e) => setFields((fls) => ({ ...fls, roomPrice: e.target.value }))}
           />
@@ -70,12 +72,13 @@ function RoomEditing(props) {
 
 function RoomItem(props) {
   const { room } = props;
+  const hotelData = useSelector(getHotelDataRdx);
   const dispatch = useDispatch();
   const [editing, setEditing] = useState(false);
   const [fields, setFields] = useState({
     roomName: room.roomName,
     roomPrice: room.roomPrice,
-    roomType: room.roomType
+    roomType: room.roomType ?? "Single"
   });
 
   return (
@@ -110,7 +113,7 @@ function RoomItem(props) {
               });
               const resp = await BookingServiceUtil.getRooms();
               if (resp && !resp.error) {
-                dispatch(updateRoom(resp));
+                dispatch(updateRoom(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
               }
               dispatch(setGlobalLoad(false));
             }}
@@ -126,22 +129,26 @@ export default function Rooms(props) {
   const dispatch = useDispatch();
   const roomsRdx = useSelector(getRoomsRdx);
   const [adding, setAdding] = useState(false);
+  const [callMade, setCallMade] = useState(false);
+
   const [newRoom, setNewRoom] = useState({
     roomName: "",
-    roomType: "",
+    roomType: "Single",
     roomPrice: ""
   });
 
   useEffect(() => {
-    if (!roomsRdx || roomsRdx.length === 0) {
+    if (!callMade) {
       (async () => {
         const resp = await BookingServiceUtil.getRooms();
         if (resp && !resp.error) {
-          dispatch(updateRoom(resp));
+          console.log(resp);
+          dispatch(updateRoom(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
+          setCallMade(true);
         }
       })();
     }
-  }, [dispatch, roomsRdx]);
+  }, [dispatch, roomsRdx, hotelData?.hotelId, callMade]);
 
   return (
     <div style={{ maxWidth: 700, marginBottom: 150 }}>
@@ -162,6 +169,7 @@ export default function Rooms(props) {
         <Collapse in={adding}>
           <div>
             <RoomEditing
+              newRoom
               setAdding={setAdding}
               fields={newRoom}
               setFields={setNewRoom}
@@ -175,12 +183,12 @@ export default function Rooms(props) {
               onSubmit={async () => {
                 dispatch(setGlobalLoad(true));
                 await BookingServiceUtil.updateRoom({
-                  hotelId: hotelData.hotelId,
+                  hotelId: hotelData?.hotelId,
                   ...newRoom
                 });
                 const resp = await BookingServiceUtil.getRooms();
                 if (resp && !resp.error) {
-                  dispatch(updateRoom(resp));
+                  dispatch(updateRoom(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
                 }
                 setNewRoom({
                   roomName: "",
