@@ -39,6 +39,17 @@ const APIDecorator = (callback, onError, onFinally) => {
 
 ### Backend Architecture Diagrams
 
+#### ER Diagram 
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/ERdiagram.png?raw=true" width="700" />
+
+#### Deployment Diagram
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/DeploymentDiagram.png?raw=true" width="700" />
+
+#### Component Diagram 
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/componentDiagram.png?raw=true" width="700" />
 
 ## Feature Sets
 
