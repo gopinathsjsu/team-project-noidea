@@ -51,6 +51,14 @@ const APIDecorator = (callback, onError, onFinally) => {
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/componentDiagram.png?raw=true" width="700" />
 
+#### DAO Diagram
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true" width="700" />
+
+#### Strategy Diagram 
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/strategydiagram.png?raw=true" width"700" />
+
 ## Feature Sets
 
 - Capabale of managing many customer and many different hotel chains 
