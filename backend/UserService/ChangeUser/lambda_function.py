@@ -26,23 +26,32 @@ def lambda_handler(event, context):
         eventBody = json.loads(eventBody)
         logger.debug('[EVENT] eventBody: {}'.format(eventBody))
     
-    if 'user' not in eventBody: 
-        return returnResponse(400, {'message': 'Invalid input, no user'})
-    if 'card' not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no card'})
-
-    user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
-    card = CreditCard(eventBody['user']['userId'], eventBody['card']['number'], eventBody['card']['cvv'], eventBody['card']['expDate'])
+    user = None
+    card = None
+    if 'user' in eventBody: 
+        user = User(eventBody['user']['userId'], eventBody['user']['name'], eventBody['user']['email'], eventBody['user']['address'], eventBody['user']['country'], eventBody['user']['roles'])
+    if 'card' in eventBody:
+        card = CreditCard(eventBody['card']['userId'], eventBody['card']['number'], eventBody['card']['cvv'], eventBody['card']['expDate'])
+    
     try:
-        uploadUser(user)
-        uploadCard(card)
+        if user is not None and card is None:
+            uploadUser(user)
+            return returnResponse(200, {'message': 'User updated',
+                                        'user': user.toJson()})
+        if card is not None and user is None:
+            uploadCard(card)
+            return returnResponse(200, {'message': 'Card updated',
+                                        'card': card.toDict()})
+        if user is not None and card is not None:
+            uploadUser(user)
+            uploadCard(card)
+            return returnResponse(200, {'message': 'User and card updated',
+                                        'user': user.toJson(),
+                                        'card': card.toDict()})
+        return returnResponse(400, {'message': 'Invalid input, no user or card'})
     except ClientError as e:
         logger.error(e.response['Error']['Message'])
         return returnResponse(500, {'message': 'Error uploading user'})
-    
-    return returnResponse(200, {'message': 'User created',
-                                'user': user.toJson(),
-                                'card': card.toDict()})
 
 def uploadUser(user):
     logger.debug('[UPLOAD] user: {}'.format(json.dumps(user.toJson())))
