@@ -73,13 +73,14 @@ class test_booking(unittest.TestCase):
         })
         event = {
             "body": {
-                "customerId" : "user001",
-                "roomId" : "room001",
+                "userId" : "user001",
                 "startDate" : "08/02/2021",
                 "endDate" : "09/20/2021",
                 "season" : "Summer",
                 "days" : "Weekdays",
-                "amenityIds" : ["amenitytest"]
+                "room" : [
+                    {"roomId" : "room001", "amenityIds": ["amenitytest"]}
+                    ]
             }
         }
         response = reservation_handler(event, "")
