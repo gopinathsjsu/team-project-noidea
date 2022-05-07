@@ -25,6 +25,14 @@ const APIDecorator = (callback, onError, onFinally) => {
 }
 ```
 
+#### Global State Pattern 
+
+The Hootel frontend is managed by a global application state that is implemented by React Redux. We split the global state into three separate portion: `Context`, `GlobalUI`, and `HotelData`. 
+
+- `Context`: The Context state managed everything that uniquely identifies this user experience. Including user type, user id, the customer's data, and the hotel's data. By using this context to drive the user experience, we can share many common component while still delivering a unique user experience for customers and hotels. 
+- `GlobalUI`: The GlobalUI state managed global UI elements such as a global loading spinner and global messages (including toast, modal, and fullscreen messages).
+- `HotelData`: This is data that is commonly used for the Hotel user experience but does not need to be reloaded. 
+
 ## Diagrams 
 
 ### Use Case Diagrams
@@ -57,7 +65,7 @@ const APIDecorator = (callback, onError, onFinally) => {
 
 #### Strategy Diagram 
 
-<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/strategydiagram.png?raw=true" width"700" />
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/strategydiagram.png?raw=true" width="700" />
 
 ## Feature Sets
 
