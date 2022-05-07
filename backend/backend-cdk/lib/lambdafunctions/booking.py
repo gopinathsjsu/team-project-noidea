@@ -10,7 +10,7 @@ from classes.Reservation import Reservation
 from classes.Room import Room
 from classes.User import User
 from classes.Amenity import Amenity
-
+from classes.BookedRoom import BookedRoom
 from constants.NoItemError import NoitemError
 from constants.Season import Season
 from constants.Days import Days
@@ -48,13 +48,11 @@ def reservation_handler(event, context):
     else:
         return returnResponse(400, {"message": "Invalid input, no queryStringParameters"})
 
-    # input: CustomerId, RoomId, AmentitiesInfo
+    # input: userId, RoomId, AmentitiesInfo
     if "userId" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no userId'})
-    if "roomId" not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no roomId'})
-    if "amenityIds" not in eventBody:
-        return returnResponse(400, {'message': 'Invalid input, no amenityIds'})
+    if "room" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no room'})
     if "startDate" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no startDate'})
     if "endDate" not in eventBody:
@@ -65,8 +63,7 @@ def reservation_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no days'})
 
     userId = eventBody["userId"]
-    roomId = eventBody["roomId"]
-    amenityIds = eventBody["amenityIds"]
+    bookedroomInfos = eventBody["room"]
     startDate = eventBody["startDate"]
     endDate = eventBody["endDate"]
     season = eventBody["season"]
@@ -78,18 +75,20 @@ def reservation_handler(event, context):
     if not Days.loopDays(days):
         return returnResponse(400, "The {} days is not valid".format(days))
 
-    # 1. Retrieve customer info from DynamoDB based on customerId
+    # 1. Retrieve customer info from DynamoDB based on userId
     customerInfo = get_item_db(customerTable, "userId", userId)
     logger.debug("**** customerInfo ---> {}".format(customerInfo))
-
-    # 2. Retrieve room info from DynamoDB based on RoomId
-    roomInfo = roomDAOimpl.getRoom(roomId)
-    logger.debug("**** roomInfo ---> {}".format(roomInfo))
-
+    
     # 3. Generate Reservation && insert it to DynamoDB
     customer = User(customerInfo["userId"], customerInfo["firstName"],customerInfo["lastName"], customerInfo["email"], customerInfo["Address"], customerInfo["Country"], customerInfo["UserRoles"])
-    room = Room(roomInfo)
-    reservation = Reservation(startDate, endDate, season, days, room, customer, amenityIds)
+    roomList = []
+    for bookedroom in bookedroomInfos:
+        roomId = bookedroom["roomId"]
+        amenityIds = bookedroom["amenityIds"]
+        curbookedroom = BookedRoom(roomId, amenityIds)
+        roomList.append(curbookedroom)
+        
+    reservation = Reservation(startDate, endDate, season, days, roomList, customer)
     logger.debug("**** total price ---> {}".format(reservation.getTotalPrice()))
 
     item = reservation.getReservationInfo()
@@ -111,8 +110,8 @@ def retrieve_handler(event, context):
     logger.debug('event:{}'.format(json.dumps(event)))
     eventBody = event['queryStringParameters']
 
-    if "reservationId" not in eventBody and "hotelId" not in eventBody and "customerId" not in eventBody:
-        return returnResponse(400, {"message": "Invalid input, no reservationId or hotelId or customerId"})
+    if "reservationId" not in eventBody and "hotelId" not in eventBody and "userId" not in eventBody:
+        return returnResponse(400, {"message": "Invalid input, no reservationId or hotelId or userId"})
 
     list_reservation = []
     # Retrieve reservation based on reservationId
@@ -122,10 +121,10 @@ def retrieve_handler(event, context):
             reservationinfo = reservationDAOimpl.getReservation(reservationId)
             return returnResponse(200, reservationinfo)
 
-        # Retrieve reservation based on customerId
-        if "customerId" in eventBody:
-            customerId = eventBody["customerId"]
-            list_reservation = reservationDAOimpl.getReservationbycustomerId(customerId)
+        # Retrieve reservation based on userId
+        if "userId" in eventBody:
+            userId = eventBody["userId"]
+            list_reservation = reservationDAOimpl.getReservationbycustomerId(userId)
         # Retrieve reservation based on hotelId
         if "hotelId" in eventBody:
             hotelId = eventBody["hotelId"]

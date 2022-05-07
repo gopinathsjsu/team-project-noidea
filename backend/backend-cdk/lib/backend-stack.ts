@@ -83,7 +83,7 @@ export class BackEndCdkStack extends Stack {
       "user_table" : user_table.tableName
     });
 
-    const room_info = createRoomLambda(this, 'Hotel_roomInfo', 'room.roomInfo_handler', {
+    const room_Info = createRoomLambda(this, 'Hotel_roomInfo', 'room.roomInfo_handler', {
       "region": this.region,
       "room_table": room_table.tableName,
       "reservation_table" : reservation_table.tableName,
@@ -225,7 +225,7 @@ export class BackEndCdkStack extends Stack {
         }]
       }
     });
-    const retrieveReservation = APIBooking.root.addResource("reservationinfo", {
+    const retrieveReservation = APIBooking.root.addResource("reservationInfo", {
       defaultCorsPreflightOptions: {
         allowOrigins: ['*'],
         allowCredentials: true,
@@ -355,7 +355,7 @@ export class BackEndCdkStack extends Stack {
       }
   });
 
-  const roomInfo = APIRoom.root.addResource("roominfo", {
+  const roomInfo = APIRoom.root.addResource("roomInfo", {
     defaultCorsPreflightOptions: {
       allowOrigins: ['*'],
       allowCredentials: true,
@@ -440,7 +440,7 @@ const allroomInfo = APIRoom.root.addResource("allroomInfo", {
       }]
     }
   });
-  const amenityInfo = APIRoom.root.addResource("amenityinfo", {
+  const amenityInfo = APIRoom.root.addResource("amenityInfo", {
     defaultCorsPreflightOptions: {
       allowOrigins: ['*'],
       allowCredentials: true,
@@ -626,7 +626,7 @@ const allamenityInfo = APIRoom.root.addResource("allamenityInfo", {
     );
     roomInfo.addMethod(
       "GET",
-      new apigw.LambdaIntegration(room_info, {proxy: true})
+      new apigw.LambdaIntegration(room_Info, {proxy: true})
     );
 
     roomType.addMethod(
@@ -697,7 +697,7 @@ const allamenityInfo = APIRoom.root.addResource("allamenityInfo", {
     reservation_table.grantFullAccess(getallreservation_hanlder);
     room_table.grantFullAccess(booking_service);
     room_table.grantFullAccess(room_service);
-    room_table.grantFullAccess(room_info);
+    room_table.grantFullAccess(room_Info);
     room_table.grantFullAccess(room_type);
     room_table.grantFullAccess(allrooms_handler);
     loyalty_table.grantFullAccess(getloatyPoint);
