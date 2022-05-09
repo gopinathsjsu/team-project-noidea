@@ -2,6 +2,8 @@ import uuid
 import json
 import sys
 from decimal import Decimal
+from datetime import datetime
+
 sys.path.append("..")
 from strategy.PriceCalculationContext import PriceCalculationContext
 from strategy.PriceCalculationStrategy import LoyaltyPlatinum, LoyaltyGlod, LoyaltySilver, LoyaltyBronzer, SummerSeason, ChristmasSeason, RegularSeason, Weekdays, Weekends, Holidays
@@ -11,7 +13,7 @@ from constants.Days import Days
 from constants.ReservationStatus import ReservationStatus
 
 class Reservation:
-    def __init__(self, startDate, endDate, season, days, roomInfos: list, customer: User) -> None:
+    def __init__(self, startDate, endDate, season, days, branchId, roomInfos: list, customer: User) -> None:
         self.id = str(uuid.uuid4())
         self.startDate = startDate
         self.endDate = endDate
@@ -20,6 +22,7 @@ class Reservation:
         self.days = days
         self.roomInfos = roomInfos
         self.customer = customer
+        self.branchId = branchId
         self.status = ReservationStatus.CONFIRM.value
         self.checkIn = False
         self.checkOut = False
@@ -30,9 +33,16 @@ class Reservation:
             bookedroomPrice += room.getPrice()
         return bookedroomPrice    
     
+    def getbranchId(self):
+        return self.branchId    
+    
     def getId(self):
         return self.id
 
+    def getHotelId(self):
+        room = self.roomInfos[0]
+        return room.gethotelId()
+     
     def getStartDate(self):
         return self.startDate
     
@@ -46,7 +56,9 @@ class Reservation:
         return self.status
     
     def getLoyalPrice(self):
-        roomAndAmentyPrice = self.getbookedroomPrice()
+        # (room + amenity) * days
+        roomAndAmentyPrice = self.getbookedroomPrice() * self.getStaytime()
+
         loyaltyPoint = self.customer.getLoyalty()
         print("the room price is {}".format(roomAndAmentyPrice))
         royalprice = 0
@@ -103,7 +115,7 @@ class Reservation:
 
     def getTotalPrice(self):
         """
-        totalprice = roomprice + amenityprice * loyalrate * seasonrate * daysrate
+        totalprice = (roomprice + amenityprice) * time stay * loyalrate * seasonrate * daysrate
         """
         curD = self.days
         totalPrice = 0
@@ -134,11 +146,28 @@ class Reservation:
     def getRoomInfo(self):
         roomInfo = []
         for room in self.roomInfos:
-            roomDict = { "roomId" : room.getroomId()}
-            roomDict = { "amenityIds" : room.getamenityIds()}
+            roomDict = {}
+            roomDict["roomId"] = room.getroomId()
+            roomDict["amenityIds"] = room.getamenityIds()
             roomInfo.append(roomDict)
         return roomInfo
     
+    def getStaytime(self):
+        startdate = self.convertDate(self.startDate)
+        enddate = self.convertDate(self.endDate)
+        delta = enddate - startdate
+        return delta.days
+    
+    def convertDate(self, date):
+        if date[2] == '/':
+            return datetime.strptime(date, "%m/%d/%Y")
+        if date[2] == '-':
+            return datetime.strptime(date, "%m-%d-%Y")
+        if date[4] == '/':
+            return datetime.strptime(date, "%Y/%m/%d")
+        if date[4] == '-':
+            return datetime.strptime(date, "%Y-%m-%d")
+        
     def updateStartDate(self, newstartDate):
         self.startDate = newstartDate
     
@@ -165,6 +194,7 @@ class Reservation:
            "reservationId": self.getId(),
             "price" : str(self.getTotalPrice()),
             "userId" : self.getUserId(),
+            "hotelId" : self.getHotelId(),
             "room" : self.getRoomInfo(),
             "custmoerFirstName" : self.customer.fName,
             "custmoerLastName" : self.customer.lName,
@@ -172,8 +202,9 @@ class Reservation:
             "checkOut" : self.isCheckedOut(),
             "startDate" : self.getStartDate(),
             "endDate" : self.getEndDate(),
-            "seanson" : self.season,
+            "season" : self.season,
             "days" : self.days,
+            "branchId" : self.getbranchId(),
             "reservationStatus" : self.getStatus()
         })
 
@@ -182,6 +213,7 @@ class Reservation:
             "reservationId": self.getId(),
             "price" : str(self.getTotalPrice()),
             "userId" : self.getUserId(),
+            "hotelId" : self.getHotelId(),
             "room" : self.getRoomInfo(),
             "custmoerFirstName" : self.customer.fName,
             "custmoerLastName" : self.customer.lName,
@@ -189,8 +221,9 @@ class Reservation:
             "checkOut" : self.isCheckedOut(),
             "startDate" : self.getStartDate(),
             "endDate" : self.getEndDate(),
-            "seanson" : self.season,
+            "season" : self.season,
             "days" : self.days,
+            "branchId" : self.getbranchId(),
             "reservationStatus" : self.getStatus()
         }
 

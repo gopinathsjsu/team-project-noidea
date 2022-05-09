@@ -9,8 +9,17 @@ class BookedRoom():
         
     def getroomId(self):
         return self.roomId
+    
     def getamenityIds(self):
         return self.amenityIds
+    
+    def gethotelId(self):
+        roomDaoimpl = RoomDAOimpl()
+        roomInfo = roomDaoimpl.getRoom(self.roomId)
+        room = Room(roomInfo) 
+        hotelid = room.getHotelId()
+        return hotelid
+    
     def getPrice(self):
         roomDaoimpl = RoomDAOimpl()
         roomInfo = roomDaoimpl.getRoom(self.roomId)
