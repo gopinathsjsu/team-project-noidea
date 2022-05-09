@@ -103,7 +103,7 @@ def getBranch(branchId, hotelId):
         )
         if 'Item' not in item:
             return None
-        return Branch(branchId, item['Item']['hotelId'], item['Item']['Address'], item['Item']['Country'], item['Item']['email'], item['Item']['ownerId'])
+        return Branch(branchId, item['Item']['hotelId'], item['Item']['Address'], item['Item']['Country'], item['Item']['email'], item['Item']['BranchName'], item['Item']['ownerId'])
     except ClientError as e:
         return returnResponse(400, e.response['Error']['Message'])
 
