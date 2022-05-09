@@ -74,6 +74,7 @@ class test_booking(unittest.TestCase):
         event = {
             "body": {
                 "userId" : "user001",
+                "branchId" : "branch001",
                 "startDate" : "08/02/2021",
                 "endDate" : "09/20/2021",
                 "season" : "Summer",

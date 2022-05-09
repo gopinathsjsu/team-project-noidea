@@ -53,6 +53,8 @@ def reservation_handler(event, context):
         return returnResponse(400, {'message': 'Invalid input, no userId'})
     if "room" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no room'})
+    if "branchId" not in eventBody:
+        return returnResponse(400, {'message': 'Invalid input, no branchId'})
     if "startDate" not in eventBody:
         return returnResponse(400, {'message': 'Invalid input, no startDate'})
     if "endDate" not in eventBody:
@@ -64,6 +66,7 @@ def reservation_handler(event, context):
 
     userId = eventBody["userId"]
     bookedroomInfos = eventBody["room"]
+    branchId = eventBody["branchId"]
     startDate = eventBody["startDate"]
     endDate = eventBody["endDate"]
     season = eventBody["season"]
@@ -88,8 +91,9 @@ def reservation_handler(event, context):
         curbookedroom = BookedRoom(roomId, amenityIds)
         roomList.append(curbookedroom)
         
-    reservation = Reservation(startDate, endDate, season, days, roomList, customer)
-    logger.debug("**** total price ---> {}".format(reservation.getTotalPrice()))
+    reservation = Reservation(startDate, endDate, season, days, branchId, roomList, customer)
+    totalprice = reservation.getTotalPrice()
+    logger.debug("**** total price ---> {}".format(totalprice))
 
     item = reservation.getReservationInfo()
     logger.debug("**** the reservation information {}".format(item))

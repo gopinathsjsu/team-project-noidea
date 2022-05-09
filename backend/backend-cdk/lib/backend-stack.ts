@@ -26,6 +26,8 @@ export class BackEndCdkStack extends Stack {
     const room_table = createTable(this, 'room_table', 'roomId');
     const user_table = dynamodb.Table.fromTableArn(this, 'user_table', 'arn:aws:dynamodb:us-west-2:568187732893:table/User');
     const loyalty_table = dynamodb.Table.fromTableArn(this, 'loyalty_table', 'arn:aws:dynamodb:us-west-2:568187732893:table/HotelLoyalty');
+    const hotel_table = dynamodb.Table.fromTableArn(this, 'hotel_table', 'arn:aws:dynamodb:us-west-2:568187732893:table/Hotel');
+
     // Lambdas
     const booking_service = createBookingLambda(this, 'Hotel_booking', 'booking.reservation_handler', {
       "region": this.region,
@@ -680,6 +682,7 @@ const allamenityInfo = APIRoom.root.addResource("allamenityInfo", {
       new apigw.LambdaIntegration(allrooms_handler, {proxy: true})
     )
     // Access Permission
+    hotel_table.grantFullAccess(booking_service);
     user_table.grantFullAccess(booking_service);
     amenity_table.grantFullAccess(booking_service);
     amenity_table.grantFullAccess(room_service);
