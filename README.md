@@ -21,6 +21,12 @@
 - [Sprint Prokect Journal PDF](https://github.com/gopinathsjsu/team-project-noidea/blob/main/SprintProjectJournal.pdf): You can also find this in the root of this repository 
 - [Sprint Task Tracker](https://docs.google.com/spreadsheets/d/1aqYAgDQ6CF_wLG771Fm-Ln9_sL4svAPKgASDdfSET5c/edit?usp=sharing): https://docs.google.com/spreadsheets/d/1aqYAgDQ6CF_wLG771Fm-Ln9_sL4svAPKgASDdfSET5c/edit?usp=sharing
 
+## Github Insights 
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Screen%20Shot%202022-05-10%20at%201.46.55%20PM.png?raw=true" width="700" />
+
+**Note:** Number of commits and amount of addition/deletion does not equate to the amount of work done. Some team members did less commits because they work on more features on their local branch before making a push. Additionally, having a low amount of additions in comparison doesn't mean that there was no work done, it means that they did not work on stories that called for creating boiler plate code for infrastructure. 
+
 ## Design Decisions
 
 ### Frontend
