@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDataRdx, getUserIdRdx } from "../../redux/context/contextSelectors";
 import { setGlobalLoad, triggerMessage } from "../../redux/globalUI/globalUISlice";
 import { useNavigate } from "react-router-dom";
-import { setHotelData, setUserData, updateUserType } from "../../redux/context/contextSlice";
+import { setCardData, setHotelData, setUserData, updateUserType } from "../../redux/context/contextSlice";
 import HotelServiceUtil from "../../util/hotelServiceUtil";
 import LoyaltyServiceUtil from "../../util/loyaltyServiceUtil";
 
@@ -133,6 +133,7 @@ export function AccordionLayout(props) {
                 dispatch(setGlobalLoad(false));
               } else {
                 dispatch(setUserData(userInfoResp.user));
+                dispatch(setCardData(userInfoResp.card));
                 setTimeout(() => {
                   dispatch(
                     triggerMessage({

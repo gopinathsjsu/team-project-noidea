@@ -19,6 +19,10 @@ export function OwlStatus(props) {
     })();
   }, [props.userId]);
 
+  if (!loyaltyAccnt && !loyaltyAccnt?.amount) {
+    return <div>This feature is currently unavailable.</div>;
+  }
+
   return (
     <div style={{ border: "2px solid #e0e0e0", borderRadius: 10, padding: "30px 40px 30px 40px" }}>
       {userType === "customer" && <h5>You're on your way to becoming an Elf owl!</h5>}
