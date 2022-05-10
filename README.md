@@ -47,10 +47,12 @@ The Hootel frontend is managed by a global application state that is implemented
 - `GlobalUI`: The GlobalUI state managed global UI elements such as a global loading spinner and global messages (including toast, modal, and fullscreen messages).
 - `HotelData`: This is data that is commonly used for the Hotel user experience but does not need to be reloaded. 
 
+### Backend
+
 #### DAO Pattern
 
 In order to perform data persistence operations with a unified interface, we leveraged DAO parttern to separate the data access interface from data access implementation. So we only need to modify the mechanism of data access by changing the underlying implmentation. It makes the code turned to be more readble and maintanable.
-please refer here for the implmentation details.
+please refer [here](https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true) for the implmentation details.
 
 ## Diagrams 
 
