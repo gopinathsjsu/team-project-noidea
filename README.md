@@ -1,6 +1,13 @@
 # Hootel Web Application
 
-[Hootel Demo](https://www.youtube.com/watch?v=XywgcXuxY30)
+[Hootel Demo](https://www.youtube.com/watch?v=XywgcXuxY30) https://www.youtube.com/watch?v=XywgcXuxY30
+[Frontend Link](https://main.d2pqi8z5jyvu7o.amplifyapp.com/) https://main.d2pqi8z5jyvu7o.amplifyapp.com/
+**Hotel User**
+- Username: hotel
+- Password: Password1!
+- **Customer User**
+- Username: customer
+- Password: Password1!
 
 ## Team member and component lead
 
