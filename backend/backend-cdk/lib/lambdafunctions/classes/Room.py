@@ -10,7 +10,7 @@ class Room:
     def __init__(self, roomInfor) -> None:
         self.id = str(uuid.uuid4())
         self.hotelId = roomInfor["hotelId"]
-        self.price = 0
+        self.price = roomInfor["roomPrice"]
         self.roomType = roomInfor["roomType"]
         self.name = roomInfor["roomName"]
 
@@ -26,6 +26,8 @@ class Room:
         return self.name
     
     def getPrice(self):
+        if (self.price != 0):
+            return self.price
         if (self.roomType == RoomType.SINGLE.value):
             return 100
         elif (self.roomType == RoomType.DOUBLE.value):

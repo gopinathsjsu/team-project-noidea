@@ -8,6 +8,7 @@ os.environ["region"] = "us-east-1"
 os.environ["room_table"] = "test_table"
 os.environ["amenity_table"] = "test_table1"
 os.environ["reservation_table"] = "test_table2"
+os.environ["loyalty_table"] = "test_table3"
 os.environ["User"] = "User"
 @pytest.fixture 
 def aws_credentials():
