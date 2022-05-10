@@ -118,3 +118,9 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 - Ability to specify room type and room amenities for each room during booking 
 - Ability to see loyalty status 
 - Ability to get discounts on bookings the more you book through Hootel
+
+### Links might help
+- [AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/)
+- [React](https://reactjs.org/docs/getting-started.html)
+- [Room API] (https://docs.google.com/document/d/1t3MyJJL2zUlXYOuZeh2-ET4QYih5bCVO5k6ZC-PbQ_0/edit?usp=sharing)
+- [Booking API && Price Factoer] (https://docs.google.com/document/d/1VBQwX6kRbqK3XLQ_BqPJSb0sfNWBF2fmEiK0qF3yyoE/edit)
