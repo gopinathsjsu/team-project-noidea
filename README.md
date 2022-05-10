@@ -120,6 +120,9 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 #### Builder Pattern
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/BuilderPattern.jpg?raw=true" width="700" />
 
+#### Singleton Pattern
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Singleton.png?raw=true" width="700" />
+
 ## Feature Sets
 
 - Capabale of managing many customer and many different hotel chains 
