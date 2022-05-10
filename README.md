@@ -52,7 +52,7 @@ The Hootel frontend is managed by a global application state that is implemented
 #### DAO Pattern
 
 In order to perform data persistence operations with a unified interface, we leveraged DAO parttern to separate the data access interface from data access implementation. So we only need to modify the mechanism of data access by changing the underlying implmentation. It makes the code turned to be more readble and maintanable.
-please refer [here](https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true) for the implmentation details.
+- please refer [here](https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true) for the implmentation details.
 
 ## Diagrams 
 
