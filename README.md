@@ -51,8 +51,15 @@ The Hootel frontend is managed by a global application state that is implemented
 
 #### DAO Pattern
 
-In order to perform data persistence operations with a unified interface, we leveraged DAO parttern to separate the data access interface from data access implementation. So we only need to modify the mechanism of data access by changing the underlying implmentation. It makes the code turned to be more readble and maintanable.
+In order to perform data persistence operations with a unified interface, we leveraged the DAO pattern to separate the data access interface from data access implementation. So we only need to modify the data access mechanism by changing the underlying implementation. Furthermore, it makes the code turned to be more readable and maintainable.
+
 - please refer [here](https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true) for the implmentation details.
+
+#### Strategy pattern
+
+Because the price of a room is changed dynamically, we decided to utilize the Strategy pattern to encapsulate the price calculation. This pattern solves the code bloated issue and follows the Open/Closed principle, making the code easy to maintain and improving the development efficiency.
+
+- please refer [here](https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/strategydiagram.png?raw=true) for the implmentation details.
 
 ## Diagrams 
 
