@@ -43,7 +43,7 @@ class test_booking(unittest.TestCase):
                 'WriteCapacityUnits': 5  
         })
         room_data = {
-            "roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single", "roomName" : "test"
+            "roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single", "roomName" : "test", "roomPrice" : "120"
         }
         roomDaoimpl.addRoom(room_data)
         
@@ -63,6 +63,7 @@ class test_booking(unittest.TestCase):
         }
         amenitiesDAOimpl.addAmenity(amenity_data)
         
+        
         table_name = 'test_table2'
         dynamodb.create_table(TableName=table_name,
                 KeySchema=[{'AttributeName': 'reservationId','KeyType': 'HASH'}],
@@ -71,6 +72,20 @@ class test_booking(unittest.TestCase):
                 'ReadCapacityUnits': 5,
                 'WriteCapacityUnits': 5  
         })
+        table_name = 'HotelLoyalty'
+        loyatable  = dynamodb.create_table(TableName=table_name,
+                KeySchema=[{'AttributeName': 'loyaltyId','KeyType': 'HASH'}],
+                AttributeDefinitions=[{'AttributeName': 'loyaltyId','AttributeType': 'S'}],
+                ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5  
+        })
+        loyalty_data = {
+            "loyaltyId" : "loyalty001",
+            "amount" : 89,
+            "ownerId" : "user001"
+        }
+        put_item_db(loyatable, loyalty_data)
         event = {
             "body": {
                 "userId" : "user001",
@@ -99,7 +114,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "startDate" : "08/02/2022",
                 "endDate" : "08/03/2022",
@@ -120,7 +135,7 @@ class test_booking(unittest.TestCase):
         response = retrieve_handler(event, "")
         assert 200 == response["statusCode"]
     
-    def test_retrieve_handler_customerId(sele):
+    def test_retrieve_handler_userId(sele):
         dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
         table_name = 'test_table2'
         dynamodb.create_table(TableName=table_name,
@@ -132,7 +147,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "startDate" : "08/02/2022",
                 "endDate" : "08/03/2022",
@@ -146,7 +161,7 @@ class test_booking(unittest.TestCase):
         
         event = {
             "queryStringParameters" : {
-                "customerId" : "customertest"
+                "userId" : "customertest"
             }
         }
         
@@ -165,7 +180,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -199,7 +214,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -231,7 +246,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -264,7 +279,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -299,7 +314,7 @@ class test_booking(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",

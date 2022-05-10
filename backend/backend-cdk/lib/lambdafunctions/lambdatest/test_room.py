@@ -21,7 +21,7 @@ class test_room(unittest.TestCase):
     
         event = {
             "body" : {
-            "roomInfo" : {"roomName" : "test","roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single"}
+            "roomInfo" : {"roomName" : "test","roomId" : "room001", "hotelId" : "hotel001", "roomType" : "Single", "roomPrice" : "120"}
             }
         }
         response = room_handler(event, "")

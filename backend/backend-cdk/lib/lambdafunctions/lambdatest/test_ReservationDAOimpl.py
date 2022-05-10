@@ -19,7 +19,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         data1 = {
            
                 "reservationId" : "reservationtest1",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "startDate" : "08/02/2022",
                 "endDate" : "08/03/2022",
@@ -31,7 +31,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         data2 = {
             
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest2",
+                "userId" : "customertest2",
                 "roomId" : "roomtest2",
                 "startDate" : "08/02/2023",
                 "endDate" : "08/03/2023",
@@ -59,7 +59,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "startDate" : "08/02/2022",
                 "endDate" : "08/03/2022",
@@ -73,7 +73,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         response = reservationDAOimpl.getReservation("reservationtest")
         assert data1 == response
 
-    def test_getReservationbycustomerId(self):
+    def test_getReservationbyuserId(self):
         dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
         table_name = 'test_table2'
         dynamodb.create_table(TableName=table_name,
@@ -85,7 +85,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "startDate" : "08/02/2022",
                 "endDate" : "08/03/2022",
@@ -111,7 +111,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -138,7 +138,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
@@ -169,7 +169,7 @@ class test_ReservationDAOimpl(unittest.TestCase):
         })
         data1 = {
                 "reservationId" : "reservationtest",
-                "customerId" : "customertest",
+                "userId" : "customertest",
                 "roomId" : "roomtest",
                 "hotelId" : "hoteltest",
                 "startDate" : "08/02/2022",
