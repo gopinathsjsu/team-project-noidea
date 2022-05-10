@@ -17,8 +17,8 @@
 
 - [Customer Portal Wireframe](https://github.com/gopinathsjsu/team-project-noidea/blob/075a18c1615a945fdaec441774fabe003163d688/images/HootelCustomer%20Wireframe.pdf): You can also find this file in the `images` folder of this repository
 - [Hotel Portal Wireframe](https://github.com/gopinathsjsu/team-project-noidea/blob/075a18c1615a945fdaec441774fabe003163d688/images/HootelHotel%20Wireframe.pdf): You can also find this file in the `images` folder of this repository
-- [Sprint Project Journal Markdown](https://github.com/gopinathsjsu/team-project-noidea/blob/075a18c1615a945fdaec441774fabe003163d688/SprintProjectJournal.md): You can also find this in the root of this repository 
-- [Sprint Prokect Journal PDF](https://github.com/gopinathsjsu/team-project-noidea/blob/075a18c1615a945fdaec441774fabe003163d688/SprintProjectJournal.pdf): You can also find this in the root of this repository 
+- [Sprint Project Journal Markdown](https://github.com/gopinathsjsu/team-project-noidea/blob/main/SprintProjectJournal.md): You can also find this in the root of this repository 
+- [Sprint Prokect Journal PDF](https://github.com/gopinathsjsu/team-project-noidea/blob/main/SprintProjectJournal.pdf): You can also find this in the root of this repository 
 - [Sprint Task Tracker](https://docs.google.com/spreadsheets/d/1aqYAgDQ6CF_wLG771Fm-Ln9_sL4svAPKgASDdfSET5c/edit?usp=sharing): https://docs.google.com/spreadsheets/d/1aqYAgDQ6CF_wLG771Fm-Ln9_sL4svAPKgASDdfSET5c/edit?usp=sharing
 
 ## Design Decisions
