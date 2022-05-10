@@ -158,6 +158,7 @@ export default function Amenities(props) {
                 if (resp && !resp.error) {
                   dispatch(updateAmenities(resp.filter((r) => r.hotelId === hotelData?.hotelId)));
                 }
+                setNewAmenity({ amenityPrice: "", amenityName: "" });
                 dispatch(setGlobalLoad(false));
               }}
             />

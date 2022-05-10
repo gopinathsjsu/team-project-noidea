@@ -31,8 +31,7 @@ export default function ReservationList(props) {
               onClick={() => navigate(`/${userType}/stays/${reservs.reservationId}`, { state: { ...reservs } })}>
               <h5>Stay at {hotels[reservs?.hotelId]}</h5>
               <p style={{ marginBottom: 0 }}>
-                {reservs?.room?.length} room(s){userType === "hotel" ? ` by ${reservs.customer} ` : " "} between{" "}
-                {reservs.startDate} and {reservs.endDate}.
+                {reservs?.room?.length} room(s) between {reservs.startDate} and {reservs.endDate}.
               </p>
             </div>
           ))}
