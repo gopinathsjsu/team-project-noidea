@@ -1,5 +1,7 @@
 # Hootel Web Application
 
+[Hootel Demo](https://www.youtube.com/watch?v=XywgcXuxY30)
+
 ## Team member and component lead
 
 - Bryan Kwong: Building frontend and then integrate with backend
