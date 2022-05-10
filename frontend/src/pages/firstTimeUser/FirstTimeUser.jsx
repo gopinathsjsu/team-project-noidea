@@ -119,9 +119,12 @@ export function AccordionLayout(props) {
                   )
                 );
               }
+
               const userInfoResp = await UserServiceUtil.getUserInfo(userId);
               dispatch(updateUserType({ userType: props.userType }));
-              await LoyaltyServiceUtil.createLoyaltyAccount();
+              if (props.userType !== "hotel") {
+                await LoyaltyServiceUtil.createLoyaltyAccount();
+              }
               if (response.error || userInfoResp.error || (props.userType === "hotel" && responseHotel.error)) {
                 dispatch(
                   triggerMessage({
@@ -133,7 +136,9 @@ export function AccordionLayout(props) {
                 dispatch(setGlobalLoad(false));
               } else {
                 dispatch(setUserData(userInfoResp.user));
-                dispatch(setCardData(userInfoResp.card));
+                if (props.userType !== "hotel") {
+                  dispatch(setCardData(userInfoResp.card));
+                }
                 setTimeout(() => {
                   dispatch(
                     triggerMessage({

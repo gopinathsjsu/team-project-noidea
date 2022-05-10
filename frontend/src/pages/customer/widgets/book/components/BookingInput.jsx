@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -84,10 +85,26 @@ export default function BookingInput(props) {
               />
             </Form.Group>
           </Col>
+          {dayjs(fields.checkout).diff(fields.checkin, "day") > 7 && (
+            <Col xs={12}>
+              <p style={{ color: "red" }}>The max stay is 7 days</p>
+            </Col>
+          )}
+          {dayjs(fields.checkout).diff(fields.checkin, "day") < 1 && (
+            <Col xs={12}>
+              <p style={{ color: "red" }}>End date has to be after start date</p>
+            </Col>
+          )}
           <Col xs={12} style={{ marginTop: 20 }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Button
-                disabled={!fields.checkin || !fields.checkout || !fields.rooms}
+                disabled={
+                  !fields.checkin ||
+                  !fields.checkout ||
+                  !fields.rooms ||
+                  dayjs(fields.checkout).diff(fields.checkin, "day") > 7 ||
+                  dayjs(fields.checkout).diff(fields.checkin, "day") < 1
+                }
                 style={{ paddingLeft: 30, paddingRight: 30 }}
                 onClick={() => {
                   setSearchParams(fields);

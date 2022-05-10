@@ -3,6 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserIdRdx } from "../../redux/context/contextSelectors";
 import { setCardData } from "../../redux/context/contextSlice";
+import { setGlobalLoad } from "../../redux/globalUI/globalUISlice";
 import UserServiceUtil from "../../util/userServiceUtil";
 
 export default function ChangePayment(props) {
@@ -44,9 +45,11 @@ export default function ChangePayment(props) {
         <Button
           variant="primary"
           onClick={async () => {
+            dispatch(setGlobalLoad(true));
             await UserServiceUtil.updateCardInfo(userId, fields);
             const userInfoResp = await UserServiceUtil.getUserInfo(userId);
             dispatch(setCardData(userInfoResp.card));
+            dispatch(setGlobalLoad(false));
             props.onHide();
           }}>
           Save changes

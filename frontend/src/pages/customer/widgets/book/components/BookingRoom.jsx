@@ -119,6 +119,16 @@ export default function BookingRoom(props) {
     })();
   }, [navStateHotel]);
 
+  useEffect(() => {
+    console.log(fields);
+    console.log(
+      navState.bookingParam.rooms,
+      Object.keys(fields)
+        .filter((f) => f !== "tacCheck")
+        .filter((f) => fields[f].roomId).length
+    );
+  }, [fields, navState.bookingParam.rooms]);
+
   return (
     <Modal show fullscreen onHide={() => navigate(-1)}>
       <Modal.Header closeButton></Modal.Header>
@@ -155,10 +165,17 @@ export default function BookingRoom(props) {
             </Form.Group>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button
-                disabled={!fields.tacCheck}
+                disabled={
+                  !fields.tacCheck ||
+                  `${navState.bookingParam.rooms}` !==
+                    `${
+                      Object.keys(fields)
+                        .filter((f) => f !== "tacCheck")
+                        .filter((f) => fields[f].roomId).length
+                    }`
+                }
                 style={{ margin: "20px 0px 0px 0px", paddingLeft: 30, paddingRight: 30 }}
                 onClick={async () => {
-                  console.log(fields);
                   dispatch(setGlobalLoad(true));
                   const resp = await BookingServiceUtil.bookRoom({
                     userId,
@@ -167,10 +184,10 @@ export default function BookingRoom(props) {
                       .map((bookingRoomId) => {
                         const bookRoomInfo = fields[bookingRoomId];
                         const amenityIds = Object.keys(bookRoomInfo)
-                          .filter((fieldKey) => fieldKey.includes("amenity_"))
+                          .filter((fieldKey) => fieldKey.includes("amenity_") && bookRoomInfo[fieldKey])
                           .map((fieldKey) => fieldKey.split("_")[1]);
                         return {
-                          amenityIds,
+                          amenityIds: amenityIds ?? [],
                           roomId: bookRoomInfo.roomId
                         };
                       }),

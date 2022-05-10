@@ -73,6 +73,7 @@ export default function ReservationView(props) {
               <p>
                 <b className="secondary-color">Added amenities</b>
                 <br />
+                {res?.amenityIds.length === 0 && "No added amenities"}
                 {res?.amenityIds?.map &&
                   res.amenityIds
                     .map((aid) => {
