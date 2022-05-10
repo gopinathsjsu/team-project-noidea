@@ -36,7 +36,19 @@
 We utilized the decorator pattern here to consolidate error check logic for all API calls. API calls can fail at any time for any reason, and the logic for catching those error is the same for all use cases. So we used a decorator here to ensure that all API calls are wrapped by the same error checker that ensures that even if an API call fails, the app remains functional. 
 
 ```
-const APIDecorator = (callback, onError, onFinally) => {
+const BlockingAPIDecorator = (callback, onError, onFinally) => {
+   try {
+      setGlobalLoad(true);
+      callback()
+   } catch (e) {
+      onError()
+   } finally {
+      onFinally()
+      setGlobalLoad(false);
+   }
+}
+
+const NonBlockingAPIDecorator = (callback, onError, onFinally) => {
    try {
       callback()
    } catch (e) {
@@ -45,6 +57,8 @@ const APIDecorator = (callback, onError, onFinally) => {
       onFinally()
    }
 }
+
+BlockingAPIDecorator(() => fetch(), () => error(), () => finally())
 ```
 
 #### Global State Pattern 
