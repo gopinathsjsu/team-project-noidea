@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-hootelwebapp-dev-172043-authRole",
+      "UnauthRoleArn": "arn:aws:iam::568187732893:role/amplify-hootelwebapp-dev-172043-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::568187732893:role/amplify-hootelwebapp-dev-172043-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-hootelwebapp-dev-172043-deployment",
+      "UnauthRoleName": "amplify-hootelwebapp-dev-172043-unauthRole",
+      "StackName": "amplify-hootelwebapp-dev-172043",
+      "StackId": "arn:aws:cloudformation:us-west-2:568187732893:stack/amplify-hootelwebapp-dev-172043/cf8764c0-a26b-11ec-9c46-0695dfceb01f",
+      "AmplifyAppId": "d2pqi8z5jyvu7o"
+    },
+    "categories": {
+      "auth": {
+        "hootelwebappe472e77f": {}
+      }
+    }
+  }
+}

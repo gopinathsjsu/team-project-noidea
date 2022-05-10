@@ -1,0 +1,141 @@
+{
+  "modalHeader": "User registration",
+  "submissionText": "Let's get started",
+  "termsAndConditions": [
+    "You agree to Hootel's terms of service",
+    "You understand and consent to Hootel's privacy policy"
+  ],
+  "mandatoryFields": [
+    "firstName",
+    "lastName",
+    "phoneNumber",
+    "email",
+    "dobMonth",
+    "dobDate",
+    "dobYear",
+    "ccNumber",
+    "ccExpDate",
+    "ccCVV",
+    "addrStreet",
+    "addrCity",
+    "addrState",
+    "addrZipcode"
+  ],
+  "accordions": [
+    {
+      "title": "Your information",
+      "hasSubSections": true,
+      "nextCTA": "Continue",
+      "subSections": [
+        {
+          "subtitle": "Basic information",
+          "fields": [
+            {
+              "fieldId": "firstName",
+              "colSizeXS": 6,
+              "label": "First name"
+            },
+            {
+              "fieldId": "lastName",
+              "colSizeXS": 6,
+              "label": "Last name"
+            },
+            {
+              "fieldId": "phoneNumber",
+              "colSizeXS": 12,
+              "placeholder": "XXX-XXX-XXXX",
+              "label": "Phone number"
+            },
+            {
+              "fieldId": "email",
+              "colSizeXS": 12,
+              "placeholder": "email@email.com",
+              "label": "Email address"
+            }
+          ]
+        },
+        {
+          "subtitle": "Date of birth",
+          "fields": [
+            {
+              "fieldId": "dobMonth",
+              "colSizeXS": 4,
+              "placeholder": "MM",
+              "label": "Month"
+            },
+            {
+              "fieldId": "dobDate",
+              "colSizeXS": 4,
+              "placeholder": "DD",
+              "label": "Date"
+            },
+            {
+              "fieldId": "dobYear",
+              "colSizeXS": 4,
+              "placeholder": "YYYY",
+              "label": "Year"
+            }
+          ]
+        },
+        {
+          "subtitle": "Address",
+          "nextCTA": "Finish",
+          "fields": [
+            {
+              "fieldId": "addrStreet",
+              "colSizeXS": 12,
+              "placeholder": "1234 San Jose St.",
+              "label": "Street"
+            },
+            {
+              "fieldId": "addrCity",
+              "colSizeXS": 4,
+              "placeholder": "Santa Clara",
+              "label": "City"
+            },
+            {
+              "fieldId": "addrState",
+              "colSizeXS": 4,
+              "placeholder": "CA",
+              "label": "State"
+            },
+            {
+              "fieldId": "addrZipcode",
+              "colSizeXS": 4,
+              "placeholder": "94618",
+              "label": "Zipcode"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Payments information",
+      "hasSubSections": false,
+      "nextCTA": "Finish",
+      "fields": [
+        {
+          "fieldId": "ccNumber",
+          "colSizeXS": 12,
+          "colSizeMD": 6,
+          "placeholder": "XXXX XXXX XXXX XXXX",
+          "label": "Card number"
+        },
+        {
+          "fieldId": "ccExpDate",
+          "colSizeXS": 6,
+          "colSizeMD": 3,
+          "label": "Exp. date",
+          "placeholder": "MM/YYYY"
+        },
+        {
+          "fieldId": "ccCVV",
+          "colSizeXS": 6,
+          "colSizeMD": 3,
+          "label": "CVV",
+          "placeholder": "XXX"
+        }
+      ]
+    }
+  ]
+}
