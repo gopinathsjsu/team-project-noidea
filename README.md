@@ -99,7 +99,7 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/HootelUseCase.png?raw=true" width="700" />
 
-### AWS Structure Diagram
+### AWS Architecture Diagram
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/AWS_Diagram.png?raw=true" width="700" />
 
