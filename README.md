@@ -99,6 +99,10 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/HootelUseCase.png?raw=true" width="700" />
 
+### AWS Structure Diagram
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/AWS_Diagram.png?raw=true" width="700" />
+
 ### Frontend Architecture Diagrams 
 
 #### Frontend Flow Diagram
@@ -111,7 +115,7 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/ERdiagram.png?raw=true" width="700" />
 
-#### Deployment Diagram
+#### Deployment Diagrams
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/DeploymentDiagram.png?raw=true" width="700" />
 
@@ -133,6 +137,13 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 #### Builder Pattern
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/BuilderPattern.jpg?raw=true" width="700" />
 
+#### CDK Deployment
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/CDK_Deployment.png?raw=true" width="700" />
+
+#### Jenkins Instance
+
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Jenkins.png?raw=true" width="700" />
 
 ## Feature Sets
 
