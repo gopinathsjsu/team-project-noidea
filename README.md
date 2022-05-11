@@ -119,6 +119,9 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/componentDiagram.png?raw=true" width="700" />
 
+#### Class Diagram
+<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/ClassDiagram.png?raw=true" width="700" />
+
 #### DAO Diagram
 
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Daodiagram.png?raw=true" width="700" />
@@ -130,8 +133,6 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 #### Builder Pattern
 <img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/BuilderPattern.jpg?raw=true" width="700" />
 
-#### Singleton Pattern
-<img src="https://github.com/gopinathsjsu/team-project-noidea/blob/main/images/Singleton.png?raw=true" width="700" />
 
 ## Feature Sets
 
