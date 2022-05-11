@@ -149,6 +149,10 @@ Because the price of a room is changed dynamically, we decided to utilize the St
 
 - Capabale of managing many customer and many different hotel chains 
 - One user can book from any hotel chain they choose
+- Custom Amenities for each Hotel
+- Per Room Amenities
+- Custom Room styles per Hotel
+- Hotel chains can host multiple hotel locations such as Marriott or Holiday Inn
 
 ### Hotel experience 
 
